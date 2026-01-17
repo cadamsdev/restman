@@ -4,6 +4,7 @@
   "author": "cadamsdev",
   "module": "index.ts",
   "devDependencies": {
+    "@lazy-release/changesets": "^0.5.0",
     "@types/bun": "latest"
   },
   "peerDependencies": {
@@ -26,7 +27,8 @@
   "private": true,
   "scripts": {
     "start": "bun run index.ts",
-    "dev": "bun run index.ts"
+    "dev": "bun run index.ts",
+    "changeset": "changeset"
   },
   "type": "module",
   "dependencies": {
