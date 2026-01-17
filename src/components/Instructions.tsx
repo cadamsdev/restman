@@ -9,7 +9,7 @@ export const Instructions: React.FC = () => {
       marginTop={1}
     >
       <Text dimColor>
-        Ctrl+Enter: Send | Tab: Next | Shift+Tab: Prev | q/Esc: Quit
+        Ctrl+Enter: Send | Tab: Next | ↑↓: Change Method | q/Esc: Quit
       </Text>
     </Box>
   );

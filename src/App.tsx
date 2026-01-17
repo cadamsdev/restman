@@ -35,6 +35,21 @@ export const App: React.FC = () => {
       return;
     }
 
+    // Method selection when focused on method
+    if (focusedField === "method") {
+      const methods = ["GET", "POST", "PUT", "PATCH", "DELETE"];
+      const currentIndex = methods.indexOf(method);
+      
+      if (key.upArrow && currentIndex > 0) {
+        setMethod(methods[currentIndex - 1]);
+        return;
+      }
+      if (key.downArrow && currentIndex < methods.length - 1) {
+        setMethod(methods[currentIndex + 1]);
+        return;
+      }
+    }
+
     // Tab navigation
     if (key.tab) {
       if (key.shift) {
