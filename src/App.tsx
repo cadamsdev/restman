@@ -525,14 +525,9 @@ export const App: React.FC = () => {
       ) : /* Environments View Mode - Full Screen Environments */
       environmentsViewMode ? (
         <Box flexDirection="column" width="100%" height="100%">
-          <Box
-            borderStyle="round"
-            borderColor="blue"
-            paddingX={1}
-            justifyContent="center"
-          >
-            <Text bold color="cyan">
-              🌐 ShellMan - Environments (ESC to return)
+          <Box paddingX={1} marginBottom={1}>
+            <Text bold color="magenta">
+              🚀 ShellMan <Text dimColor italic>v1.0</Text> <Text color="cyan">- Environments</Text> <Text dimColor>(ESC to return)</Text>
             </Text>
           </Box>
           <Box flexGrow={1}>
@@ -548,14 +543,9 @@ export const App: React.FC = () => {
         </Box>
       ) : savedRequestsViewMode ? (
         <Box flexDirection="column" width="100%" height="100%">
-          <Box
-            borderStyle="round"
-            borderColor="blue"
-            paddingX={1}
-            justifyContent="center"
-          >
-            <Text bold color="cyan">
-              🌐 ShellMan - Saved Requests (ESC to return)
+          <Box paddingX={1} marginBottom={1}>
+            <Text bold color="magenta">
+              🚀 ShellMan <Text dimColor italic>v1.0</Text> <Text color="cyan">- Saved Requests</Text> <Text dimColor>(ESC to return)</Text>
             </Text>
           </Box>
           <Box flexGrow={1}>
@@ -569,14 +559,9 @@ export const App: React.FC = () => {
         </Box>
       ) : historyViewMode ? (
         <Box flexDirection="column" width="100%" height="100%">
-          <Box
-            borderStyle="round"
-            borderColor="blue"
-            paddingX={1}
-            justifyContent="center"
-          >
-            <Text bold color="cyan">
-              🌐 ShellMan - Request History (ESC to return)
+          <Box paddingX={1} marginBottom={1}>
+            <Text bold color="magenta">
+              🚀 ShellMan <Text dimColor italic>v1.0</Text> <Text color="cyan">- Request History</Text> <Text dimColor>(ESC to return)</Text>
             </Text>
           </Box>
           <Box flexGrow={1}>
@@ -590,14 +575,9 @@ export const App: React.FC = () => {
       ) : responseViewMode ? (
         /* Response View Mode - Full Screen Response */
         <Box flexDirection="column" width="100%" height="100%">
-          <Box
-            borderStyle="round"
-            borderColor="blue"
-            paddingX={1}
-            justifyContent="center"
-          >
-            <Text bold color="cyan">
-              🌐 ShellMan - Response View (ESC to return)
+          <Box paddingX={1} marginBottom={1}>
+            <Text bold color="magenta">
+              🚀 ShellMan <Text dimColor italic>v1.0</Text> <Text color="cyan">- Response View</Text> <Text dimColor>(ESC to return)</Text>
             </Text>
           </Box>
           <Box flexGrow={1}>
@@ -610,19 +590,8 @@ export const App: React.FC = () => {
       ) : (
         <>
           {/* Header */}
-          <Box
-            borderStyle="double"
-            borderColor="magenta"
-            paddingX={1}
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Text>
-              <Text bold color="magenta">🚀 ShellMan</Text>
-              <Text dimColor> │ </Text>
-              <Text color="cyan">REST API Client</Text>
-            </Text>
-            <Text dimColor italic>v1.0</Text>
+          <Box paddingX={1} marginBottom={1}>
+            <Text bold color="magenta">🚀 ShellMan <Text dimColor italic>v1.0</Text></Text>
           </Box>
 
           {/* Environment Selector Row */}
