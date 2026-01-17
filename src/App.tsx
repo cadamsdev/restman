@@ -229,7 +229,7 @@ export const App: React.FC = () => {
         justifyContent="center"
       >
         <Text bold color="cyan">
-          🚀 ShellMan - REST API Client
+          🌐 ShellMan - REST API Client
         </Text>
       </Box>
 

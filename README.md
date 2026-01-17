@@ -1,4 +1,4 @@
-# 🚀 ShellMan - REST API Client TUI
+# 🌐 ShellMan - REST API Client TUI
 
 A powerful Terminal User Interface (TUI) REST API client, similar to Postman but running entirely in your terminal. Built with Bun, TypeScript, React, and Ink.
 
