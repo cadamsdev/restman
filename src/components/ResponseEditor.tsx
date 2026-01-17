@@ -6,6 +6,7 @@ import type { Response } from "../http-client";
 interface ResponseEditorProps {
   response: Response | null;
   focused: boolean;
+  editMode?: boolean;
 }
 
 type Tab = "body" | "headers" | "cookies";
@@ -13,6 +14,7 @@ type Tab = "body" | "headers" | "cookies";
 export const ResponseEditor: React.FC<ResponseEditorProps> = ({
   response,
   focused,
+  editMode = false,
 }) => {
   const [activeTab, setActiveTab] = useState<Tab>("body");
   const [scrollOffset, setScrollOffset] = useState(0);
@@ -91,17 +93,17 @@ export const ResponseEditor: React.FC<ResponseEditorProps> = ({
       return;
     }
 
-    // Scrolling with up/down arrows (works in all tabs)
+    // Scrolling (up/down arrows work only in edit mode)
     if (response) {
       const lines = getTabLines();
       const totalLines = lines.length;
 
-      if (key.upArrow) {
+      if (editMode && key.upArrow) {
         setScrollOffset(Math.max(0, scrollOffset - 1));
         return;
       }
       
-      if (key.downArrow) {
+      if (editMode && key.downArrow) {
         setScrollOffset(Math.min(Math.max(0, totalLines - maxVisibleLines), scrollOffset + 1));
         return;
       }

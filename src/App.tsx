@@ -662,6 +662,7 @@ export const App: React.FC = () => {
             <ResponseEditor
               response={response}
               focused={focusedField === "response"}
+              editMode={editMode === "response"}
             />
           </Box>
 
