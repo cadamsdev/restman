@@ -9,6 +9,7 @@ import { ResponsePanel } from "./components/ResponsePanel";
 import { StatusBar } from "./components/StatusBar";
 import { Instructions } from "./components/Instructions";
 import { ExitModal } from "./components/ExitModal";
+import { HelpModal } from "./components/HelpModal";
 
 type FocusField = "method" | "url" | "headers" | "body" | "response";
 
@@ -26,12 +27,22 @@ export const App: React.FC = () => {
   const [focusedField, setFocusedField] = useState<FocusField>("url");
   const [error, setError] = useState<string>("");
   const [showExitModal, setShowExitModal] = useState<boolean>(false);
+  const [showHelpModal, setShowHelpModal] = useState<boolean>(false);
   const [editMode, setEditMode] = useState<FocusField | null>(null);
 
   const fields: FocusField[] = ["method", "url", "headers", "body", "response"];
 
   // Handle keyboard input
   useInput((input, key) => {
+    // Handle help modal
+    if (showHelpModal) {
+      if (input === "/" || key.escape) {
+        setShowHelpModal(false);
+        return;
+      }
+      return; // Ignore other keys when help modal is shown
+    }
+
     // Handle exit modal responses
     if (showExitModal) {
       if (input === "y" || input === "Y") {
@@ -60,6 +71,12 @@ export const App: React.FC = () => {
     // Force quit without confirmation
     if (key.ctrl && input === "c") {
       exit();
+      return;
+    }
+
+    // Show help modal
+    if (input === "/") {
+      setShowHelpModal(true);
       return;
     }
 
@@ -259,6 +276,11 @@ export const App: React.FC = () => {
 
       {/* Instructions */}
       <Instructions editMode={editMode !== null} />
+
+      {/* Help Modal */}
+      {showHelpModal && (
+        <HelpModal onClose={() => setShowHelpModal(false)} />
+      )}
 
       {/* Exit Modal */}
       {showExitModal && (

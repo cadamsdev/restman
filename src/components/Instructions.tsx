@@ -14,11 +14,11 @@ export const Instructions: React.FC<InstructionsProps> = ({ editMode }) => {
     >
       {editMode ? (
         <Text dimColor>
-          <Text color="green" bold>[EDIT MODE]</Text> ESC: Exit Edit | Ctrl+S: Send | Ctrl+C: Force Quit
+          <Text color="green" bold>[EDIT MODE]</Text> ESC: Exit Edit | Ctrl+S: Send | /: Help | Ctrl+C: Force Quit
         </Text>
       ) : (
         <Text dimColor>
-          Enter: Send | e: Edit | m/u/h/b/r: Jump | ↑↓: Change Method | q: Exit
+          Enter: Send | e: Edit | m/u/h/b/r: Jump | ↑↓: Change Method | /: Help | q: Exit
         </Text>
       )}
     </Box>
