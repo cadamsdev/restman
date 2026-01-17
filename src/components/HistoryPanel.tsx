@@ -28,6 +28,14 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
   const maxVisibleLines = 18; // Lines available for history display
 
   useEffect(() => {
+    // When panel becomes focused, select the most recent request
+    if (focused && history.length > 0) {
+      setSelectedIndex(history.length - 1);
+      setScrollOffset(0);
+    }
+  }, [focused, history.length]);
+
+  useEffect(() => {
     // Reset selection when history changes
     if (history.length > 0 && selectedIndex >= history.length) {
       setSelectedIndex(history.length - 1);
@@ -39,18 +47,18 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
 
     // Navigate through history
     if (key.upArrow) {
-      const newIndex = Math.max(0, selectedIndex - 1);
-      setSelectedIndex(newIndex);
-      // Adjust scroll if needed
-      if (newIndex < scrollOffset) {
-        setScrollOffset(newIndex);
-      }
-    } else if (key.downArrow) {
       const newIndex = Math.min(history.length - 1, selectedIndex + 1);
       setSelectedIndex(newIndex);
       // Adjust scroll if needed
       if (newIndex >= scrollOffset + maxVisibleLines) {
         setScrollOffset(newIndex - maxVisibleLines + 1);
+      }
+    } else if (key.downArrow) {
+      const newIndex = Math.max(0, selectedIndex - 1);
+      setSelectedIndex(newIndex);
+      // Adjust scroll if needed
+      if (newIndex < scrollOffset) {
+        setScrollOffset(newIndex);
       }
     } else if (key.pageUp) {
       const newIndex = Math.max(0, selectedIndex - maxVisibleLines);
