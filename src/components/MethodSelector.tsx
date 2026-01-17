@@ -30,29 +30,14 @@ export const MethodSelector: React.FC<MethodSelectorProps> = ({
 
   return (
     <Panel
-      title={editMode ? "⚡ Method [↕]" : "⚡ Method"}
+      title="⚡ Method"
       focused={focused}
       editMode={editMode}
       width={20}
     >
-      {editMode ? (
-        <>
-          {methods.map((method) => (
-            <Text
-              key={method}
-              color={method === value ? getMethodColor(method) : "gray"}
-              bold={method === value}
-              dimColor={method !== value}
-            >
-              {method === value ? `▸ ${method}` : `  ${method}`}
-            </Text>
-          ))}
-        </>
-      ) : (
-        <Text color={focused ? getMethodColor(value) : "gray"} bold={focused}>
-          ▸ {value}
-        </Text>
-      )}
+      <Text color={focused ? getMethodColor(value) : "gray"} bold={focused}>
+        ▸ {value}
+      </Text>
     </Panel>
   );
 };

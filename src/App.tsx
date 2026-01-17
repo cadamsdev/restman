@@ -11,6 +11,7 @@ import { StatusBar } from "./components/StatusBar";
 import { Instructions } from "./components/Instructions";
 import { ExitModal } from "./components/ExitModal";
 import { HelpModal } from "./components/HelpModal";
+import { MethodSelectorModal } from "./components/MethodSelectorModal";
 import { HistoryPanel } from "./components/HistoryPanel";
 import type { HistoryEntry } from "./components/HistoryPanel";
 import { SaveModal } from "./components/SaveModal";
@@ -40,6 +41,7 @@ export const App: React.FC = () => {
   const [error, setError] = useState<string>("");
   const [showExitModal, setShowExitModal] = useState<boolean>(false);
   const [showHelpModal, setShowHelpModal] = useState<boolean>(false);
+  const [showMethodModal, setShowMethodModal] = useState<boolean>(false);
   const [editMode, setEditMode] = useState<FocusField | null>(null);
   const [responseViewMode, setResponseViewMode] = useState<boolean>(false);
   const [historyViewMode, setHistoryViewMode] = useState<boolean>(false);
@@ -135,6 +137,11 @@ export const App: React.FC = () => {
       return; // Ignore all keys when modal is shown - modal handles them
     }
 
+    // Method selector modal handles its own keyboard input
+    if (showMethodModal) {
+      return; // Ignore all keys when modal is shown - modal handles them
+    }
+
     // Environment editor modal handles its own keyboard input
     if (showEnvironmentEditor) {
       return; // Ignore all keys when modal is shown - modal handles them
@@ -206,9 +213,13 @@ export const App: React.FC = () => {
 
     // Only allow navigation hotkeys in readonly mode
     if (!editMode) {
-      // Enter edit mode
+      // Enter edit mode (or open modal for method)
       if (input === "e") {
-        setEditMode(focusedField);
+        if (focusedField === "method") {
+          setShowMethodModal(true);
+        } else {
+          setEditMode(focusedField);
+        }
         return;
       }
 
@@ -260,23 +271,6 @@ export const App: React.FC = () => {
       if (input === "b" || input === "4") {
         setFocusedField("body");
         setEditMode(null);
-        return;
-      }
-    }
-
-    // Method selection when focused on method and in edit mode
-    if (editMode === "method") {
-      const methods = ["GET", "POST", "PUT", "PATCH", "DELETE"];
-      const currentIndex = methods.indexOf(method);
-      
-      if (key.upArrow && currentIndex > 0) {
-        const newMethod = methods[currentIndex - 1];
-        if (newMethod) setMethod(newMethod);
-        return;
-      }
-      if (key.downArrow && currentIndex < methods.length - 1) {
-        const newMethod = methods[currentIndex + 1];
-        if (newMethod) setMethod(newMethod);
         return;
       }
     }
@@ -709,6 +703,18 @@ export const App: React.FC = () => {
       {/* Help Modal */}
       {showHelpModal && (
         <HelpModal onClose={() => setShowHelpModal(false)} />
+      )}
+
+      {/* Method Selector Modal */}
+      {showMethodModal && (
+        <MethodSelectorModal
+          currentMethod={method}
+          onSelect={(newMethod) => {
+            setMethod(newMethod);
+            setShowMethodModal(false);
+          }}
+          onCancel={() => setShowMethodModal(false)}
+        />
       )}
 
       {/* Save Modal */}
