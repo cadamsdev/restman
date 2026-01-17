@@ -26,6 +26,7 @@ export const App: React.FC = () => {
   const [focusedField, setFocusedField] = useState<FocusField>("url");
   const [error, setError] = useState<string>("");
   const [showExitModal, setShowExitModal] = useState<boolean>(false);
+  const [editMode, setEditMode] = useState<FocusField | null>(null);
 
   const fields: FocusField[] = ["method", "url", "headers", "body", "response"];
 
@@ -44,8 +45,14 @@ export const App: React.FC = () => {
       return; // Ignore other keys when modal is shown
     }
 
-    // Show exit confirmation
-    if (input === "q" || key.escape) {
+    // Exit edit mode with ESC (only if in edit mode)
+    if (editMode && key.escape) {
+      setEditMode(null);
+      return;
+    }
+
+    // Show exit confirmation (only in readonly mode)
+    if (!editMode && (input === "q" || key.escape)) {
       setShowExitModal(true);
       return;
     }
@@ -56,8 +63,44 @@ export const App: React.FC = () => {
       return;
     }
 
-    // Method selection when focused on method
-    if (focusedField === "method") {
+    // Only allow navigation hotkeys in readonly mode
+    if (!editMode) {
+      // Enter edit mode
+      if (input === "e" && focusedField !== "response") {
+        setEditMode(focusedField);
+        return;
+      }
+
+      // Quick navigation hotkeys
+      if (input === "m") {
+        setFocusedField("method");
+        setEditMode(null);
+        return;
+      }
+      if (input === "u") {
+        setFocusedField("url");
+        setEditMode(null);
+        return;
+      }
+      if (input === "h") {
+        setFocusedField("headers");
+        setEditMode(null);
+        return;
+      }
+      if (input === "b") {
+        setFocusedField("body");
+        setEditMode(null);
+        return;
+      }
+      if (input === "r") {
+        setFocusedField("response");
+        setEditMode(null);
+        return;
+      }
+    }
+
+    // Method selection when focused on method and in edit mode
+    if (editMode === "method") {
       const methods = ["GET", "POST", "PUT", "PATCH", "DELETE"];
       const currentIndex = methods.indexOf(method);
       
@@ -87,17 +130,17 @@ export const App: React.FC = () => {
       return;
     }
 
-    // Send request - multiple trigger options
-    // 1. Ctrl+Enter
-    // 2. Ctrl+S (like save/send)
-    // 3. F5 (function key)
-    if ((key.return && key.ctrl) || (input === "s" && key.ctrl) || input === "\x1B[15~") {
-      sendRequest();
-      return;
+    // Send request options
+    if (!editMode) {
+      // In readonly mode, Enter sends request
+      if (key.return) {
+        sendRequest();
+        return;
+      }
     }
-
-    // Also allow Enter when not focused on a text input field
-    if (key.return && !key.ctrl && focusedField !== "url") {
+    
+    // Ctrl+S always sends request (works in both modes)
+    if (input === "s" && key.ctrl) {
       sendRequest();
       return;
     }
@@ -171,11 +214,13 @@ export const App: React.FC = () => {
           value={method}
           onChange={setMethod}
           focused={focusedField === "method"}
+          editMode={editMode === "method"}
         />
         <URLInput
           value={url}
           onChange={setUrl}
           focused={focusedField === "url"}
+          editMode={editMode === "url"}
         />
       </Box>
 
@@ -185,11 +230,13 @@ export const App: React.FC = () => {
           value={headers}
           onChange={setHeaders}
           focused={focusedField === "headers"}
+          editMode={editMode === "headers"}
         />
         <BodyEditor
           value={body}
           onChange={setBody}
           focused={focusedField === "body"}
+          editMode={editMode === "body"}
         />
       </Box>
 
@@ -211,7 +258,7 @@ export const App: React.FC = () => {
       </Box>
 
       {/* Instructions */}
-      <Instructions />
+      <Instructions editMode={editMode !== null} />
 
       {/* Exit Modal */}
       {showExitModal && (

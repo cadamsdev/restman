@@ -1,16 +1,26 @@
 import React from "react";
 import { Box, Text } from "ink";
 
-export const Instructions: React.FC = () => {
+interface InstructionsProps {
+  editMode: boolean;
+}
+
+export const Instructions: React.FC<InstructionsProps> = ({ editMode }) => {
   return (
     <Box
       justifyContent="center"
       paddingX={1}
       marginTop={1}
     >
-      <Text dimColor>
-        Enter/Ctrl+S: Send | Tab: Next | ↑↓: Change Method | q/Esc: Exit | Ctrl+C: Force Quit
-      </Text>
+      {editMode ? (
+        <Text dimColor>
+          <Text color="green" bold>[EDIT MODE]</Text> ESC: Exit Edit | Ctrl+S: Send | Ctrl+C: Force Quit
+        </Text>
+      ) : (
+        <Text dimColor>
+          Enter: Send | e: Edit | m/u/h/b/r: Jump | ↑↓: Change Method | q: Exit
+        </Text>
+      )}
     </Box>
   );
 };

@@ -5,12 +5,14 @@ interface MethodSelectorProps {
   value: string;
   onChange: (method: string) => void;
   focused: boolean;
+  editMode: boolean;
 }
 
 export const MethodSelector: React.FC<MethodSelectorProps> = ({
   value,
   onChange,
   focused,
+  editMode,
 }) => {
   const methods = ["GET", "POST", "PUT", "PATCH", "DELETE"];
 
@@ -22,7 +24,9 @@ export const MethodSelector: React.FC<MethodSelectorProps> = ({
       flexDirection="column"
       paddingX={1}
     >
-      <Text bold dimColor={!focused}>Method</Text>
+      <Text bold dimColor={!focused}>
+        Method {editMode && <Text color="green">[EDIT]</Text>}
+      </Text>
       {methods.map((method) => (
         <Text
           key={method}

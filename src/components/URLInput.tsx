@@ -6,12 +6,14 @@ interface URLInputProps {
   value: string;
   onChange: (value: string) => void;
   focused: boolean;
+  editMode: boolean;
 }
 
 export const URLInput: React.FC<URLInputProps> = ({
   value,
   onChange,
   focused,
+  editMode,
 }) => {
   return (
     <Box
@@ -22,11 +24,13 @@ export const URLInput: React.FC<URLInputProps> = ({
       paddingX={1}
       flexDirection="column"
     >
-      <Text bold dimColor={!focused}>URL</Text>
-      {focused ? (
+      <Text bold dimColor={!focused}>
+        URL {editMode && <Text color="green">[EDIT]</Text>}
+      </Text>
+      {editMode ? (
         <TextInput value={value} onChange={onChange} />
       ) : (
-        <Text dimColor>{value || "Enter URL..."}</Text>
+        <Text dimColor={!focused}>{value || "Enter URL..."}</Text>
       )}
     </Box>
   );
