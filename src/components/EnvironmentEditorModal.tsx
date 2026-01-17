@@ -16,12 +16,13 @@ export const EnvironmentEditorModal: React.FC<EnvironmentEditorModalProps> = ({
   onCancel,
 }) => {
   const [name, setName] = useState<string>(environmentName);
-  const [variablesText, setVariablesText] = useState<string>(
-    Object.entries(variables)
-      .map(([key, value]) => `${key}=${value}`)
-      .join("\n")
+  const [variablesLines, setVariablesLines] = useState<string[]>(
+    Object.entries(variables).length > 0
+      ? Object.entries(variables).map(([key, value]) => `${key}=${value}`)
+      : [""]
   );
   const [focusedField, setFocusedField] = useState<"name" | "variables">("name");
+  const [currentLineIndex, setCurrentLineIndex] = useState<number>(0);
 
   useInput((input, key) => {
     if (key.escape) {
@@ -31,12 +32,45 @@ export const EnvironmentEditorModal: React.FC<EnvironmentEditorModalProps> = ({
 
     if (key.tab) {
       setFocusedField(focusedField === "name" ? "variables" : "name");
+      if (focusedField === "name") {
+        setCurrentLineIndex(0);
+      }
       return;
     }
 
     if (input === "s" && key.ctrl) {
       handleSave();
       return;
+    }
+
+    // Handle arrow key navigation in variables field
+    if (focusedField === "variables") {
+      if (key.upArrow && currentLineIndex > 0) {
+        setCurrentLineIndex(currentLineIndex - 1);
+        return;
+      }
+      if (key.downArrow && currentLineIndex < variablesLines.length - 1) {
+        setCurrentLineIndex(currentLineIndex + 1);
+        return;
+      }
+      // Add new line with Enter
+      if (key.return) {
+        const newLines = [
+          ...variablesLines.slice(0, currentLineIndex + 1),
+          "",
+          ...variablesLines.slice(currentLineIndex + 1),
+        ];
+        setVariablesLines(newLines);
+        setCurrentLineIndex(currentLineIndex + 1);
+        return;
+      }
+      // Delete current line with Ctrl+D (if empty or if there are multiple lines)
+      if (input === "d" && key.ctrl && variablesLines.length > 1) {
+        const newLines = variablesLines.filter((_, i) => i !== currentLineIndex);
+        setVariablesLines(newLines);
+        setCurrentLineIndex(Math.min(currentLineIndex, newLines.length - 1));
+        return;
+      }
     }
   });
 
@@ -45,11 +79,10 @@ export const EnvironmentEditorModal: React.FC<EnvironmentEditorModalProps> = ({
       return; // Don't save without a name
     }
 
-    // Parse variables from text (format: KEY=value, one per line)
+    // Parse variables from lines (format: KEY=value, one per line)
     const parsedVariables: Record<string, string> = {};
-    const lines = variablesText.split("\n");
     
-    for (const line of lines) {
+    for (const line of variablesLines) {
       const trimmed = line.trim();
       if (!trimmed) continue;
 
@@ -65,6 +98,12 @@ export const EnvironmentEditorModal: React.FC<EnvironmentEditorModalProps> = ({
     }
 
     onSave(name, parsedVariables);
+  };
+
+  const handleLineChange = (newValue: string) => {
+    const newLines = [...variablesLines];
+    newLines[currentLineIndex] = newValue;
+    setVariablesLines(newLines);
   };
 
   return (
@@ -133,24 +172,35 @@ export const EnvironmentEditorModal: React.FC<EnvironmentEditorModalProps> = ({
             flexDirection="column"
           >
             {focusedField === "variables" ? (
-              <TextInput
-                value={variablesText}
-                onChange={setVariablesText}
-                placeholder="BASE_URL=https://api.example.com"
-              />
-            ) : variablesText ? (
               <Box flexDirection="column">
-                {variablesText.split('\n').slice(0, 10).map((line, i) => (
+                {variablesLines.map((line, i) => (
+                  <Box key={i}>
+                    <Text color={i === currentLineIndex ? "yellow" : "gray"}>
+                      {i === currentLineIndex ? "▶ " : "  "}
+                    </Text>
+                    {i === currentLineIndex ? (
+                      <TextInput
+                        value={line}
+                        onChange={handleLineChange}
+                        placeholder="KEY=value"
+                      />
+                    ) : (
+                      <Text dimColor={!line.trim()}>{line || " "}</Text>
+                    )}
+                  </Box>
+                ))}
+              </Box>
+            ) : (
+              <Box flexDirection="column">
+                {variablesLines.slice(0, 10).map((line, i) => (
                   <Text key={i} dimColor={!line.trim()}>
                     {line || " "}
                   </Text>
                 ))}
-                {variablesText.split('\n').length > 10 && (
-                  <Text dimColor>... and {variablesText.split('\n').length - 10} more lines</Text>
+                {variablesLines.length > 10 && (
+                  <Text dimColor>... and {variablesLines.length - 10} more lines</Text>
                 )}
               </Box>
-            ) : (
-              <Text dimColor>Enter variables...</Text>
             )}
           </Box>
         </Box>
@@ -158,7 +208,10 @@ export const EnvironmentEditorModal: React.FC<EnvironmentEditorModalProps> = ({
         {/* Instructions */}
         <Box borderStyle="round" borderColor="gray" paddingX={1}>
           <Text dimColor>
-            Tab: Switch Fields | Ctrl+S: Save | ESC: Cancel
+            {focusedField === "variables" 
+              ? "↑↓: Navigate Lines | Enter: New Line | Ctrl+D: Delete Line | Tab: Switch | Ctrl+S: Save | ESC: Cancel"
+              : "Tab: Switch Fields | Ctrl+S: Save | ESC: Cancel"
+            }
           </Text>
         </Box>
       </Box>
