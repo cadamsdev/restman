@@ -43,6 +43,20 @@ export const EnvironmentEditorModal: React.FC<EnvironmentEditorModalProps> = ({
       return;
     }
 
+    // Arrow key navigation between fields
+    if (key.upArrow && focusedField === "variables" && currentLineIndex === 0) {
+      // At top of variables list, go to name field
+      setFocusedField("name");
+      return;
+    }
+    
+    if (key.downArrow && focusedField === "name") {
+      // From name field, go to variables
+      setFocusedField("variables");
+      setCurrentLineIndex(0);
+      return;
+    }
+
     // Handle arrow key navigation in variables field
     if (focusedField === "variables") {
       if (key.upArrow && currentLineIndex > 0) {
@@ -209,8 +223,8 @@ export const EnvironmentEditorModal: React.FC<EnvironmentEditorModalProps> = ({
         <Box borderStyle="round" borderColor="gray" paddingX={1}>
           <Text dimColor>
             {focusedField === "variables" 
-              ? "↑↓: Navigate Lines | Enter: New Line | Ctrl+D: Delete Line | Tab: Switch | Ctrl+S: Save | ESC: Cancel"
-              : "Tab: Switch Fields | Ctrl+S: Save | ESC: Cancel"
+              ? "↑↓: Navigate Lines | Enter: New Line | Ctrl+D: Delete Line | Tab/↑: Switch | Ctrl+S: Save | ESC: Cancel"
+              : "Tab/↓: Switch Fields | Ctrl+S: Save | ESC: Cancel"
             }
           </Text>
         </Box>
