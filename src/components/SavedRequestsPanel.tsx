@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box, Text, useInput } from "ink";
+import { Fieldset } from "./Fieldset";
 import type { RequestOptions } from "../http-client";
 import type { SavedRequest } from "../saved-requests-storage";
 
@@ -114,18 +115,14 @@ export const SavedRequestsPanel: React.FC<SavedRequestsPanelProps> = ({
 
   if (savedRequests.length === 0) {
     return (
-      <Box
-        flexDirection="column"
-        borderStyle="round"
+      <Fieldset
+        title="💾 Saved Requests (Empty)"
         borderColor="yellow"
-        paddingX={1}
-        paddingY={1}
+        titleColor="yellow"
+        focused={focused}
         width="100%"
         height="100%"
       >
-        <Text color="yellow" bold>
-          💾 Saved Requests (Empty)
-        </Text>
         <Box marginTop={1}>
           <Text dimColor>
             No saved requests yet. Press 's' to save your current request!
@@ -136,30 +133,22 @@ export const SavedRequestsPanel: React.FC<SavedRequestsPanelProps> = ({
             • ESC: Return to main view
           </Text>
         </Box>
-      </Box>
+      </Fieldset>
     );
   }
 
   const visibleRequests = savedRequests.slice(scrollOffset, scrollOffset + maxVisibleLines);
+  const title = `💾 Saved Requests (${savedRequests.length} total) - ${selectedIndex + 1}/${savedRequests.length}`;
 
   return (
-    <Box
-      flexDirection="column"
-      borderStyle="round"
+    <Fieldset
+      title={title}
       borderColor="green"
-      paddingX={1}
-      paddingY={1}
+      titleColor="green"
+      focused={focused}
       width="100%"
       height="100%"
     >
-      <Box justifyContent="space-between" marginBottom={1}>
-        <Text color="green" bold>
-          💾 Saved Requests ({savedRequests.length} total)
-        </Text>
-        <Text dimColor>
-          {selectedIndex + 1}/{savedRequests.length}
-        </Text>
-      </Box>
 
       {visibleRequests.map((entry, index) => {
         const actualIndex = scrollOffset + index;
@@ -215,6 +204,6 @@ export const SavedRequestsPanel: React.FC<SavedRequestsPanelProps> = ({
           </Text>
         )}
       </Box>
-    </Box>
+    </Fieldset>
   );
 };

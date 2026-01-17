@@ -1,5 +1,6 @@
 import React from "react";
-import { Box, Text } from "ink";
+import { Text } from "ink";
+import { Fieldset } from "./Fieldset";
 
 interface MethodSelectorProps {
   value: string;
@@ -28,27 +29,15 @@ export const MethodSelector: React.FC<MethodSelectorProps> = ({
   };
 
   return (
-    <Box
-      borderStyle="round"
-      borderColor={focused ? "magenta" : editMode ? "green" : "gray"}
-      width={14}
-      flexDirection="column"
-      paddingX={1}
+    <Fieldset
+      title="⚡ Method"
+      focused={focused}
+      editMode={editMode}
+      width={20}
     >
-      <Text>
-        <Text bold color={focused ? "magenta" : "gray"}>⚡ Method</Text>
-        {editMode && <Text color="green"> [↕]</Text>}
+      <Text color={focused ? getMethodColor(value) : "gray"} bold={focused}>
+        ▸ {value}
       </Text>
-      {methods.map((method) => (
-        <Text
-          key={method}
-          color={method === value ? getMethodColor(method) : "gray"}
-          bold={method === value}
-          dimColor={method !== value}
-        >
-          {method === value ? `▸ ${method}` : `  ${method}`}
-        </Text>
-      ))}
-    </Box>
+    </Fieldset>
   );
 };

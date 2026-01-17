@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Box, Text, useInput } from "ink";
 import TextInput from "ink-text-input";
+import { Fieldset } from "./Fieldset";
 
 interface EnvironmentEditorModalProps {
   environmentName?: string;
@@ -40,6 +41,20 @@ export const EnvironmentEditorModal: React.FC<EnvironmentEditorModalProps> = ({
 
     if (input === "s" && key.ctrl) {
       handleSave();
+      return;
+    }
+
+    // Arrow key navigation between fields
+    if (key.upArrow && focusedField === "variables" && currentLineIndex === 0) {
+      // At top of variables list, go to name field
+      setFocusedField("name");
+      return;
+    }
+    
+    if (key.downArrow && focusedField === "name") {
+      // From name field, go to variables
+      setFocusedField("variables");
+      setCurrentLineIndex(0);
       return;
     }
 
@@ -132,44 +147,35 @@ export const EnvironmentEditorModal: React.FC<EnvironmentEditorModalProps> = ({
         flexGrow={1}
       >
         {/* Name Field */}
-        <Box marginBottom={1} flexDirection="column">
-          <Text bold color={focusedField === "name" ? "yellow" : "cyan"}>
-            Name:
-          </Text>
-          {focusedField === "name" ? (
-            <Box
-              borderStyle="round"
-              borderColor="yellow"
-              paddingX={1}
-            >
+        <Box marginBottom={1}>
+          <Fieldset
+            title="📝 Name"
+            focused={focusedField === "name"}
+            editMode={focusedField === "name"}
+            borderStyle="round"
+          >
+            {focusedField === "name" ? (
               <TextInput
                 value={name}
                 onChange={setName}
                 placeholder="e.g., Development, Staging, Production"
               />
-            </Box>
-          ) : (
-            <Box
-              borderStyle="round"
-              borderColor="gray"
-              paddingX={1}
-            >
-              <Text dimColor={!name}>{name || "Enter a name..."}</Text>
-            </Box>
-          )}
+            ) : (
+              <Text color={name ? "cyan" : "gray"} italic={!name}>
+                {name || "Enter a name..."}
+              </Text>
+            )}
+          </Fieldset>
         </Box>
 
         {/* Variables Field */}
-        <Box marginBottom={1} flexDirection="column" flexGrow={1}>
-          <Text bold color={focusedField === "variables" ? "yellow" : "cyan"}>
-            Variables (KEY=value, one per line):
-          </Text>
-          <Box
+        <Box marginBottom={1} flexGrow={1}>
+          <Fieldset
+            title="🔑 Variables (KEY=value, one per line)"
+            focused={focusedField === "variables"}
+            editMode={focusedField === "variables"}
             borderStyle="round"
-            borderColor={focusedField === "variables" ? "yellow" : "gray"}
-            paddingX={1}
             flexGrow={1}
-            flexDirection="column"
           >
             {focusedField === "variables" ? (
               <Box flexDirection="column">
@@ -202,15 +208,15 @@ export const EnvironmentEditorModal: React.FC<EnvironmentEditorModalProps> = ({
                 )}
               </Box>
             )}
-          </Box>
+          </Fieldset>
         </Box>
 
         {/* Instructions */}
         <Box borderStyle="round" borderColor="gray" paddingX={1}>
           <Text dimColor>
             {focusedField === "variables" 
-              ? "↑↓: Navigate Lines | Enter: New Line | Ctrl+D: Delete Line | Tab: Switch | Ctrl+S: Save | ESC: Cancel"
-              : "Tab: Switch Fields | Ctrl+S: Save | ESC: Cancel"
+              ? "↑↓: Navigate Lines | Enter: New Line | Ctrl+D: Delete Line | Tab/↑: Switch | Ctrl+S: Save | ESC: Cancel"
+              : "Tab/↓: Switch Fields | Ctrl+S: Save | ESC: Cancel"
             }
           </Text>
         </Box>

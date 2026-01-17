@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Box, Text, useInput } from "ink";
 import type { Environment, EnvironmentsConfig } from "../environment-storage";
+import { Fieldset } from "./Fieldset";
 
 interface EnvironmentsPanelProps {
   config: EnvironmentsConfig;
@@ -67,42 +68,37 @@ export const EnvironmentsPanel: React.FC<EnvironmentsPanelProps> = ({
 
   return (
     <Box flexDirection="column" width="100%" height="100%">
-      {/* Header */}
-      <Box
-        borderStyle="round"
+      {/* Environments List */}
+      <Fieldset
+        title={`🌍 Environments (${config.environments.length})`}
         borderColor="cyan"
-        paddingX={1}
-        marginBottom={1}
+        flexGrow={1}
       >
-        <Text bold>
-          🌍 Environments ({config.environments.length})
-        </Text>
-      </Box>
-
-      {/* Environment List */}
-      <Box flexDirection="column" paddingX={2}>
-        {config.environments.map((env: Environment, index: number) => {
-          const isSelected = index === selectedIndex;
-          const isActive = env.id === config.activeEnvironmentId;
-          
-          return (
-            <Box key={env.id} marginBottom={1}>
-              <Box width={3}>
-                <Text color={isActive ? "green" : undefined}>
-                  {isActive ? "▶" : " "}
-                </Text>
-              </Box>
-              <Box
-                borderStyle="round"
-                borderColor={isSelected ? "yellow" : "gray"}
-                paddingX={1}
-                flexGrow={1}
-              >
-                <Box flexDirection="column" width="100%">
-                  <Text bold color={isActive ? "green" : undefined}>
-                    {env.name}
-                  </Text>
-                  <Box marginTop={1}>
+        <Box flexDirection="column">
+          {config.environments.map((env: Environment, index: number) => {
+            const isSelected = index === selectedIndex;
+            const isActive = env.id === config.activeEnvironmentId;
+            
+            return (
+              <Box key={env.id} marginBottom={1} flexDirection="column">
+                <Box>
+                  <Box width={3}>
+                    <Text color={isActive ? "green" : undefined}>
+                      {isActive ? "▶" : " "}
+                    </Text>
+                  </Box>
+                  <Box flexGrow={1}>
+                    <Text 
+                      bold 
+                      color={isSelected ? "yellow" : (isActive ? "green" : "cyan")}
+                      backgroundColor={isSelected ? "blue" : undefined}
+                    >
+                      {env.name}
+                    </Text>
+                  </Box>
+                </Box>
+                <Box marginLeft={3} flexDirection="column">
+                  <Box>
                     <Text dimColor>Variables: </Text>
                     <Text color="cyan">
                       {Object.keys(env.variables).length} defined
@@ -124,21 +120,21 @@ export const EnvironmentsPanel: React.FC<EnvironmentsPanelProps> = ({
                   )}
                 </Box>
               </Box>
-            </Box>
-          );
-        })}
-      </Box>
+            );
+          })}
+        </Box>
+      </Fieldset>
 
       {/* Instructions */}
-      <Box
-        marginTop={1}
-        paddingX={2}
-        borderStyle="round"
-        borderColor="gray"
-      >
-        <Text dimColor>
-          ↑↓: Navigate | Enter: Activate | n: New | e: Edit | Shift+D: Delete | ESC: Close
-        </Text>
+      <Box marginTop={1}>
+        <Fieldset
+          title="⌨️  Controls"
+          borderColor="gray"
+        >
+          <Text dimColor>
+            ↑↓: Navigate | Enter: Activate | n: New | e: Edit | Shift+D: Delete | ESC: Close
+          </Text>
+        </Fieldset>
       </Box>
     </Box>
   );
