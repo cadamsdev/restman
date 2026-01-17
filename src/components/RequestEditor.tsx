@@ -140,7 +140,7 @@ export const RequestEditor: React.FC<RequestEditorProps> = ({
         backgroundColor={activeTab === "headers" ? (focused ? "cyan" : undefined) : undefined}
         inverse={activeTab === "headers" && focused && !editMode}
       >
-        {activeTab === "headers" ? "▶" : " "} 📋 Headers (h/3)
+        {activeTab === "headers" ? "▶" : " "} Headers (h/3)
       </Text>
       <Text dimColor>│</Text>
       <Text
@@ -149,7 +149,7 @@ export const RequestEditor: React.FC<RequestEditorProps> = ({
         backgroundColor={activeTab === "body" ? (focused ? "cyan" : undefined) : undefined}
         inverse={activeTab === "body" && focused && !editMode}
       >
-        {activeTab === "body" ? "▶" : " "} 📝 Body (b/4)
+        {activeTab === "body" ? "▶" : " "} Body (b/4)
       </Text>
     </Box>
   );

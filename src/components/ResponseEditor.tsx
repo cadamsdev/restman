@@ -147,7 +147,7 @@ export const ResponseEditor: React.FC<ResponseEditorProps> = ({
         backgroundColor={activeTab === "body" ? (focused ? "cyan" : undefined) : undefined}
         inverse={activeTab === "body" && focused}
       >
-        {activeTab === "body" ? "▶" : " "} 💾 Body (b/5)
+        {activeTab === "body" ? "▶" : " "} Body (b/5)
       </Text>
       <Text dimColor>│</Text>
       <Text
@@ -156,7 +156,7 @@ export const ResponseEditor: React.FC<ResponseEditorProps> = ({
         backgroundColor={activeTab === "headers" ? (focused ? "cyan" : undefined) : undefined}
         inverse={activeTab === "headers" && focused}
       >
-        {activeTab === "headers" ? "▶" : " "} 📋 Headers (h/6)
+        {activeTab === "headers" ? "▶" : " "} Headers (h/6)
       </Text>
       <Text dimColor>│</Text>
       <Text
@@ -165,7 +165,7 @@ export const ResponseEditor: React.FC<ResponseEditorProps> = ({
         backgroundColor={activeTab === "cookies" ? (focused ? "cyan" : undefined) : undefined}
         inverse={activeTab === "cookies" && focused}
       >
-        {activeTab === "cookies" ? "▶" : " "} 🍪 Cookies (c/7)
+        {activeTab === "cookies" ? "▶" : " "} Cookies (c/7)
       </Text>
     </Box>
   );

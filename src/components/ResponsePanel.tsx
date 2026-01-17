@@ -128,21 +128,21 @@ export const ResponsePanel: React.FC<ResponsePanelProps> = ({
               color={activeTab === "info" ? "cyan" : "gray"}
               dimColor={activeTab !== "info"}
             >
-              {activeTab === "info" ? "▸" : "▹"} [1] 📝 Info
+              {activeTab === "info" ? "▸" : "▹"} [1] Info
             </Text>
             <Text 
               bold={activeTab === "body"} 
               color={activeTab === "body" ? "cyan" : "gray"}
               dimColor={activeTab !== "body"}
             >
-              {activeTab === "body" ? "▸" : "▹"} [2] 💾 Body
+              {activeTab === "body" ? "▸" : "▹"} [2] Body
             </Text>
             <Text 
               bold={activeTab === "cookies"} 
               color={activeTab === "cookies" ? "cyan" : "gray"}
               dimColor={activeTab !== "cookies"}
             >
-              {activeTab === "cookies" ? "▸" : "▹"} [3] 🍪 Cookies
+              {activeTab === "cookies" ? "▸" : "▹"} [3] Cookies
             </Text>
           </Box>
 
@@ -166,7 +166,7 @@ export const ResponsePanel: React.FC<ResponsePanelProps> = ({
 
                 {/* All Headers */}
                 <Box flexDirection="column">
-                  <Text bold color="cyan">📦 Headers:</Text>
+                  <Text bold color="cyan">Headers:</Text>
                   {Object.entries(response.headers).map(([key, value]) => (
                     <Text key={key}>
                       <Text color="yellow">{key}:</Text>
@@ -178,7 +178,7 @@ export const ResponsePanel: React.FC<ResponsePanelProps> = ({
             ) : activeTab === "body" ? (
               <Box flexDirection="column" flexGrow={1}>
                 <Box justifyContent="space-between">
-                  <Text bold color="cyan">💾 Body Content</Text>
+                  <Text bold color="cyan">Body Content</Text>
                   {focused && <Text dimColor>(↑/↓ PgUp/PgDn g/G to scroll)</Text>}
                 </Box>
                 {(() => {
@@ -203,7 +203,7 @@ export const ResponsePanel: React.FC<ResponsePanelProps> = ({
               </Box>
             ) : (
               <Box flexDirection="column">
-                <Text bold color="cyan">🍪 Cookies:</Text>
+                <Text bold color="cyan">Cookies:</Text>
                 {(() => {
                   const cookies = parseCookies(response.headers);
                   if (cookies.length === 0) {
