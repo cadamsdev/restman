@@ -66,8 +66,17 @@ export const App: React.FC = () => {
       return;
     }
 
-    // Send request (F5 or Ctrl+Enter)
-    if ((key.return && key.ctrl) || input === "\x1B[15~") {
+    // Send request - multiple trigger options
+    // 1. Ctrl+Enter
+    // 2. Ctrl+S (like save/send)
+    // 3. F5 (function key)
+    if ((key.return && key.ctrl) || (input === "s" && key.ctrl) || input === "\x1B[15~") {
+      sendRequest();
+      return;
+    }
+
+    // Also allow Enter when not focused on a text input field
+    if (key.return && !key.ctrl && focusedField !== "url") {
       sendRequest();
       return;
     }
