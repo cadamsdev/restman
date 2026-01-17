@@ -12,9 +12,9 @@ Features to add before sharing with users for testing.
 - [x] Persist history to disk (~/.shellman/history.json)
 
 ### 2. Environment Variables / Request Templates
-- [ ] Support variable substitution in URLs and headers (e.g., `{{API_KEY}}`)
-- [ ] Load environment variables from a config file
-- [ ] Allow switching between different environments (dev, staging, prod)
+- [x] Support variable substitution in URLs and headers (e.g., `{{API_KEY}}`)
+- [x] Load environment variables from a config file
+- [x] Allow switching between different environments (dev, staging, prod)
 
 ### 3. Request Saving/Loading
 - [x] Save requests to disk (JSON format)
