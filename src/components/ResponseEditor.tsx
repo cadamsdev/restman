@@ -16,7 +16,7 @@ export const ResponseEditor: React.FC<ResponseEditorProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<Tab>("body");
   const [scrollOffset, setScrollOffset] = useState(0);
-  const maxVisibleLines = 5; // Lines visible in the response fieldset
+  const maxVisibleLines = 5; // Lines visible in the response fieldset (plus 1 for line count indicator)
 
   // Handle keyboard input for tab switching and scrolling
   useInput((input, key) => {
@@ -78,12 +78,18 @@ export const ResponseEditor: React.FC<ResponseEditorProps> = ({
       ([key]) => key.toLowerCase() === 'content-type'
     )?.[1] || '';
     
-    if (contentType.includes('application/json')) {
+    // If it's JSON content, ensure it's formatted (it should already be formatted by HTTPClient)
+    if (contentType.includes('application/json') || contentType.includes('application/vnd.api+json')) {
       try {
+        // Try to parse to verify it's valid JSON, but return original if already formatted
         const parsed = JSON.parse(body);
-        return JSON.stringify(parsed, null, 2);
+        // Only re-format if the body appears to be minified (no newlines)
+        if (!body.includes('\n') && body.length > 50) {
+          return JSON.stringify(parsed, null, 2);
+        }
+        return body; // Already formatted
       } catch {
-        return body;
+        return body; // Not valid JSON, return as-is
       }
     }
     return body;
@@ -179,6 +185,11 @@ export const ResponseEditor: React.FC<ResponseEditorProps> = ({
       );
     }
 
+    const truncateLine = (line: string, maxLength: number = 120): string => {
+      if (line.length <= maxLength) return line;
+      return line.substring(0, maxLength) + "...";
+    };
+
     const lines = getTabLines();
     const totalLines = lines.length;
     const visibleLines = lines.slice(scrollOffset, scrollOffset + maxVisibleLines);
@@ -187,14 +198,12 @@ export const ResponseEditor: React.FC<ResponseEditorProps> = ({
       <Box flexDirection="column" flexGrow={1}>
         {visibleLines.map((line, idx) => (
           <Text key={idx} color={focused ? "cyan" : "gray"} dimColor={!focused}>
-            {line || " "}
+            {truncateLine(line) || " "}
           </Text>
         ))}
-        {totalLines > maxVisibleLines && (
-          <Text dimColor italic>
-            [{scrollOffset + 1}-{Math.min(scrollOffset + maxVisibleLines, totalLines)} of {totalLines} lines]
-          </Text>
-        )}
+        <Text dimColor italic>
+          [{scrollOffset + 1}-{Math.min(scrollOffset + maxVisibleLines, totalLines)} of {totalLines} lines]
+        </Text>
       </Box>
     );
   };
@@ -229,7 +238,7 @@ export const ResponseEditor: React.FC<ResponseEditorProps> = ({
     >
       <Box flexDirection="column">
         {renderTabBar()}
-        <Box height={5} flexDirection="column">
+        <Box height={7} flexDirection="column">
           {renderContent()}
         </Box>
       </Box>
