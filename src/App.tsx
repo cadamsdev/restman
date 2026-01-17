@@ -13,6 +13,7 @@ import { ExitModal } from "./components/ExitModal";
 import { HelpModal } from "./components/HelpModal";
 import { HistoryPanel } from "./components/HistoryPanel";
 import type { HistoryEntry } from "./components/HistoryPanel";
+import { loadHistory, saveHistory } from "./history-storage";
 
 type FocusField = "method" | "url" | "headers" | "body";
 
@@ -38,6 +39,27 @@ export const App: React.FC = () => {
   const [historyIdCounter, setHistoryIdCounter] = useState<number>(1);
 
   const fields: FocusField[] = ["method", "url", "headers", "body"];
+
+  // Load history from disk on startup
+  useEffect(() => {
+    const initHistory = async () => {
+      const loadedHistory = await loadHistory();
+      if (loadedHistory.length > 0) {
+        setHistory(loadedHistory);
+        // Set the counter to be one more than the highest ID
+        const maxId = Math.max(...loadedHistory.map(h => h.id));
+        setHistoryIdCounter(maxId + 1);
+      }
+    };
+    initHistory();
+  }, []);
+
+  // Save history to disk whenever it changes
+  useEffect(() => {
+    if (history.length > 0) {
+      saveHistory(history);
+    }
+  }, [history]);
 
   // Handle keyboard input
   useInput((input, key) => {
@@ -271,11 +293,16 @@ export const App: React.FC = () => {
   };
 
   const loadRequestFromHistory = (request: RequestOptions) => {
+    // Safety check
+    if (!request || !request.method || !request.url) {
+      return;
+    }
+    
     setMethod(request.method);
     setUrl(request.url);
     
     // Convert headers object back to string format
-    const headersString = Object.entries(request.headers)
+    const headersString = Object.entries(request.headers || {})
       .map(([key, value]) => `${key}: ${value}`)
       .join("\n");
     setHeaders(headersString);

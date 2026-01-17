@@ -157,6 +157,11 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
         const actualIndex = history.length - 1 - (scrollOffset + index);
         const isSelected = actualIndex === selectedIndex;
         
+        // Safety check for invalid entries
+        if (!entry || !entry.request || !entry.request.method || !entry.request.url) {
+          return null;
+        }
+        
         return (
           <Box key={entry.id} marginBottom={0}>
             <Text
