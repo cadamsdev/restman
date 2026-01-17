@@ -69,75 +69,98 @@ export const EnvironmentEditorModal: React.FC<EnvironmentEditorModalProps> = ({
 
   return (
     <Box
-      position="absolute"
-      top="25%"
-      left="50%"
-      width={80}
-      marginLeft={-40}
-      borderStyle="double"
-      borderColor="yellow"
-      padding={1}
       flexDirection="column"
+      width="100%"
+      height="100%"
     >
-      <Box marginBottom={1} justifyContent="center">
+      {/* Header */}
+      <Box
+        borderStyle="round"
+        borderColor="yellow"
+        paddingX={1}
+        justifyContent="center"
+      >
         <Text bold color="yellow">
-          {environmentName ? "Edit Environment" : "New Environment"}
+          🌍 {environmentName ? "Edit Environment" : "New Environment"}
         </Text>
       </Box>
 
-      {/* Name Field */}
-      <Box marginBottom={1} flexDirection="column">
-        <Text bold color={focusedField === "name" ? "yellow" : "cyan"}>
-          Name:
-        </Text>
-        {focusedField === "name" ? (
-          <TextInput
-            value={name}
-            onChange={setName}
-            placeholder="e.g., Development, Staging, Production"
-          />
-        ) : (
-          <Text>{name || "Enter a name..."}</Text>
-        )}
-      </Box>
+      {/* Modal Content */}
+      <Box
+        marginTop={1}
+        paddingX={2}
+        flexDirection="column"
+        flexGrow={1}
+      >
+        {/* Name Field */}
+        <Box marginBottom={1} flexDirection="column">
+          <Text bold color={focusedField === "name" ? "yellow" : "cyan"}>
+            Name:
+          </Text>
+          {focusedField === "name" ? (
+            <Box
+              borderStyle="round"
+              borderColor="yellow"
+              paddingX={1}
+            >
+              <TextInput
+                value={name}
+                onChange={setName}
+                placeholder="e.g., Development, Staging, Production"
+              />
+            </Box>
+          ) : (
+            <Box
+              borderStyle="round"
+              borderColor="gray"
+              paddingX={1}
+            >
+              <Text dimColor={!name}>{name || "Enter a name..."}</Text>
+            </Box>
+          )}
+        </Box>
 
-      {/* Variables Field */}
-      <Box marginBottom={1} flexDirection="column">
-        <Text bold color={focusedField === "variables" ? "yellow" : "cyan"}>
-          Variables (KEY=value, one per line):
-        </Text>
-        {focusedField === "variables" ? (
+        {/* Variables Field */}
+        <Box marginBottom={1} flexDirection="column" flexGrow={1}>
+          <Text bold color={focusedField === "variables" ? "yellow" : "cyan"}>
+            Variables (KEY=value, one per line):
+          </Text>
           <Box
             borderStyle="round"
-            borderColor="yellow"
+            borderColor={focusedField === "variables" ? "yellow" : "gray"}
             paddingX={1}
-            height={8}
+            flexGrow={1}
+            flexDirection="column"
           >
-            <TextInput
-              value={variablesText}
-              onChange={setVariablesText}
-              placeholder="BASE_URL=https://api.example.com&#10;API_KEY=your-api-key"
-            />
+            {focusedField === "variables" ? (
+              <TextInput
+                value={variablesText}
+                onChange={setVariablesText}
+                placeholder="BASE_URL=https://api.example.com"
+              />
+            ) : variablesText ? (
+              <Box flexDirection="column">
+                {variablesText.split('\n').slice(0, 10).map((line, i) => (
+                  <Text key={i} dimColor={!line.trim()}>
+                    {line || " "}
+                  </Text>
+                ))}
+                {variablesText.split('\n').length > 10 && (
+                  <Text dimColor>... and {variablesText.split('\n').length - 10} more lines</Text>
+                )}
+              </Box>
+            ) : (
+              <Text dimColor>Enter variables...</Text>
+            )}
           </Box>
-        ) : (
-          <Box
-            borderStyle="round"
-            borderColor="gray"
-            paddingX={1}
-            height={8}
-          >
-            <Text>
-              {variablesText || "Enter variables..."}
-            </Text>
-          </Box>
-        )}
-      </Box>
+        </Box>
 
-      {/* Instructions */}
-      <Box borderStyle="single" borderColor="gray" paddingX={1} marginTop={1}>
-        <Text dimColor>
-          Tab: Switch Fields | Ctrl+S: Save | ESC: Cancel
-        </Text>
+        {/* Instructions */}
+        <Box borderStyle="round" borderColor="gray" paddingX={1}>
+          <Text dimColor>
+            Tab: Switch Fields | Ctrl+S: Save | ESC: Cancel
+          </Text>
+        </Box>
       </Box>
     </Box>
   );

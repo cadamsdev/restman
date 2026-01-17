@@ -534,8 +534,19 @@ export const App: React.FC = () => {
 
   return (
     <Box flexDirection="column" width="100%" height="100%">
-      {/* Environments View Mode - Full Screen Environments */}
-      {environmentsViewMode ? (
+      {/* Environment Editor Modal - Full Screen Overlay */}
+      {showEnvironmentEditor ? (
+        <EnvironmentEditorModal
+          environmentName={editingEnvironmentId ? environmentsConfig.environments.find(e => e.id === editingEnvironmentId)?.name : ""}
+          variables={editingEnvironmentId ? environmentsConfig.environments.find(e => e.id === editingEnvironmentId)?.variables : {}}
+          onSave={handleSaveEnvironment}
+          onCancel={() => {
+            setShowEnvironmentEditor(false);
+            setEditingEnvironmentId(null);
+          }}
+        />
+      ) : /* Environments View Mode - Full Screen Environments */
+      environmentsViewMode ? (
         <Box flexDirection="column" width="100%" height="100%">
           <Box
             borderStyle="round"
@@ -709,19 +720,6 @@ export const App: React.FC = () => {
         <ExitModal
           onConfirm={() => exit()}
           onCancel={() => setShowExitModal(false)}
-        />
-      )}
-
-      {/* Environment Editor Modal */}
-      {showEnvironmentEditor && (
-        <EnvironmentEditorModal
-          environmentName={editingEnvironmentId ? environmentsConfig.environments.find(e => e.id === editingEnvironmentId)?.name : ""}
-          variables={editingEnvironmentId ? environmentsConfig.environments.find(e => e.id === editingEnvironmentId)?.variables : {}}
-          onSave={handleSaveEnvironment}
-          onCancel={() => {
-            setShowEnvironmentEditor(false);
-            setEditingEnvironmentId(null);
-          }}
         />
       )}
     </Box>
