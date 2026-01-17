@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Box, Text, measureElement, type DOMElement } from "ink";
 
-export interface PanelProps {
+export interface FieldsetProps {
   title: string;
   children: React.ReactNode;
   borderColor?: string;
@@ -40,7 +40,7 @@ type BorderFragment = {
   content: string;
 };
 
-export const Panel: React.FC<PanelProps> = ({
+export const Fieldset: React.FC<FieldsetProps> = ({
   title,
   children,
   borderColor = "gray",

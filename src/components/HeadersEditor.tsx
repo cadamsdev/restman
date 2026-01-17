@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, Text, useInput } from "ink";
-import { Panel } from "./Panel";
+import { Fieldset } from "./Fieldset";
 
 interface HeadersEditorProps {
   value: string;
@@ -99,7 +99,7 @@ export const HeadersEditor: React.FC<HeadersEditorProps> = ({
   }, { isActive: editMode });
 
   return (
-    <Panel
+    <Fieldset
       title="📝 Headers (key: value)"
       focused={focused}
       editMode={editMode}
@@ -122,6 +122,6 @@ export const HeadersEditor: React.FC<HeadersEditorProps> = ({
           </Text>
         ))}
       </Box>
-    </Panel>
+    </Fieldset>
   );
 };

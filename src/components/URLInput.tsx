@@ -1,7 +1,7 @@
 import React from "react";
 import { Text } from "ink";
 import TextInput from "ink-text-input";
-import { Panel } from "./Panel";
+import { Fieldset } from "./Fieldset";
 
 interface URLInputProps {
   value: string;
@@ -17,7 +17,7 @@ export const URLInput: React.FC<URLInputProps> = ({
   editMode,
 }) => {
   return (
-    <Panel
+    <Fieldset
       title="🌐 URL"
       focused={focused}
       editMode={editMode}
@@ -30,6 +30,6 @@ export const URLInput: React.FC<URLInputProps> = ({
           {value || "Enter URL..."}
         </Text>
       )}
-    </Panel>
+    </Fieldset>
   );
 };

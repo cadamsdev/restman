@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, Text, useInput } from "ink";
-import { Panel } from "./Panel";
+import { Fieldset } from "./Fieldset";
 
 interface BodyEditorProps {
   value: string;
@@ -99,7 +99,7 @@ export const BodyEditor: React.FC<BodyEditorProps> = ({
   }, { isActive: editMode });
 
   return (
-    <Panel
+    <Fieldset
       title="💾 Body"
       focused={focused}
       editMode={editMode}
@@ -128,6 +128,6 @@ export const BodyEditor: React.FC<BodyEditorProps> = ({
           </Text>
         )}
       </Box>
-    </Panel>
+    </Fieldset>
   );
 };

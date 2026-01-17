@@ -1,5 +1,5 @@
 import { Text } from "ink";
-import { Panel } from "./Panel";
+import { Fieldset } from "./Fieldset";
 import type { Environment } from "../environment-storage";
 
 interface EnvironmentSelectorProps {
@@ -20,7 +20,7 @@ export const EnvironmentSelector: React.FC<EnvironmentSelectorProps> = ({
   const activeEnv = environments.find((env: Environment) => env.id === activeEnvironmentId);
 
   return (
-    <Panel
+    <Fieldset
       title="🌍 Environment"
       focused={focused}
       editMode={editMode}
@@ -35,6 +35,6 @@ export const EnvironmentSelector: React.FC<EnvironmentSelectorProps> = ({
           ∅ None selected
         </Text>
       )}
-    </Panel>
+    </Fieldset>
   );
 };

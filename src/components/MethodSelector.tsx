@@ -1,6 +1,6 @@
 import React from "react";
 import { Text } from "ink";
-import { Panel } from "./Panel";
+import { Fieldset } from "./Fieldset";
 
 interface MethodSelectorProps {
   value: string;
@@ -29,7 +29,7 @@ export const MethodSelector: React.FC<MethodSelectorProps> = ({
   };
 
   return (
-    <Panel
+    <Fieldset
       title="⚡ Method"
       focused={focused}
       editMode={editMode}
@@ -38,6 +38,6 @@ export const MethodSelector: React.FC<MethodSelectorProps> = ({
       <Text color={focused ? getMethodColor(value) : "gray"} bold={focused}>
         ▸ {value}
       </Text>
-    </Panel>
+    </Fieldset>
   );
 };
