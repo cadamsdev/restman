@@ -634,18 +634,23 @@ export const App: React.FC = () => {
         <>
           {/* Header */}
           <Box
-            borderStyle="round"
-            borderColor="blue"
-            paddingX={1}
-            justifyContent="center"
+            borderStyle="double"
+            borderColor="magenta"
+            paddingX={2}
+            paddingY={0}
+            justifyContent="space-between"
+            alignItems="center"
           >
-            <Text bold color="cyan">
-              🌐 ShellMan - REST API Client
+            <Text>
+              <Text bold color="magenta">🚀 ShellMan</Text>
+              <Text dimColor> │ </Text>
+              <Text color="cyan">REST API Client</Text>
             </Text>
+            <Text dimColor italic>v1.0</Text>
           </Box>
 
           {/* Environment Selector Row */}
-          <Box marginTop={1}>
+          <Box marginTop={1} marginBottom={0}>
             <EnvironmentSelector
               environments={environmentsConfig.environments}
               activeEnvironmentId={environmentsConfig.activeEnvironmentId}
@@ -656,7 +661,7 @@ export const App: React.FC = () => {
           </Box>
 
           {/* Method and URL Row */}
-          <Box marginTop={1}>
+          <Box marginTop={1} gap={1}>
             <MethodSelector
               value={method}
               onChange={setMethod}
@@ -672,7 +677,7 @@ export const App: React.FC = () => {
           </Box>
 
           {/* Headers and Body */}
-          <Box marginTop={1} height={10}>
+          <Box marginTop={1} height={10} gap={1}>
             <HeadersEditor
               value={headers}
               onChange={setHeaders}

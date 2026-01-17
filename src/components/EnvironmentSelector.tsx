@@ -21,26 +21,22 @@ export const EnvironmentSelector: React.FC<EnvironmentSelectorProps> = ({
   return (
     <Box
       borderStyle="round"
-      borderColor={focused ? "yellow" : "cyan"}
+      borderColor={focused ? "magenta" : editMode ? "green" : "gray"}
       paddingX={1}
       flexDirection="column"
-      width={25}
+      width={28}
     >
-      <Text bold dimColor={!focused}>
-        Environment {editMode && <Text color="green">[EDIT]</Text>}
+      <Text>
+        <Text bold color={focused ? "magenta" : "gray"}>🌍 Environment</Text>
+        {editMode && <Text color="green"> [↕]</Text>}
       </Text>
       {activeEnv ? (
-        <Text dimColor={!focused} color={focused ? "green" : undefined}>
-          🌍 {activeEnv.name}
+        <Text color={focused ? "cyan" : "gray"} bold={focused}>
+          ▸ {activeEnv.name}
         </Text>
       ) : (
-        <Text dimColor>
-          None selected
-        </Text>
-      )}
-      {editMode && environments.length > 1 && (
-        <Text dimColor color="gray">
-          ↑↓ to cycle
+        <Text dimColor italic>
+          ∅ None selected
         </Text>
       )}
     </Box>

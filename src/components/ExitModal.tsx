@@ -60,39 +60,44 @@ export const ExitModal: React.FC<ExitModalProps> = ({ onConfirm, onCancel }) => 
       {/* Modal content */}
       <Box
         borderStyle="double"
-        borderColor="yellow"
-        paddingX={2}
+        borderColor="red"
+        paddingX={3}
         paddingY={1}
         flexDirection="column"
-        width={50}
+        width={55}
         backgroundColor="black"
       >
-        <Text bold color="yellow">
-          Exit ShellMan?
-        </Text>
-        <Text marginTop={1}>
-          Are you sure you want to quit?
-        </Text>
-        <Box marginTop={1} justifyContent="center">
-          <Text>
-            <Text 
-              color={selectedOption === "yes" ? "green" : "gray"} 
-              bold={selectedOption === "yes"}
-            >
-              Yes
-            </Text>
-            <Text color="gray"> / </Text>
-            <Text 
-              color={selectedOption === "no" ? "red" : "gray"} 
-              bold={selectedOption === "no"}
-            >
-              No
-            </Text>
+        <Box justifyContent="center">
+          <Text bold color="red">
+            🚻 Exit ShellMan?
           </Text>
         </Box>
-        <Text marginTop={1} color="gray" dimColor>
-          ← → to select, Enter to confirm, Y/N for quick select
-        </Text>
+        <Box marginTop={1} justifyContent="center">
+          <Text dimColor>
+            Are you sure you want to quit?
+          </Text>
+        </Box>
+        <Box marginTop={1} justifyContent="center" gap={3}>
+          <Text 
+            backgroundColor={selectedOption === "yes" ? "red" : undefined}
+            color={selectedOption === "yes" ? "black" : "red"} 
+            bold
+          >
+            {selectedOption === "yes" ? "[✓ Yes]" : "  Yes  "}
+          </Text>
+          <Text 
+            backgroundColor={selectedOption === "no" ? "green" : undefined}
+            color={selectedOption === "no" ? "black" : "green"} 
+            bold
+          >
+            {selectedOption === "no" ? "[✓ No]" : "  No  "}
+          </Text>
+        </Box>
+        <Box marginTop={1} justifyContent="center" borderStyle="single" borderColor="gray" paddingX={1}>
+          <Text dimColor>
+            ←→ select │ Enter confirm │ Y/N quick select
+          </Text>
+        </Box>
       </Box>
     </Box>
   );

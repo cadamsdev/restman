@@ -100,21 +100,23 @@ export const HeadersEditor: React.FC<HeadersEditorProps> = ({
   return (
     <Box
       borderStyle="round"
-      borderColor={focused ? "yellow" : "cyan"}
+      borderColor={focused ? "magenta" : editMode ? "green" : "gray"}
       width="50%"
       flexDirection="column"
       paddingX={1}
     >
-      <Text bold dimColor={!focused}>
-        Headers (key: value) {editMode && <Text color="green">[EDIT]</Text>}
+      <Text>
+        <Text bold color={focused ? "magenta" : "gray"}>📝 Headers</Text>
+        <Text dimColor> (key: value)</Text>
+        {editMode && <Text color="green"> [✎]</Text>}
       </Text>
       <Box flexDirection="column" flexGrow={1}>
         {lines.map((line, idx) => (
-          <Text key={idx} dimColor={!focused}>
+          <Text key={idx} color={focused ? "cyan" : "gray"} dimColor={!focused}>
             {editMode && idx === cursorLine ? (
               <>
                 {line.slice(0, cursorPosition)}
-                <Text backgroundColor="yellow" color="black">
+                <Text backgroundColor="magenta" color="black">
                   {line[cursorPosition] || " "}
                 </Text>
                 {line.slice(cursorPosition + 1)}

@@ -107,48 +107,43 @@ export const ResponsePanel: React.FC<ResponsePanelProps> = ({
   return (
     <Box
       borderStyle="round"
-      borderColor={focused ? "yellow" : "green"}
+      borderColor={focused ? "magenta" : "gray"}
       flexDirection="column"
       paddingX={1}
       width="100%"
       height="100%"
     >
       <Box justifyContent="space-between">
-        <Text bold dimColor={!focused}>
-          Response {focused && response && "- ←/→ or 1/2/3 to switch tabs"}
+        <Text>
+          <Text bold color={focused ? "magenta" : "gray"}>📊 Response</Text>
+          {focused && response && <Text dimColor> - ←/→ or 1/2/3 to switch tabs</Text>}
         </Text>
       </Box>
       {response ? (
         <Box flexDirection="column" marginTop={1} height="100%">
           {/* Tab Headers */}
-          <Box flexShrink={0}>
-            <Box marginRight={2}>
-              <Text 
-                bold={activeTab === "info"} 
-                color={activeTab === "info" ? "cyan" : undefined}
-                dimColor={activeTab !== "info"}
-              >
-                [1] Info
-              </Text>
-            </Box>
-            <Box marginRight={2}>
-              <Text 
-                bold={activeTab === "body"} 
-                color={activeTab === "body" ? "cyan" : undefined}
-                dimColor={activeTab !== "body"}
-              >
-                [2] Body
-              </Text>
-            </Box>
-            <Box>
-              <Text 
-                bold={activeTab === "cookies"} 
-                color={activeTab === "cookies" ? "cyan" : undefined}
-                dimColor={activeTab !== "cookies"}
-              >
-                [3] Cookies
-              </Text>
-            </Box>
+          <Box flexShrink={0} gap={2}>
+            <Text 
+              bold={activeTab === "info"} 
+              color={activeTab === "info" ? "cyan" : "gray"}
+              dimColor={activeTab !== "info"}
+            >
+              {activeTab === "info" ? "▸" : "▹"} [1] 📝 Info
+            </Text>
+            <Text 
+              bold={activeTab === "body"} 
+              color={activeTab === "body" ? "cyan" : "gray"}
+              dimColor={activeTab !== "body"}
+            >
+              {activeTab === "body" ? "▸" : "▹"} [2] 💾 Body
+            </Text>
+            <Text 
+              bold={activeTab === "cookies"} 
+              color={activeTab === "cookies" ? "cyan" : "gray"}
+              dimColor={activeTab !== "cookies"}
+            >
+              {activeTab === "cookies" ? "▸" : "▹"} [3] 🍪 Cookies
+            </Text>
           </Box>
 
           {/* Tab Content */}
@@ -156,32 +151,36 @@ export const ResponsePanel: React.FC<ResponsePanelProps> = ({
             {activeTab === "info" ? (
               <Box flexDirection="column">
                 {/* Response Metadata */}
-                <Box flexDirection="column" borderStyle="single" borderColor="gray" paddingX={1} marginBottom={1}>
+                <Box flexDirection="column" borderStyle="round" borderColor={response.status >= 200 && response.status < 300 ? "green" : response.status >= 400 ? "red" : "yellow"} paddingX={1} marginBottom={1}>
                   <Box>
                     <Text bold color={response.status >= 200 && response.status < 300 ? "green" : response.status >= 400 ? "red" : "yellow"}>
-                      Status: {response.status} {response.statusText}
+                      {response.status >= 200 && response.status < 300 ? "✓" : response.status >= 400 ? "✗" : "⚠"} Status: {response.status} {response.statusText}
                     </Text>
                   </Box>
                   <Box>
-                    <Text dimColor>Time: {response.time}ms</Text>
-                    <Text dimColor> | </Text>
-                    <Text dimColor>Size: {new Blob([response.body]).size} bytes</Text>
+                    <Text color={response.time < 200 ? "green" : response.time < 1000 ? "yellow" : "red"}>⏱ Time: {response.time}ms</Text>
+                    <Text dimColor> │ </Text>
+                    <Text color="cyan">📄 Size: {new Blob([response.body]).size} bytes</Text>
                   </Box>
                 </Box>
 
                 {/* All Headers */}
                 <Box flexDirection="column">
-                  <Text bold>Headers:</Text>
+                  <Text bold color="cyan">📦 Headers:</Text>
                   {Object.entries(response.headers).map(([key, value]) => (
-                    <Text key={key} dimColor>
-                      {key}: {value}
+                    <Text key={key}>
+                      <Text color="yellow">{key}:</Text>
+                      <Text> {value}</Text>
                     </Text>
                   ))}
                 </Box>
               </Box>
             ) : activeTab === "body" ? (
               <Box flexDirection="column" flexGrow={1}>
-                <Text bold dimColor>Body {focused && "(↑/↓ PgUp/PgDn g/G to scroll)"}:</Text>
+                <Box justifyContent="space-between">
+                  <Text bold color="cyan">💾 Body Content</Text>
+                  {focused && <Text dimColor>(↑/↓ PgUp/PgDn g/G to scroll)</Text>}
+                </Box>
                 {(() => {
                   const formattedBody = formatBody(response.body, response.headers);
                   const lines = formattedBody.split("\n");
@@ -191,11 +190,11 @@ export const ResponsePanel: React.FC<ResponsePanelProps> = ({
                   return (
                     <>
                       {visibleLines.map((line, idx) => (
-                        <Text key={idx}>{line || " "}</Text>
+                        <Text key={idx} color="white">{line || " "}</Text>
                       ))}
                       {totalLines > maxVisibleBodyLines && (
                         <Text dimColor italic>
-                          [{scrollOffset + 1}-{Math.min(scrollOffset + maxVisibleBodyLines, totalLines)} of {totalLines} lines]
+                          📊 [{scrollOffset + 1}-{Math.min(scrollOffset + maxVisibleBodyLines, totalLines)} of {totalLines} lines]
                         </Text>
                       )}
                     </>
@@ -204,17 +203,21 @@ export const ResponsePanel: React.FC<ResponsePanelProps> = ({
               </Box>
             ) : (
               <Box flexDirection="column">
-                <Text bold>Cookies:</Text>
+                <Text bold color="cyan">🍪 Cookies:</Text>
                 {(() => {
                   const cookies = parseCookies(response.headers);
                   if (cookies.length === 0) {
-                    return <Text dimColor italic>No cookies set</Text>;
+                    return <Text dimColor italic>∅ No cookies set</Text>;
                   }
                   return cookies.map((cookie, idx) => (
-                    <Box key={idx} flexDirection="column" marginTop={1} borderStyle="single" borderColor="gray" paddingX={1}>
-                      <Text color="cyan">{cookie.name} = {cookie.value}</Text>
+                    <Box key={idx} flexDirection="column" marginTop={1} borderStyle="round" borderColor="yellow" paddingX={1}>
+                      <Text>
+                        <Text color="yellow" bold>{cookie.name}</Text>
+                        <Text dimColor> = </Text>
+                        <Text color="cyan">{cookie.value}</Text>
+                      </Text>
                       {cookie.attributes && (
-                        <Text dimColor>{cookie.attributes}</Text>
+                        <Text dimColor>🔒 {cookie.attributes}</Text>
                       )}
                     </Box>
                   ));
@@ -225,7 +228,7 @@ export const ResponsePanel: React.FC<ResponsePanelProps> = ({
         </Box>
       ) : (
         <Text dimColor italic marginTop={1}>
-          No response yet. Send a request to see results.
+          ∅ No response yet. Send a request to see results.
         </Text>
       )}
     </Box>

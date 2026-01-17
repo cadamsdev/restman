@@ -48,29 +48,31 @@ export const SaveModal: React.FC<SaveModalProps> = ({
       <Box
         borderStyle="double"
         borderColor="green"
-        paddingX={2}
+        paddingX={3}
         paddingY={1}
         flexDirection="column"
-        width={60}
+        width={65}
         backgroundColor="black"
       >
-        <Text bold color="green">
-          💾 Save Request
-        </Text>
-        <Box marginTop={1}>
-          <Text>Enter a name for this request:</Text>
+        <Box justifyContent="center">
+          <Text bold color="green">
+            💾 Save Request
+          </Text>
         </Box>
         <Box marginTop={1}>
-          <Text color="cyan">Name: </Text>
+          <Text dimColor>Enter a name for this request:</Text>
+        </Box>
+        <Box marginTop={1} borderStyle="round" borderColor="cyan" paddingX={1}>
+          <Text color="cyan" bold>📝 </Text>
           <TextInput
             value={name}
             onChange={setName}
             placeholder="e.g., Get User Profile"
           />
         </Box>
-        <Box marginTop={1} flexDirection="column">
+        <Box marginTop={1} justifyContent="center" borderStyle="single" borderColor="gray" paddingX={1}>
           <Text dimColor>
-            Enter: Save | ESC: Cancel
+            <Text color="green" bold>Enter</Text> Save │ <Text color="yellow" bold>ESC</Text> Cancel
           </Text>
         </Box>
       </Box>

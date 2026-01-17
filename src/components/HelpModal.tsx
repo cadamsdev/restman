@@ -25,49 +25,52 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose }) => {
       {/* Modal content */}
       <Box
         borderStyle="double"
-        borderColor="cyan"
-        paddingX={2}
+        borderColor="magenta"
+        paddingX={3}
         paddingY={1}
         flexDirection="column"
-        width={70}
+        width={75}
         backgroundColor="black"
       >
-        <Text bold color="cyan">
-          ⌨️  ShellMan Keyboard Shortcuts
-        </Text>
+        <Box justifyContent="center">
+          <Text bold color="magenta">
+            ⌨️  ShellMan Keyboard Shortcuts
+          </Text>
+        </Box>
         
         <Box marginTop={1} flexDirection="column">
-          <Text bold color="yellow">Navigation:</Text>
-          <Text>  <Text color="cyan">m</Text> / <Text color="cyan">1</Text> - Jump to Method section</Text>
-          <Text>  <Text color="cyan">u</Text> / <Text color="cyan">2</Text> - Jump to URL section</Text>
-          <Text>  <Text color="cyan">h</Text> / <Text color="cyan">3</Text> - Jump to Headers section</Text>
-          <Text>  <Text color="cyan">b</Text> / <Text color="cyan">4</Text> - Jump to Body section</Text>
-          <Text>  <Text color="cyan">r</Text> / <Text color="cyan">5</Text> - View Request History</Text>
-          <Text>  <Text color="cyan">l</Text> / <Text color="cyan">6</Text> - View Saved Requests</Text>
-          <Text>  <Text color="cyan">Tab</Text> - Next section</Text>
-          <Text>  <Text color="cyan">Shift+Tab</Text> - Previous section</Text>
+          <Text bold color="cyan">▸ Navigation:</Text>
+          <Text>  <Text color="yellow">0</Text> - Jump to Environment</Text>
+          <Text>  <Text color="yellow">m</Text> / <Text color="yellow">1</Text> - Jump to Method</Text>
+          <Text>  <Text color="yellow">u</Text> / <Text color="yellow">2</Text> - Jump to URL</Text>
+          <Text>  <Text color="yellow">h</Text> / <Text color="yellow">3</Text> - Jump to Headers</Text>
+          <Text>  <Text color="yellow">b</Text> / <Text color="yellow">4</Text> - Jump to Body</Text>
+          <Text>  <Text color="yellow">r</Text> / <Text color="yellow">5</Text> - View Request History</Text>
+          <Text>  <Text color="yellow">l</Text> / <Text color="yellow">6</Text> - View Saved Requests</Text>
+          <Text>  <Text color="yellow">v</Text> / <Text color="yellow">7</Text> - View Environments</Text>
+          <Text>  <Text color="yellow">Tab</Text> / <Text color="yellow">Shift+Tab</Text> - Next/Previous section</Text>
         </Box>
 
         <Box marginTop={1} flexDirection="column">
-          <Text bold color="yellow">Actions:</Text>
-          <Text>  <Text color="cyan">e</Text> - Enter edit mode for focused section</Text>
-          <Text>  <Text color="cyan">s</Text> - Save current request</Text>
-          <Text>  <Text color="cyan">Enter</Text> - Send request (in readonly mode)</Text>
-          <Text>  <Text color="cyan">Ctrl+S</Text> - Send request (any mode)</Text>
-          <Text>  <Text color="cyan">↑↓</Text> - Change HTTP method (when on method)</Text>
+          <Text bold color="cyan">▸ Actions:</Text>
+          <Text>  <Text color="yellow">e</Text> - Enter edit mode for focused section</Text>
+          <Text>  <Text color="yellow">s</Text> - Save current request</Text>
+          <Text>  <Text color="green">Enter</Text> - Send request (readonly mode)</Text>
+          <Text>  <Text color="green">Ctrl+S</Text> - Send request (any mode)</Text>
+          <Text>  <Text color="yellow">↑↓</Text> - Change method/environment</Text>
         </Box>
 
         <Box marginTop={1} flexDirection="column">
-          <Text bold color="yellow">Other:</Text>
-          <Text>  <Text color="cyan">ESC</Text> - Exit edit mode / Show exit confirmation</Text>
-          <Text>  <Text color="cyan">q</Text> - Show exit confirmation</Text>
-          <Text>  <Text color="cyan">/</Text> - Show this help</Text>
-          <Text>  <Text color="cyan">Ctrl+C</Text> - Force quit (no confirmation)</Text>
+          <Text bold color="cyan">▸ Other:</Text>
+          <Text>  <Text color="yellow">ESC</Text> - Exit edit mode / View / Confirm quit</Text>
+          <Text>  <Text color="yellow">q</Text> - Show exit confirmation</Text>
+          <Text>  <Text color="magenta">/</Text> - Toggle this help</Text>
+          <Text>  <Text color="red">Ctrl+C</Text> - Force quit (no confirmation)</Text>
         </Box>
 
-        <Box marginTop={1} justifyContent="center">
+        <Box marginTop={1} justifyContent="center" borderStyle="single" borderColor="gray" paddingX={1}>
           <Text dimColor italic>
-            Press <Text color="cyan">/</Text> or <Text color="cyan">ESC</Text> to close
+            Press <Text color="magenta" bold>/</Text> or <Text color="yellow" bold>ESC</Text> to close
           </Text>
         </Box>
       </Box>

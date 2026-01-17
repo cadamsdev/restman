@@ -18,19 +18,21 @@ export const URLInput: React.FC<URLInputProps> = ({
   return (
     <Box
       borderStyle="round"
-      borderColor={focused ? "yellow" : "cyan"}
+      borderColor={focused ? "magenta" : editMode ? "green" : "gray"}
       flexGrow={1}
-      marginLeft={1}
       paddingX={1}
       flexDirection="column"
     >
-      <Text bold dimColor={!focused}>
-        URL {editMode && <Text color="green">[EDIT]</Text>}
+      <Text>
+        <Text bold color={focused ? "magenta" : "gray"}>🌐 URL</Text>
+        {editMode && <Text color="green"> [✎]</Text>}
       </Text>
       {editMode ? (
         <TextInput value={value} onChange={onChange} />
       ) : (
-        <Text dimColor={!focused}>{value || "Enter URL..."}</Text>
+        <Text color={value ? "cyan" : "gray"} italic={!value}>
+          {value || "Enter URL..."}
+        </Text>
       )}
     </Box>
   );
