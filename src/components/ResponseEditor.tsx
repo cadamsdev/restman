@@ -22,17 +22,45 @@ export const ResponseEditor: React.FC<ResponseEditorProps> = ({
   useInput((input, key) => {
     if (!focused) return;
 
-    // Tab switching when not in edit mode
-    if (key.leftArrow || (key.tab && key.shift)) {
-      if (activeTab === "headers") {
+    // Tab switching with left/right arrows (no wrapping)
+    if (key.leftArrow) {
+      if (activeTab === "cookies") {
+        setActiveTab("headers");
+        setScrollOffset(0);
+      } else if (activeTab === "headers") {
+        setActiveTab("body");
+        setScrollOffset(0);
+      }
+      // Do nothing if already on first tab (body)
+      return;
+    }
+    
+    if (key.rightArrow) {
+      if (activeTab === "body") {
+        setActiveTab("headers");
+        setScrollOffset(0);
+      } else if (activeTab === "headers") {
+        setActiveTab("cookies");
+        setScrollOffset(0);
+      }
+      // Do nothing if already on last tab (cookies)
+      return;
+    }
+    
+    // Tab key continues to wrap around for convenience
+    if (key.tab && key.shift) {
+      if (activeTab === "body") {
         setActiveTab("cookies");
       } else if (activeTab === "cookies") {
-        setActiveTab("body");
-      } else {
         setActiveTab("headers");
+      } else {
+        setActiveTab("body");
       }
       setScrollOffset(0);
-    } else if (key.rightArrow || key.tab) {
+      return;
+    }
+    
+    if (key.tab) {
       if (activeTab === "body") {
         setActiveTab("headers");
       } else if (activeTab === "headers") {
@@ -41,34 +69,61 @@ export const ResponseEditor: React.FC<ResponseEditorProps> = ({
         setActiveTab("body");
       }
       setScrollOffset(0);
-    } else if (input === "b" || input === "5") {
+      return;
+    }
+    
+    // Direct tab shortcuts
+    if (input === "b" || input === "5") {
       setActiveTab("body");
       setScrollOffset(0);
-    } else if (input === "h" || input === "6") {
+      return;
+    }
+    
+    if (input === "h" || input === "6") {
       setActiveTab("headers");
       setScrollOffset(0);
-    } else if (input === "c" || input === "7") {
+      return;
+    }
+    
+    if (input === "c" || input === "7") {
       setActiveTab("cookies");
       setScrollOffset(0);
+      return;
     }
 
-    // Scrolling (works in all tabs)
+    // Scrolling with up/down arrows (works in all tabs)
     if (response) {
       const lines = getTabLines();
       const totalLines = lines.length;
 
       if (key.upArrow) {
         setScrollOffset(Math.max(0, scrollOffset - 1));
-      } else if (key.downArrow) {
+        return;
+      }
+      
+      if (key.downArrow) {
         setScrollOffset(Math.min(Math.max(0, totalLines - maxVisibleLines), scrollOffset + 1));
-      } else if (key.pageUp) {
+        return;
+      }
+      
+      if (key.pageUp) {
         setScrollOffset(Math.max(0, scrollOffset - maxVisibleLines));
-      } else if (key.pageDown) {
+        return;
+      }
+      
+      if (key.pageDown) {
         setScrollOffset(Math.min(Math.max(0, totalLines - maxVisibleLines), scrollOffset + maxVisibleLines));
-      } else if (input === 'g') {
+        return;
+      }
+      
+      if (input === 'g') {
         setScrollOffset(0);
-      } else if (input === 'G') {
+        return;
+      }
+      
+      if (input === 'G') {
         setScrollOffset(Math.max(0, totalLines - maxVisibleLines));
+        return;
       }
     }
   }, { isActive: focused });
