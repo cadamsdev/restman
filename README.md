@@ -15,6 +15,9 @@ A powerful Terminal User Interface (TUI) REST API client, similar to Postman but
 - ⏱️ **Request Timing** - See how long each request takes
 - 🎨 **Modern UI** - Built with React components for maintainability
 - ⚛️ **Component-based** - Modular React architecture using Ink
+- 📜 **Request History** - View and re-execute previous requests
+- 💾 **Saved Requests** - Save frequently used requests for quick access
+- 🌍 **Environment Variables** - Manage multiple environments (dev, staging, prod) with variable substitution
 
 ## Installation
 
@@ -44,11 +47,36 @@ chmod +x index.ts
 
 ### Keyboard Shortcuts
 
-- **Ctrl+Enter** - Send the current request
-- **Tab** - Move to next field
-- **Shift+Tab** - Move to previous field
-- **q / Esc** - Quit application
-- **Arrow Keys** - Navigate within text fields
+**Navigation:**
+- **Tab / Shift+Tab** - Move between fields
+- **↑↓** - Navigate in readonly mode
+- **0-7** - Quick jump to fields (0: Environment, 1: Method, 2: URL, 3: Headers, 4: Body, 5: History, 6: Saved, 7: Environments)
+
+**Actions:**
+- **Enter** - Send request (in readonly mode)
+- **Ctrl+S** - Send request (works in both modes)
+- **e** - Enter edit mode for focused field
+- **ESC** - Exit edit mode / close panels / quit
+
+**Features:**
+- **s** - Save current request
+- **l** or **6** - Load saved requests
+- **r** or **5** - View request history
+- **v** or **7** - Manage environments
+- **/** - Show help
+- **q** - Quit application
+
+### Environment Variables
+
+ShellMan supports environment variables for managing different API environments (dev, staging, production). Use `{{VARIABLE_NAME}}` syntax in URLs, headers, or body to substitute values from the active environment.
+
+**Quick start:**
+1. Press `v` to open the environments panel
+2. Select an environment with ↑↓ and press Enter to activate it
+3. Use variables like `{{BASE_URL}}/api/users` in your requests
+4. Press `n` to create new environments with custom variables
+
+See [ENVIRONMENT_VARIABLES.md](ENVIRONMENT_VARIABLES.md) for detailed documentation.
 
 ### Interface Layout
 

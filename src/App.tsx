@@ -15,10 +15,15 @@ import { HistoryPanel } from "./components/HistoryPanel";
 import type { HistoryEntry } from "./components/HistoryPanel";
 import { SaveModal } from "./components/SaveModal";
 import { SavedRequestsPanel } from "./components/SavedRequestsPanel";
+import { EnvironmentSelector } from "./components/EnvironmentSelector";
+import { EnvironmentsPanel } from "./components/EnvironmentsPanel";
+import { EnvironmentEditorModal } from "./components/EnvironmentEditorModal";
 import { loadHistory, saveHistory } from "./history-storage";
 import { loadSavedRequests, saveSavedRequests, type SavedRequest } from "./saved-requests-storage";
+import { loadEnvironments, saveEnvironments, setActiveEnvironment, addEnvironment, updateEnvironment, deleteEnvironment, getActiveEnvironment, type EnvironmentsConfig } from "./environment-storage";
+import { substituteVariables, substituteVariablesInHeaders } from "./variable-substitution";
 
-type FocusField = "method" | "url" | "headers" | "body";
+type FocusField = "method" | "url" | "headers" | "body" | "environment";
 
 export const App: React.FC = () => {
   const { exit } = useApp();
@@ -44,8 +49,12 @@ export const App: React.FC = () => {
   const [savedRequestsViewMode, setSavedRequestsViewMode] = useState<boolean>(false);
   const [savedRequests, setSavedRequests] = useState<SavedRequest[]>([]);
   const [savedRequestIdCounter, setSavedRequestIdCounter] = useState<number>(1);
+  const [environmentsConfig, setEnvironmentsConfig] = useState<EnvironmentsConfig>({ activeEnvironmentId: null, environments: [] });
+  const [environmentsViewMode, setEnvironmentsViewMode] = useState<boolean>(false);
+  const [showEnvironmentEditor, setShowEnvironmentEditor] = useState<boolean>(false);
+  const [editingEnvironmentId, setEditingEnvironmentId] = useState<number | null>(null);
 
-  const fields: FocusField[] = ["method", "url", "headers", "body"];
+  const fields: FocusField[] = ["environment", "method", "url", "headers", "body"];
 
   // Load history from disk on startup
   useEffect(() => {
@@ -75,6 +84,15 @@ export const App: React.FC = () => {
     initSavedRequests();
   }, []);
 
+  // Load environments from disk on startup
+  useEffect(() => {
+    const initEnvironments = async () => {
+      const loaded = await loadEnvironments();
+      setEnvironmentsConfig(loaded);
+    };
+    initEnvironments();
+  }, []);
+
   // Save history to disk whenever it changes
   useEffect(() => {
     if (history.length > 0) {
@@ -88,6 +106,13 @@ export const App: React.FC = () => {
       saveSavedRequests(savedRequests);
     }
   }, [savedRequests]);
+
+  // Save environments to disk whenever they change
+  useEffect(() => {
+    if (environmentsConfig.environments.length > 0) {
+      saveEnvironments(environmentsConfig);
+    }
+  }, [environmentsConfig]);
 
   // Handle keyboard input
   useInput((input, key) => {
@@ -108,6 +133,21 @@ export const App: React.FC = () => {
     // Exit modal handles its own keyboard input
     if (showExitModal) {
       return; // Ignore all keys when modal is shown - modal handles them
+    }
+
+    // Environment editor modal handles its own keyboard input
+    if (showEnvironmentEditor) {
+      return; // Ignore all keys when modal is shown - modal handles them
+    }
+
+    // Handle environments view mode
+    if (environmentsViewMode) {
+      if (key.escape) {
+        setEnvironmentsViewMode(false);
+        return;
+      }
+      // All other inputs are handled by EnvironmentsPanel
+      return;
     }
 
     // Handle saved requests view mode
@@ -190,7 +230,18 @@ export const App: React.FC = () => {
         return;
       }
 
+      // Open environments view
+      if (input === "v" || input === "7") {
+        setEnvironmentsViewMode(true);
+        return;
+      }
+
       // Quick navigation hotkeys
+      if (input === "0") {
+        setFocusedField("environment");
+        setEditMode(null);
+        return;
+      }
       if (input === "m" || input === "1") {
         setFocusedField("method");
         setEditMode(null);
@@ -219,11 +270,39 @@ export const App: React.FC = () => {
       const currentIndex = methods.indexOf(method);
       
       if (key.upArrow && currentIndex > 0) {
-        setMethod(methods[currentIndex - 1]);
+        const newMethod = methods[currentIndex - 1];
+        if (newMethod) setMethod(newMethod);
         return;
       }
       if (key.downArrow && currentIndex < methods.length - 1) {
-        setMethod(methods[currentIndex + 1]);
+        const newMethod = methods[currentIndex + 1];
+        if (newMethod) setMethod(newMethod);
+        return;
+      }
+    }
+
+    // Environment selection when focused on environment and in edit mode
+    if (editMode === "environment") {
+      if (environmentsConfig.environments.length === 0) return;
+      
+      const currentIndex = environmentsConfig.environments.findIndex(
+        env => env.id === environmentsConfig.activeEnvironmentId
+      );
+      
+      if (key.upArrow) {
+        const newIndex = currentIndex > 0 ? currentIndex - 1 : environmentsConfig.environments.length - 1;
+        const newEnv = environmentsConfig.environments[newIndex];
+        if (newEnv) {
+          setEnvironmentsConfig(setActiveEnvironment(environmentsConfig, newEnv.id));
+        }
+        return;
+      }
+      if (key.downArrow) {
+        const newIndex = currentIndex < environmentsConfig.environments.length - 1 ? currentIndex + 1 : 0;
+        const newEnv = environmentsConfig.environments[newIndex];
+        if (newEnv) {
+          setEnvironmentsConfig(setActiveEnvironment(environmentsConfig, newEnv.id));
+        }
         return;
       }
     }
@@ -233,13 +312,15 @@ export const App: React.FC = () => {
       if (key.upArrow) {
         const currentIndex = fields.indexOf(focusedField);
         const prevIndex = (currentIndex - 1 + fields.length) % fields.length;
-        setFocusedField(fields[prevIndex]);
+        const prevField = fields[prevIndex];
+        if (prevField) setFocusedField(prevField);
         return;
       }
       if (key.downArrow) {
         const currentIndex = fields.indexOf(focusedField);
         const nextIndex = (currentIndex + 1) % fields.length;
-        setFocusedField(fields[nextIndex]);
+        const nextField = fields[nextIndex];
+        if (nextField) setFocusedField(nextField);
         return;
       }
     }
@@ -250,12 +331,14 @@ export const App: React.FC = () => {
         // Shift+Tab - previous field
         const currentIndex = fields.indexOf(focusedField);
         const prevIndex = (currentIndex - 1 + fields.length) % fields.length;
-        setFocusedField(fields[prevIndex]);
+        const prevField = fields[prevIndex];
+        if (prevField) setFocusedField(prevField);
       } else {
         // Tab - next field
         const currentIndex = fields.indexOf(focusedField);
         const nextIndex = (currentIndex + 1) % fields.length;
-        setFocusedField(fields[nextIndex]);
+        const nextField = fields[nextIndex];
+        if (nextField) setFocusedField(nextField);
       }
       return;
     }
@@ -308,11 +391,21 @@ export const App: React.FC = () => {
     setError("");
 
     try {
+      // Get active environment variables
+      const activeEnv = getActiveEnvironment(environmentsConfig);
+      const variables = activeEnv?.variables || {};
+
+      // Apply variable substitution
+      const substitutedUrl = substituteVariables(url, variables);
+      const substitutedBody = body ? substituteVariables(body, variables) : undefined;
+      const parsedHeaders = parseHeaders(headers);
+      const substitutedHeaders = substituteVariablesInHeaders(parsedHeaders, variables);
+
       const requestOptions: RequestOptions = {
         method,
-        url,
-        headers: parseHeaders(headers),
-        body: body || undefined,
+        url: substitutedUrl,
+        headers: substitutedHeaders,
+        body: substitutedBody,
       };
 
       // Add request to history (before sending)
@@ -407,10 +500,65 @@ export const App: React.FC = () => {
     setSavedRequests(prev => prev.filter(req => req.id !== id));
   };
 
+  const handleAddEnvironment = () => {
+    setEditingEnvironmentId(null);
+    setShowEnvironmentEditor(true);
+  };
+
+  const handleEditEnvironment = (id: number) => {
+    setEditingEnvironmentId(id);
+    setShowEnvironmentEditor(true);
+  };
+
+  const handleSaveEnvironment = (name: string, variables: Record<string, string>) => {
+    if (editingEnvironmentId === null) {
+      // Add new environment
+      setEnvironmentsConfig(addEnvironment(environmentsConfig, name, variables));
+    } else {
+      // Update existing environment
+      setEnvironmentsConfig(updateEnvironment(environmentsConfig, editingEnvironmentId, name, variables));
+    }
+    setShowEnvironmentEditor(false);
+    setEditingEnvironmentId(null);
+  };
+
+  const handleDeleteEnvironment = (id: number) => {
+    setEnvironmentsConfig(deleteEnvironment(environmentsConfig, id));
+  };
+
+  const handleSelectEnvironment = (id: number) => {
+    setEnvironmentsConfig(setActiveEnvironment(environmentsConfig, id));
+    setEnvironmentsViewMode(false);
+  };
+
+
   return (
     <Box flexDirection="column" width="100%" height="100%">
-      {/* Saved Requests View Mode - Full Screen Saved Requests */}
-      {savedRequestsViewMode ? (
+      {/* Environments View Mode - Full Screen Environments */}
+      {environmentsViewMode ? (
+        <Box flexDirection="column" width="100%" height="100%">
+          <Box
+            borderStyle="round"
+            borderColor="blue"
+            paddingX={1}
+            justifyContent="center"
+          >
+            <Text bold color="cyan">
+              🌐 ShellMan - Environments (ESC to return)
+            </Text>
+          </Box>
+          <Box marginTop={1} flexGrow={1}>
+            <EnvironmentsPanel
+              config={environmentsConfig}
+              focused={true}
+              onSelectEnvironment={handleSelectEnvironment}
+              onAddEnvironment={handleAddEnvironment}
+              onEditEnvironment={handleEditEnvironment}
+              onDeleteEnvironment={handleDeleteEnvironment}
+            />
+          </Box>
+        </Box>
+      ) : savedRequestsViewMode ? (
         <Box flexDirection="column" width="100%" height="100%">
           <Box
             borderStyle="round"
@@ -485,6 +633,17 @@ export const App: React.FC = () => {
             </Text>
           </Box>
 
+          {/* Environment Selector Row */}
+          <Box marginTop={1}>
+            <EnvironmentSelector
+              environments={environmentsConfig.environments}
+              activeEnvironmentId={environmentsConfig.activeEnvironmentId}
+              focused={focusedField === "environment"}
+              editMode={editMode === "environment"}
+              onSelect={(id: number) => setEnvironmentsConfig(setActiveEnvironment(environmentsConfig, id))}
+            />
+          </Box>
+
           {/* Method and URL Row */}
           <Box marginTop={1}>
             <MethodSelector
@@ -550,6 +709,19 @@ export const App: React.FC = () => {
         <ExitModal
           onConfirm={() => exit()}
           onCancel={() => setShowExitModal(false)}
+        />
+      )}
+
+      {/* Environment Editor Modal */}
+      {showEnvironmentEditor && (
+        <EnvironmentEditorModal
+          environmentName={editingEnvironmentId ? environmentsConfig.environments.find(e => e.id === editingEnvironmentId)?.name : ""}
+          variables={editingEnvironmentId ? environmentsConfig.environments.find(e => e.id === editingEnvironmentId)?.variables : {}}
+          onSave={handleSaveEnvironment}
+          onCancel={() => {
+            setShowEnvironmentEditor(false);
+            setEditingEnvironmentId(null);
+          }}
         />
       )}
     </Box>
