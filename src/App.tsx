@@ -17,6 +17,7 @@ import type { HistoryEntry } from "./components/HistoryPanel";
 import { SaveModal } from "./components/SaveModal";
 import { SavedRequestsPanel } from "./components/SavedRequestsPanel";
 import { EnvironmentSelector } from "./components/EnvironmentSelector";
+import { EnvironmentSelectorModal } from "./components/EnvironmentSelectorModal";
 import { EnvironmentsPanel } from "./components/EnvironmentsPanel";
 import { EnvironmentEditorModal } from "./components/EnvironmentEditorModal";
 import { loadHistory, saveHistory } from "./history-storage";
@@ -42,6 +43,7 @@ export const App: React.FC = () => {
   const [showExitModal, setShowExitModal] = useState<boolean>(false);
   const [showHelpModal, setShowHelpModal] = useState<boolean>(false);
   const [showMethodModal, setShowMethodModal] = useState<boolean>(false);
+  const [showEnvironmentSelectorModal, setShowEnvironmentSelectorModal] = useState<boolean>(false);
   const [editMode, setEditMode] = useState<FocusField | null>(null);
   const [responseViewMode, setResponseViewMode] = useState<boolean>(false);
   const [historyViewMode, setHistoryViewMode] = useState<boolean>(false);
@@ -142,6 +144,11 @@ export const App: React.FC = () => {
       return; // Ignore all keys when modal is shown - modal handles them
     }
 
+    // Environment selector modal handles its own keyboard input
+    if (showEnvironmentSelectorModal) {
+      return; // Ignore all keys when modal is shown - modal handles them
+    }
+
     // Environment editor modal handles its own keyboard input
     if (showEnvironmentEditor) {
       return; // Ignore all keys when modal is shown - modal handles them
@@ -213,10 +220,12 @@ export const App: React.FC = () => {
 
     // Only allow navigation hotkeys in readonly mode
     if (!editMode) {
-      // Enter edit mode (or open modal for method)
+      // Enter edit mode (or open modal for method/environment)
       if (input === "e") {
         if (focusedField === "method") {
           setShowMethodModal(true);
+        } else if (focusedField === "environment") {
+          setShowEnvironmentSelectorModal(true);
         } else {
           setEditMode(focusedField);
         }
@@ -271,32 +280,6 @@ export const App: React.FC = () => {
       if (input === "b" || input === "4") {
         setFocusedField("body");
         setEditMode(null);
-        return;
-      }
-    }
-
-    // Environment selection when focused on environment and in edit mode
-    if (editMode === "environment") {
-      if (environmentsConfig.environments.length === 0) return;
-      
-      const currentIndex = environmentsConfig.environments.findIndex(
-        env => env.id === environmentsConfig.activeEnvironmentId
-      );
-      
-      if (key.upArrow) {
-        const newIndex = currentIndex > 0 ? currentIndex - 1 : environmentsConfig.environments.length - 1;
-        const newEnv = environmentsConfig.environments[newIndex];
-        if (newEnv) {
-          setEnvironmentsConfig(setActiveEnvironment(environmentsConfig, newEnv.id));
-        }
-        return;
-      }
-      if (key.downArrow) {
-        const newIndex = currentIndex < environmentsConfig.environments.length - 1 ? currentIndex + 1 : 0;
-        const newEnv = environmentsConfig.environments[newIndex];
-        if (newEnv) {
-          setEnvironmentsConfig(setActiveEnvironment(environmentsConfig, newEnv.id));
-        }
         return;
       }
     }
@@ -714,6 +697,19 @@ export const App: React.FC = () => {
             setShowMethodModal(false);
           }}
           onCancel={() => setShowMethodModal(false)}
+        />
+      )}
+
+      {/* Environment Selector Modal */}
+      {showEnvironmentSelectorModal && (
+        <EnvironmentSelectorModal
+          environments={environmentsConfig.environments}
+          currentEnvironmentId={environmentsConfig.activeEnvironmentId}
+          onSelect={(id) => {
+            setEnvironmentsConfig(setActiveEnvironment(environmentsConfig, id));
+            setShowEnvironmentSelectorModal(false);
+          }}
+          onCancel={() => setShowEnvironmentSelectorModal(false)}
         />
       )}
 
