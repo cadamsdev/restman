@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Text, useInput } from "ink";
 import type { RequestOptions } from "../http-client";
+import { Fieldset } from "./Fieldset";
 
 export interface HistoryEntry {
   id: number;
@@ -104,18 +105,14 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
 
   if (history.length === 0) {
     return (
-      <Box
-        flexDirection="column"
-        borderStyle="round"
+      <Fieldset
+        title="📜 Request History (Empty)"
         borderColor="yellow"
-        paddingX={1}
-        paddingY={1}
+        titleColor="yellow"
+        focused={focused}
         width="100%"
         height="100%"
       >
-        <Text color="yellow" bold>
-          📜 Request History (Empty)
-        </Text>
         <Box marginTop={1}>
           <Text dimColor>
             No requests sent yet. Send your first request to see it here!
@@ -126,7 +123,7 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
             • ↑↓: Navigate • Enter: Load request • ESC: Return
           </Text>
         </Box>
-      </Box>
+      </Fieldset>
     );
   }
 
@@ -135,19 +132,15 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
   const reversedVisible = reversedHistory.slice(scrollOffset, scrollOffset + maxVisibleLines);
 
   return (
-    <Box
-      flexDirection="column"
-      borderStyle="round"
+    <Fieldset
+      title={`📜 Request History (${history.length} total)`}
       borderColor="magenta"
-      paddingX={1}
-      paddingY={1}
+      titleColor="magenta"
+      focused={focused}
       width="100%"
       height="100%"
     >
       <Box justifyContent="space-between" marginBottom={1}>
-        <Text color="magenta" bold>
-          📜 Request History ({history.length} total)
-        </Text>
         <Text dimColor>
           {selectedIndex + 1}/{history.length}
         </Text>
@@ -195,6 +188,6 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
           ↑↓: Navigate | PgUp/PgDn: Scroll | g/G: Top/Bottom | Enter: Load | ESC: Return
         </Text>
       </Box>
-    </Box>
+    </Fieldset>
   );
 };
