@@ -12,7 +12,7 @@ export const ResponsePanel: React.FC<ResponsePanelProps> = ({
   focused,
 }) => {
   const [scrollOffset, setScrollOffset] = useState(0);
-  const [activeTab, setActiveTab] = useState<"info" | "body">("info");
+  const [activeTab, setActiveTab] = useState<"info" | "body" | "cookies">("info");
   const maxVisibleBodyLines = 12; // Lines reserved for body content
 
   useEffect(() => {
@@ -30,8 +30,14 @@ export const ResponsePanel: React.FC<ResponsePanelProps> = ({
     } else if (input === '2') {
       setActiveTab("body");
       return;
-    } else if (key.leftArrow || key.rightArrow) {
-      setActiveTab(activeTab === "info" ? "body" : "info");
+    } else if (input === '3') {
+      setActiveTab("cookies");
+      return;
+    } else if (key.leftArrow) {
+      setActiveTab(activeTab === "info" ? "cookies" : activeTab === "body" ? "info" : "body");
+      return;
+    } else if (key.rightArrow) {
+      setActiveTab(activeTab === "info" ? "body" : activeTab === "body" ? "cookies" : "info");
       return;
     }
 
@@ -72,6 +78,32 @@ export const ResponsePanel: React.FC<ResponsePanelProps> = ({
     return body;
   };
 
+  const parseCookies = (headers: Record<string, string>): Array<{ name: string; value: string; attributes: string }> => {
+    const cookies: Array<{ name: string; value: string; attributes: string }> = [];
+    
+    Object.entries(headers).forEach(([key, value]) => {
+      if (key.toLowerCase() === 'set-cookie') {
+        // Handle multiple Set-Cookie headers (they might be comma-separated or in array)
+        const cookieStrings = value.split(/,(?=\s*[a-zA-Z0-9_-]+=)/);
+        
+        cookieStrings.forEach(cookieStr => {
+          const parts = cookieStr.trim().split(';');
+          if (parts.length > 0) {
+            const [nameValue, ...attrs] = parts;
+            const [name, val] = nameValue.split('=');
+            cookies.push({
+              name: name?.trim() || '',
+              value: val?.trim() || '',
+              attributes: attrs.join('; ').trim()
+            });
+          }
+        });
+      }
+    });
+    
+    return cookies;
+  };
+
   return (
     <Box
       borderStyle="round"
@@ -83,7 +115,7 @@ export const ResponsePanel: React.FC<ResponsePanelProps> = ({
     >
       <Box justifyContent="space-between">
         <Text bold dimColor={!focused}>
-          Response {focused && response && "- ←/→ or 1/2 to switch tabs"}
+          Response {focused && response && "- ←/→ or 1/2/3 to switch tabs"}
         </Text>
       </Box>
       {response ? (
@@ -99,13 +131,22 @@ export const ResponsePanel: React.FC<ResponsePanelProps> = ({
                 [1] Info
               </Text>
             </Box>
-            <Box>
+            <Box marginRight={2}>
               <Text 
                 bold={activeTab === "body"} 
                 color={activeTab === "body" ? "cyan" : undefined}
                 dimColor={activeTab !== "body"}
               >
                 [2] Body
+              </Text>
+            </Box>
+            <Box>
+              <Text 
+                bold={activeTab === "cookies"} 
+                color={activeTab === "cookies" ? "cyan" : undefined}
+                dimColor={activeTab !== "cookies"}
+              >
+                [3] Cookies
               </Text>
             </Box>
           </Box>
@@ -138,7 +179,7 @@ export const ResponsePanel: React.FC<ResponsePanelProps> = ({
                   ))}
                 </Box>
               </Box>
-            ) : (
+            ) : activeTab === "body" ? (
               <Box flexDirection="column" flexGrow={1}>
                 <Text bold dimColor>Body {focused && "(↑/↓ PgUp/PgDn g/G to scroll)"}:</Text>
                 {(() => {
@@ -159,6 +200,24 @@ export const ResponsePanel: React.FC<ResponsePanelProps> = ({
                       )}
                     </>
                   );
+                })()}
+              </Box>
+            ) : (
+              <Box flexDirection="column">
+                <Text bold>Cookies:</Text>
+                {(() => {
+                  const cookies = parseCookies(response.headers);
+                  if (cookies.length === 0) {
+                    return <Text dimColor italic>No cookies set</Text>;
+                  }
+                  return cookies.map((cookie, idx) => (
+                    <Box key={idx} flexDirection="column" marginTop={1} borderStyle="single" borderColor="gray" paddingX={1}>
+                      <Text color="cyan">{cookie.name} = {cookie.value}</Text>
+                      {cookie.attributes && (
+                        <Text dimColor>{cookie.attributes}</Text>
+                      )}
+                    </Box>
+                  ));
                 })()}
               </Box>
             )}
