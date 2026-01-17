@@ -1,0 +1,36 @@
+{
+  "name": "shellman",
+  "version": "1.0.0",
+  "description": "A powerful REST API client TUI built with Bun",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "shellman": "./index.ts"
+  },
+  "scripts": {
+    "start": "bun run index.ts",
+    "dev": "bun run index.ts"
+  },
+  "keywords": [
+    "rest",
+    "api",
+    "client",
+    "tui",
+    "postman",
+    "terminal",
+    "http"
+  ],
+  "author": "cadamsdev",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@types/blessed": "^0.1.27",
+    "blessed": "^0.1.81"
+  }
+}
