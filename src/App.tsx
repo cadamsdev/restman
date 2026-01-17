@@ -8,6 +8,7 @@ import { BodyEditor } from "./components/BodyEditor";
 import { ResponsePanel } from "./components/ResponsePanel";
 import { StatusBar } from "./components/StatusBar";
 import { Instructions } from "./components/Instructions";
+import { ExitModal } from "./components/ExitModal";
 
 type FocusField = "method" | "url" | "headers" | "body" | "response";
 
@@ -24,13 +25,33 @@ export const App: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [focusedField, setFocusedField] = useState<FocusField>("url");
   const [error, setError] = useState<string>("");
+  const [showExitModal, setShowExitModal] = useState<boolean>(false);
 
   const fields: FocusField[] = ["method", "url", "headers", "body", "response"];
 
   // Handle keyboard input
   useInput((input, key) => {
-    // Quit
-    if (input === "q" || key.escape || key.ctrl && input === "c") {
+    // Handle exit modal responses
+    if (showExitModal) {
+      if (input === "y" || input === "Y") {
+        exit();
+        return;
+      }
+      if (input === "n" || input === "N" || key.escape) {
+        setShowExitModal(false);
+        return;
+      }
+      return; // Ignore other keys when modal is shown
+    }
+
+    // Show exit confirmation
+    if (input === "q" || key.escape) {
+      setShowExitModal(true);
+      return;
+    }
+
+    // Force quit without confirmation
+    if (key.ctrl && input === "c") {
       exit();
       return;
     }
@@ -191,6 +212,14 @@ export const App: React.FC = () => {
 
       {/* Instructions */}
       <Instructions />
+
+      {/* Exit Modal */}
+      {showExitModal && (
+        <ExitModal
+          onConfirm={() => exit()}
+          onCancel={() => setShowExitModal(false)}
+        />
+      )}
     </Box>
   );
 };
