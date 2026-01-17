@@ -30,6 +30,7 @@ export const Instructions: React.FC<InstructionsProps> = ({ editMode }) => {
           <Text color="cyan">l</Text><Text dimColor> Load │ </Text>
           <Text color="cyan">i</Text><Text dimColor> History │ </Text>
           <Text color="cyan">v</Text><Text dimColor> Env │ </Text>
+          <Text color="cyan">1-4</Text><Text dimColor> Jump │ </Text>
           <Text color="cyan">/</Text><Text dimColor> Help │ </Text>
           <Text color="cyan">q</Text><Text dimColor> Exit</Text>
         </Text>

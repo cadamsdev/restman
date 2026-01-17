@@ -5,6 +5,7 @@ import type { RequestOptions, Response } from "./http-client";
 import { URLInput } from "./components/URLInput";
 import { MethodSelector } from "./components/MethodSelector";
 import { RequestEditor } from "./components/RequestEditor";
+import { ResponseEditor } from "./components/ResponseEditor";
 import { ResponsePanel } from "./components/ResponsePanel";
 import { StatusBar } from "./components/StatusBar";
 import { Instructions } from "./components/Instructions";
@@ -24,7 +25,7 @@ import { loadSavedRequests, saveSavedRequests, type SavedRequest } from "./saved
 import { loadEnvironments, saveEnvironments, setActiveEnvironment, addEnvironment, updateEnvironment, deleteEnvironment, getActiveEnvironment, type EnvironmentsConfig } from "./environment-storage";
 import { substituteVariables, substituteVariablesInHeaders } from "./variable-substitution";
 
-type FocusField = "method" | "url" | "request" | "environment";
+type FocusField = "method" | "url" | "request" | "response" | "environment";
 
 export const App: React.FC = () => {
   const { exit } = useApp();
@@ -57,7 +58,7 @@ export const App: React.FC = () => {
   const [showEnvironmentEditor, setShowEnvironmentEditor] = useState<boolean>(false);
   const [editingEnvironmentId, setEditingEnvironmentId] = useState<number | null>(null);
 
-  const fields: FocusField[] = ["environment", "method", "url", "request"];
+  const fields: FocusField[] = ["environment", "method", "url", "request", "response"];
 
   // Load history from disk on startup
   useEffect(() => {
@@ -276,6 +277,11 @@ export const App: React.FC = () => {
         setEditMode(null);
         return;
       }
+      if (input === "p" || input === "4") {
+        setFocusedField("response");
+        setEditMode(null);
+        return;
+      }
     }
 
     // Arrow key navigation (only in readonly mode)
@@ -400,10 +406,6 @@ export const App: React.FC = () => {
             : entry
         )
       );
-      
-      // Automatically switch to response view mode after successful request
-      setResponseViewMode(true);
-      setEditMode(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
@@ -624,6 +626,14 @@ export const App: React.FC = () => {
               onBodyChange={setBody}
               focused={focusedField === "request"}
               editMode={editMode === "request"}
+            />
+          </Box>
+
+          {/* Response Editor (Body, Headers and Cookies tabs) */}
+          <Box height={10}>
+            <ResponseEditor
+              response={response}
+              focused={focusedField === "response"}
             />
           </Box>
 
