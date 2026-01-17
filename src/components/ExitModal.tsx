@@ -92,7 +92,7 @@ export const ExitModal: React.FC<ExitModalProps> = ({ onConfirm, onCancel }) => 
           </Text>
         </Box>
         <Text marginTop={1} color="gray" dimColor>
-          ← → to select, Enter to confirm
+          ← → to select, Enter to confirm, Y/N for quick select
         </Text>
       </Box>
     </Box>
