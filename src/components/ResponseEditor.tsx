@@ -203,7 +203,7 @@ export const ResponseEditor: React.FC<ResponseEditorProps> = ({
     if (!response) {
       return "📊 Response";
     }
-    return `📊 Response - ${response.status} ${response.statusText}`;
+    return `📊 Response - ${response.status} ${response.statusText} (${response.time}ms)`;
   };
 
   const getTitleColor = () => {
