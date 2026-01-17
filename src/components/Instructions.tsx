@@ -18,7 +18,7 @@ export const Instructions: React.FC<InstructionsProps> = ({ editMode }) => {
         </Text>
       ) : (
         <Text dimColor>
-          Enter: Send | e: Edit | m/u/h/b/r: Jump | ↑↓: Change Method | /: Help | q: Exit
+          Enter: Send | e: Edit | m/u/h/b: Jump | r: History | ↑↓: Navigate | /: Help | q: Exit
         </Text>
       )}
     </Box>

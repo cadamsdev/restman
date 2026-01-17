@@ -5,10 +5,10 @@ Features to add before sharing with users for testing.
 ## Critical Features (Must Have)
 
 ### 1. Request History
-- [ ] Store sent requests in memory (or local file)
-- [ ] Navigate through previous requests with keyboard shortcuts
-- [ ] Allow users to re-execute previous requests
-- [ ] Show last N requests (e.g., 10-20)
+- [x] Store sent requests in memory (or local file)
+- [x] Navigate through previous requests with keyboard shortcuts
+- [x] Allow users to re-execute previous requests
+- [x] Show last N requests (e.g., 10-20)
 
 ### 2. Environment Variables / Request Templates
 - [ ] Support variable substitution in URLs and headers (e.g., `{{API_KEY}}`)

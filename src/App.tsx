@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Text, useInput, useApp } from "ink";
-import { HTTPClient, RequestOptions, Response } from "./http-client";
+import { HTTPClient } from "./http-client";
+import type { RequestOptions, Response } from "./http-client";
 import { URLInput } from "./components/URLInput";
 import { MethodSelector } from "./components/MethodSelector";
 import { HeadersEditor } from "./components/HeadersEditor";
@@ -10,6 +11,8 @@ import { StatusBar } from "./components/StatusBar";
 import { Instructions } from "./components/Instructions";
 import { ExitModal } from "./components/ExitModal";
 import { HelpModal } from "./components/HelpModal";
+import { HistoryPanel } from "./components/HistoryPanel";
+import type { HistoryEntry } from "./components/HistoryPanel";
 
 type FocusField = "method" | "url" | "headers" | "body";
 
@@ -30,6 +33,9 @@ export const App: React.FC = () => {
   const [showHelpModal, setShowHelpModal] = useState<boolean>(false);
   const [editMode, setEditMode] = useState<FocusField | null>(null);
   const [responseViewMode, setResponseViewMode] = useState<boolean>(false);
+  const [historyViewMode, setHistoryViewMode] = useState<boolean>(false);
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [historyIdCounter, setHistoryIdCounter] = useState<number>(1);
 
   const fields: FocusField[] = ["method", "url", "headers", "body"];
 
@@ -47,6 +53,16 @@ export const App: React.FC = () => {
     // Exit modal handles its own keyboard input
     if (showExitModal) {
       return; // Ignore all keys when modal is shown - modal handles them
+    }
+
+    // Handle history view mode
+    if (historyViewMode) {
+      if (key.escape) {
+        setHistoryViewMode(false);
+        return;
+      }
+      // All other inputs are handled by HistoryPanel
+      return;
     }
 
     // Handle response view mode
@@ -88,6 +104,12 @@ export const App: React.FC = () => {
       // Enter edit mode
       if (input === "e") {
         setEditMode(focusedField);
+        return;
+      }
+
+      // Open history view
+      if (input === "r" || input === "5") {
+        setHistoryViewMode(true);
         return;
       }
 
@@ -216,8 +238,28 @@ export const App: React.FC = () => {
         body: body || undefined,
       };
 
+      // Add request to history (before sending)
+      const historyEntry: HistoryEntry = {
+        id: historyIdCounter,
+        timestamp: new Date(),
+        request: requestOptions,
+      };
+      
+      setHistory(prev => [...prev, historyEntry]);
+      setHistoryIdCounter(prev => prev + 1);
+
       const result = await httpClient.sendRequest(requestOptions);
       setResponse(result);
+      
+      // Update history entry with response info
+      setHistory(prev => 
+        prev.map(entry => 
+          entry.id === historyEntry.id 
+            ? { ...entry, status: result.status, statusText: result.statusText, time: result.time }
+            : entry
+        )
+      );
+      
       // Automatically switch to response view mode after successful request
       setResponseViewMode(true);
       setEditMode(null);
@@ -228,10 +270,45 @@ export const App: React.FC = () => {
     }
   };
 
+  const loadRequestFromHistory = (request: RequestOptions) => {
+    setMethod(request.method);
+    setUrl(request.url);
+    
+    // Convert headers object back to string format
+    const headersString = Object.entries(request.headers)
+      .map(([key, value]) => `${key}: ${value}`)
+      .join("\n");
+    setHeaders(headersString);
+    
+    setBody(request.body || "");
+    setHistoryViewMode(false);
+  };
+
   return (
     <Box flexDirection="column" width="100%" height="100%">
-      {/* Response View Mode - Full Screen Response */}
-      {responseViewMode ? (
+      {/* History View Mode - Full Screen History */}
+      {historyViewMode ? (
+        <Box flexDirection="column" width="100%" height="100%">
+          <Box
+            borderStyle="round"
+            borderColor="blue"
+            paddingX={1}
+            justifyContent="center"
+          >
+            <Text bold color="cyan">
+              🌐 ShellMan - Request History (ESC to return)
+            </Text>
+          </Box>
+          <Box marginTop={1} flexGrow={1}>
+            <HistoryPanel
+              history={history}
+              focused={true}
+              onSelectRequest={loadRequestFromHistory}
+            />
+          </Box>
+        </Box>
+      ) : responseViewMode ? (
+        /* Response View Mode - Full Screen Response */
         <Box flexDirection="column" width="100%" height="100%">
           <Box
             borderStyle="round"
