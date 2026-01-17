@@ -11,12 +11,12 @@ export const ResponsePanel: React.FC<ResponsePanelProps> = ({
   response,
   focused,
 }) => {
-  const [scrollOffset, setScrollOffset] = useState(0);
+  const [scrollOffsets, setScrollOffsets] = useState({ info: 0, body: 0, cookies: 0 });
   const [activeTab, setActiveTab] = useState<"info" | "body" | "cookies">("info");
-  const maxVisibleBodyLines = 12; // Lines reserved for body content
+  const maxVisibleBodyLines = 4; // Lines reserved for body content
 
   useEffect(() => {
-    setScrollOffset(0);
+    setScrollOffsets({ info: 0, body: 0, cookies: 0 });
     setActiveTab("info");
   }, [response]);
 
@@ -41,23 +41,59 @@ export const ResponsePanel: React.FC<ResponsePanelProps> = ({
       return;
     }
 
-    // Scrolling only works in body tab
+    // Scrolling for all tabs
     if (activeTab === "body") {
       const formattedBody = formatBody(response.body, response.headers);
       const totalLines = formattedBody.split("\n").length;
+      const currentScroll = scrollOffsets.body;
 
       if (key.upArrow) {
-        setScrollOffset(Math.max(0, scrollOffset - 1));
+        setScrollOffsets({ ...scrollOffsets, body: Math.max(0, currentScroll - 1) });
       } else if (key.downArrow) {
-        setScrollOffset(Math.min(Math.max(0, totalLines - maxVisibleBodyLines), scrollOffset + 1));
+        setScrollOffsets({ ...scrollOffsets, body: Math.min(Math.max(0, totalLines - maxVisibleBodyLines), currentScroll + 1) });
       } else if (key.pageUp) {
-        setScrollOffset(Math.max(0, scrollOffset - maxVisibleBodyLines));
+        setScrollOffsets({ ...scrollOffsets, body: Math.max(0, currentScroll - maxVisibleBodyLines) });
       } else if (key.pageDown) {
-        setScrollOffset(Math.min(Math.max(0, totalLines - maxVisibleBodyLines), scrollOffset + maxVisibleBodyLines));
+        setScrollOffsets({ ...scrollOffsets, body: Math.min(Math.max(0, totalLines - maxVisibleBodyLines), currentScroll + maxVisibleBodyLines) });
       } else if (input === 'g') {
-        setScrollOffset(0);
+        setScrollOffsets({ ...scrollOffsets, body: 0 });
       } else if (input === 'G') {
-        setScrollOffset(Math.max(0, totalLines - maxVisibleBodyLines));
+        setScrollOffsets({ ...scrollOffsets, body: Math.max(0, totalLines - maxVisibleBodyLines) });
+      }
+    } else if (activeTab === "info") {
+      const totalHeaders = Object.entries(response.headers).length;
+      const currentScroll = scrollOffsets.info;
+
+      if (key.upArrow) {
+        setScrollOffsets({ ...scrollOffsets, info: Math.max(0, currentScroll - 1) });
+      } else if (key.downArrow) {
+        setScrollOffsets({ ...scrollOffsets, info: Math.min(Math.max(0, totalHeaders - maxVisibleBodyLines), currentScroll + 1) });
+      } else if (key.pageUp) {
+        setScrollOffsets({ ...scrollOffsets, info: Math.max(0, currentScroll - maxVisibleBodyLines) });
+      } else if (key.pageDown) {
+        setScrollOffsets({ ...scrollOffsets, info: Math.min(Math.max(0, totalHeaders - maxVisibleBodyLines), currentScroll + maxVisibleBodyLines) });
+      } else if (input === 'g') {
+        setScrollOffsets({ ...scrollOffsets, info: 0 });
+      } else if (input === 'G') {
+        setScrollOffsets({ ...scrollOffsets, info: Math.max(0, totalHeaders - maxVisibleBodyLines) });
+      }
+    } else if (activeTab === "cookies") {
+      const cookies = parseCookies(response.headers);
+      const totalCookies = cookies.length;
+      const currentScroll = scrollOffsets.cookies;
+
+      if (key.upArrow) {
+        setScrollOffsets({ ...scrollOffsets, cookies: Math.max(0, currentScroll - 1) });
+      } else if (key.downArrow) {
+        setScrollOffsets({ ...scrollOffsets, cookies: Math.min(Math.max(0, totalCookies - 5), currentScroll + 1) });
+      } else if (key.pageUp) {
+        setScrollOffsets({ ...scrollOffsets, cookies: Math.max(0, currentScroll - 5) });
+      } else if (key.pageDown) {
+        setScrollOffsets({ ...scrollOffsets, cookies: Math.min(Math.max(0, totalCookies - 5), currentScroll + 5) });
+      } else if (input === 'g') {
+        setScrollOffsets({ ...scrollOffsets, cookies: 0 });
+      } else if (input === 'G') {
+        setScrollOffsets({ ...scrollOffsets, cookies: Math.max(0, totalCookies - 5) });
       }
     }
   }, { isActive: focused });
@@ -128,21 +164,21 @@ export const ResponsePanel: React.FC<ResponsePanelProps> = ({
               color={activeTab === "info" ? "cyan" : "gray"}
               dimColor={activeTab !== "info"}
             >
-              {activeTab === "info" ? "▸" : "▹"} [1] 📝 Info
+              Info
             </Text>
             <Text 
               bold={activeTab === "body"} 
               color={activeTab === "body" ? "cyan" : "gray"}
               dimColor={activeTab !== "body"}
             >
-              {activeTab === "body" ? "▸" : "▹"} [2] 💾 Body
+              Body
             </Text>
             <Text 
               bold={activeTab === "cookies"} 
               color={activeTab === "cookies" ? "cyan" : "gray"}
               dimColor={activeTab !== "cookies"}
             >
-              {activeTab === "cookies" ? "▸" : "▹"} [3] 🍪 Cookies
+              Cookies
             </Text>
           </Box>
 
@@ -165,36 +201,52 @@ export const ResponsePanel: React.FC<ResponsePanelProps> = ({
                 </Box>
 
                 {/* All Headers */}
-                <Box flexDirection="column">
-                  <Text bold color="cyan">📦 Headers:</Text>
-                  {Object.entries(response.headers).map(([key, value]) => (
-                    <Text key={key}>
-                      <Text color="yellow">{key}:</Text>
-                      <Text> {value}</Text>
-                    </Text>
-                  ))}
+                <Box flexDirection="column" marginTop={1}>
+                  <Box justifyContent="space-between">
+                    <Text bold color="cyan">Headers:</Text>
+                    {focused && <Text dimColor>(↑/↓ PgUp/PgDn g/G to scroll)</Text>}
+                  </Box>
+                  {(() => {
+                    const headerLines = Object.entries(response.headers);
+                    const visibleHeaders = headerLines.slice(scrollOffsets.info, scrollOffsets.info + maxVisibleBodyLines);
+                    return (
+                      <>
+                        {visibleHeaders.map(([key, value]) => (
+                          <Text key={key} wrap="truncate-end">
+                            <Text color="yellow">{key}:</Text>
+                            <Text> {value}</Text>
+                          </Text>
+                        ))}
+                        {headerLines.length > maxVisibleBodyLines && (
+                          <Text dimColor italic>
+                            [{scrollOffsets.info + 1}-{Math.min(scrollOffsets.info + maxVisibleBodyLines, headerLines.length)} of {headerLines.length} headers]
+                          </Text>
+                        )}
+                      </>
+                    );
+                  })()}
                 </Box>
               </Box>
             ) : activeTab === "body" ? (
               <Box flexDirection="column" flexGrow={1}>
                 <Box justifyContent="space-between">
-                  <Text bold color="cyan">💾 Body Content</Text>
+                  <Text bold color="cyan">Body Content</Text>
                   {focused && <Text dimColor>(↑/↓ PgUp/PgDn g/G to scroll)</Text>}
                 </Box>
                 {(() => {
                   const formattedBody = formatBody(response.body, response.headers);
                   const lines = formattedBody.split("\n");
                   const totalLines = lines.length;
-                  const visibleLines = lines.slice(scrollOffset, scrollOffset + maxVisibleBodyLines);
+                  const visibleLines = lines.slice(scrollOffsets.body, scrollOffsets.body + maxVisibleBodyLines);
                   
                   return (
                     <>
                       {visibleLines.map((line, idx) => (
-                        <Text key={idx} color="white">{line || " "}</Text>
+                        <Text key={idx} color="white" wrap="truncate-end">{line || " "}</Text>
                       ))}
                       {totalLines > maxVisibleBodyLines && (
                         <Text dimColor italic>
-                          📊 [{scrollOffset + 1}-{Math.min(scrollOffset + maxVisibleBodyLines, totalLines)} of {totalLines} lines]
+                          📊 [{scrollOffsets.body + 1}-{Math.min(scrollOffsets.body + maxVisibleBodyLines, totalLines)} of {totalLines} lines]
                         </Text>
                       )}
                     </>
@@ -203,24 +255,36 @@ export const ResponsePanel: React.FC<ResponsePanelProps> = ({
               </Box>
             ) : (
               <Box flexDirection="column">
-                <Text bold color="cyan">🍪 Cookies:</Text>
+                <Box justifyContent="space-between">
+                  <Text bold color="cyan">Cookies:</Text>
+                  {focused && <Text dimColor>(↑/↓ PgUp/PgDn g/G to scroll)</Text>}
+                </Box>
                 {(() => {
                   const cookies = parseCookies(response.headers);
                   if (cookies.length === 0) {
                     return <Text dimColor italic>∅ No cookies set</Text>;
                   }
-                  return cookies.map((cookie, idx) => (
-                    <Box key={idx} flexDirection="column" marginTop={1} borderStyle="round" borderColor="yellow" paddingX={1}>
-                      <Text>
-                        <Text color="yellow" bold>{cookie.name}</Text>
-                        <Text dimColor> = </Text>
-                        <Text color="cyan">{cookie.value}</Text>
-                      </Text>
-                      {cookie.attributes && (
-                        <Text dimColor>🔒 {cookie.attributes}</Text>
+                  const visibleCookies = cookies.slice(scrollOffsets.cookies, scrollOffsets.cookies + 5);
+                  return (
+                    <>
+                      {visibleCookies.map((cookie, idx) => (
+                        <Box key={idx} flexDirection="column" marginTop={1} borderStyle="round" borderColor="yellow" paddingX={1}>
+                          <Text>
+                            <Text color="yellow" bold>{cookie.name}</Text>
+                            <Text>: {cookie.value}</Text>
+                          </Text>
+                          {cookie.attributes && (
+                            <Text dimColor>{cookie.attributes}</Text>
+                          )}
+                        </Box>
+                      ))}
+                      {cookies.length > 5 && (
+                        <Text dimColor italic>
+                          [{scrollOffsets.cookies + 1}-{Math.min(scrollOffsets.cookies + 5, cookies.length)} of {cookies.length} cookies]
+                        </Text>
                       )}
-                    </Box>
-                  ));
+                    </>
+                  );
                 })()}
               </Box>
             )}

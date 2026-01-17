@@ -5,8 +5,9 @@ import type { RequestOptions, Response } from "./http-client";
 import { URLInput } from "./components/URLInput";
 import { MethodSelector } from "./components/MethodSelector";
 import { RequestEditor } from "./components/RequestEditor";
+import { ResponseEditor } from "./components/ResponseEditor";
 import { ResponsePanel } from "./components/ResponsePanel";
-import { StatusBar } from "./components/StatusBar";
+import { Toast } from "./components/Toast";
 import { Instructions } from "./components/Instructions";
 import { ExitModal } from "./components/ExitModal";
 import { HelpModal } from "./components/HelpModal";
@@ -24,7 +25,7 @@ import { loadSavedRequests, saveSavedRequests, type SavedRequest } from "./saved
 import { loadEnvironments, saveEnvironments, setActiveEnvironment, addEnvironment, updateEnvironment, deleteEnvironment, getActiveEnvironment, type EnvironmentsConfig } from "./environment-storage";
 import { substituteVariables, substituteVariablesInHeaders } from "./variable-substitution";
 
-type FocusField = "method" | "url" | "request" | "environment";
+type FocusField = "method" | "url" | "request" | "response" | "environment";
 
 export const App: React.FC = () => {
   const { exit } = useApp();
@@ -39,6 +40,9 @@ export const App: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [focusedField, setFocusedField] = useState<FocusField>("url");
   const [error, setError] = useState<string>("");
+  const [toastMessage, setToastMessage] = useState<string>("");
+  const [toastType, setToastType] = useState<"loading" | "error" | "success">("loading");
+  const [showToast, setShowToast] = useState<boolean>(false);
   const [showExitModal, setShowExitModal] = useState<boolean>(false);
   const [showHelpModal, setShowHelpModal] = useState<boolean>(false);
   const [showMethodModal, setShowMethodModal] = useState<boolean>(false);
@@ -57,7 +61,7 @@ export const App: React.FC = () => {
   const [showEnvironmentEditor, setShowEnvironmentEditor] = useState<boolean>(false);
   const [editingEnvironmentId, setEditingEnvironmentId] = useState<number | null>(null);
 
-  const fields: FocusField[] = ["environment", "method", "url", "request"];
+  const fields: FocusField[] = ["environment", "method", "url", "request", "response"];
 
   // Load history from disk on startup
   useEffect(() => {
@@ -116,6 +120,16 @@ export const App: React.FC = () => {
       saveEnvironments(environmentsConfig);
     }
   }, [environmentsConfig]);
+
+  // Auto-dismiss toast after 3 seconds for success/error messages
+  useEffect(() => {
+    if (showToast && toastType !== "loading") {
+      const timer = setTimeout(() => {
+        setShowToast(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showToast, toastType]);
 
   // Handle keyboard input
   useInput((input, key) => {
@@ -276,6 +290,11 @@ export const App: React.FC = () => {
         setEditMode(null);
         return;
       }
+      if (input === "p" || input === "4") {
+        setFocusedField("response");
+        setEditMode(null);
+        return;
+      }
     }
 
     // Arrow key navigation (only in readonly mode)
@@ -355,11 +374,17 @@ export const App: React.FC = () => {
   const sendRequest = async () => {
     if (!url) {
       setError("URL is required");
+      setToastMessage("URL is required");
+      setToastType("error");
+      setShowToast(true);
       return;
     }
 
     setLoading(true);
     setError("");
+    setToastMessage("Sending request...");
+    setToastType("loading");
+    setShowToast(true);
 
     try {
       // Get active environment variables
@@ -401,11 +426,16 @@ export const App: React.FC = () => {
         )
       );
       
-      // Automatically switch to response view mode after successful request
-      setResponseViewMode(true);
-      setEditMode(null);
+      // Show success toast
+      setToastMessage(`${result.status} ${result.statusText} (${result.time}ms)`);
+      setToastType("success");
+      setShowToast(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      setError(errorMessage);
+      setToastMessage(errorMessage);
+      setToastType("error");
+      setShowToast(true);
     } finally {
       setLoading(false);
     }
@@ -627,12 +657,12 @@ export const App: React.FC = () => {
             />
           </Box>
 
-          {/* Status Bar */}
-          <Box>
-            <StatusBar
-              loading={loading}
+          {/* Response Editor (Body, Headers and Cookies tabs) */}
+          <Box height={10}>
+            <ResponseEditor
               response={response}
-              error={error}
+              focused={focusedField === "response"}
+              editMode={editMode === "response"}
             />
           </Box>
 
@@ -685,6 +715,15 @@ export const App: React.FC = () => {
         <ExitModal
           onConfirm={() => exit()}
           onCancel={() => setShowExitModal(false)}
+        />
+      )}
+
+      {/* Toast Notification - Overlay */}
+      {showToast && (
+        <Toast
+          message={toastMessage}
+          type={toastType}
+          visible={showToast}
         />
       )}
     </Box>

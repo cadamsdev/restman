@@ -43,9 +43,9 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose }) => {
           <Text>  <Text color="yellow">0</Text> - Jump to Environment</Text>
           <Text>  <Text color="yellow">m</Text> / <Text color="yellow">1</Text> - Jump to Method</Text>
           <Text>  <Text color="yellow">u</Text> / <Text color="yellow">2</Text> - Jump to URL</Text>
-          <Text>  <Text color="yellow">h</Text> / <Text color="yellow">3</Text> - Jump to Headers</Text>
-          <Text>  <Text color="yellow">b</Text> / <Text color="yellow">4</Text> - Jump to Body</Text>
-          <Text>  <Text color="yellow">r</Text> / <Text color="yellow">5</Text> - View Request History</Text>
+          <Text>  <Text color="yellow">r</Text> / <Text color="yellow">3</Text> - Jump to Request</Text>
+          <Text>  <Text color="yellow">p</Text> / <Text color="yellow">4</Text> - Jump to Response</Text>
+          <Text>  <Text color="yellow">i</Text> / <Text color="yellow">5</Text> - View Request History</Text>
           <Text>  <Text color="yellow">l</Text> / <Text color="yellow">6</Text> - View Saved Requests</Text>
           <Text>  <Text color="yellow">v</Text> / <Text color="yellow">7</Text> - View Environments</Text>
           <Text>  <Text color="yellow">Tab</Text> / <Text color="yellow">Shift+Tab</Text> - Next/Previous section</Text>
