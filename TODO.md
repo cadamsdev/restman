@@ -17,10 +17,10 @@ Features to add before sharing with users for testing.
 - [ ] Allow switching between different environments (dev, staging, prod)
 
 ### 3. Request Saving/Loading
-- [ ] Save requests to disk (JSON format)
-- [ ] Load saved requests
+- [x] Save requests to disk (JSON format)
+- [x] Load saved requests
+- [x] Quick file picker for saved requests
 - [ ] Organize requests into collections/folders
-- [ ] Quick file picker for saved requests
 
 ### 4. Response Formatting
 - [ ] Auto-format JSON responses with indentation

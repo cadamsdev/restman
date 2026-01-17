@@ -42,7 +42,8 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose }) => {
           <Text>  <Text color="cyan">u</Text> / <Text color="cyan">2</Text> - Jump to URL section</Text>
           <Text>  <Text color="cyan">h</Text> / <Text color="cyan">3</Text> - Jump to Headers section</Text>
           <Text>  <Text color="cyan">b</Text> / <Text color="cyan">4</Text> - Jump to Body section</Text>
-          <Text>  <Text color="cyan">r</Text> / <Text color="cyan">5</Text> - Jump to Response section</Text>
+          <Text>  <Text color="cyan">r</Text> / <Text color="cyan">5</Text> - View Request History</Text>
+          <Text>  <Text color="cyan">l</Text> / <Text color="cyan">6</Text> - View Saved Requests</Text>
           <Text>  <Text color="cyan">Tab</Text> - Next section</Text>
           <Text>  <Text color="cyan">Shift+Tab</Text> - Previous section</Text>
         </Box>
@@ -50,6 +51,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose }) => {
         <Box marginTop={1} flexDirection="column">
           <Text bold color="yellow">Actions:</Text>
           <Text>  <Text color="cyan">e</Text> - Enter edit mode for focused section</Text>
+          <Text>  <Text color="cyan">s</Text> - Save current request</Text>
           <Text>  <Text color="cyan">Enter</Text> - Send request (in readonly mode)</Text>
           <Text>  <Text color="cyan">Ctrl+S</Text> - Send request (any mode)</Text>
           <Text>  <Text color="cyan">↑↓</Text> - Change HTTP method (when on method)</Text>

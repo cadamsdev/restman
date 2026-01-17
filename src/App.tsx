@@ -13,7 +13,10 @@ import { ExitModal } from "./components/ExitModal";
 import { HelpModal } from "./components/HelpModal";
 import { HistoryPanel } from "./components/HistoryPanel";
 import type { HistoryEntry } from "./components/HistoryPanel";
+import { SaveModal } from "./components/SaveModal";
+import { SavedRequestsPanel } from "./components/SavedRequestsPanel";
 import { loadHistory, saveHistory } from "./history-storage";
+import { loadSavedRequests, saveSavedRequests, type SavedRequest } from "./saved-requests-storage";
 
 type FocusField = "method" | "url" | "headers" | "body";
 
@@ -37,6 +40,10 @@ export const App: React.FC = () => {
   const [historyViewMode, setHistoryViewMode] = useState<boolean>(false);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [historyIdCounter, setHistoryIdCounter] = useState<number>(1);
+  const [showSaveModal, setShowSaveModal] = useState<boolean>(false);
+  const [savedRequestsViewMode, setSavedRequestsViewMode] = useState<boolean>(false);
+  const [savedRequests, setSavedRequests] = useState<SavedRequest[]>([]);
+  const [savedRequestIdCounter, setSavedRequestIdCounter] = useState<number>(1);
 
   const fields: FocusField[] = ["method", "url", "headers", "body"];
 
@@ -54,12 +61,33 @@ export const App: React.FC = () => {
     initHistory();
   }, []);
 
+  // Load saved requests from disk on startup
+  useEffect(() => {
+    const initSavedRequests = async () => {
+      const loaded = await loadSavedRequests();
+      if (loaded.length > 0) {
+        setSavedRequests(loaded);
+        // Set the counter to be one more than the highest ID
+        const maxId = Math.max(...loaded.map(r => r.id));
+        setSavedRequestIdCounter(maxId + 1);
+      }
+    };
+    initSavedRequests();
+  }, []);
+
   // Save history to disk whenever it changes
   useEffect(() => {
     if (history.length > 0) {
       saveHistory(history);
     }
   }, [history]);
+
+  // Save saved requests to disk whenever they change
+  useEffect(() => {
+    if (savedRequests.length > 0) {
+      saveSavedRequests(savedRequests);
+    }
+  }, [savedRequests]);
 
   // Handle keyboard input
   useInput((input, key) => {
@@ -72,9 +100,24 @@ export const App: React.FC = () => {
       return; // Ignore other keys when help modal is shown
     }
 
+    // Save modal handles its own keyboard input
+    if (showSaveModal) {
+      return; // Ignore all keys when modal is shown - modal handles them
+    }
+
     // Exit modal handles its own keyboard input
     if (showExitModal) {
       return; // Ignore all keys when modal is shown - modal handles them
+    }
+
+    // Handle saved requests view mode
+    if (savedRequestsViewMode) {
+      if (key.escape) {
+        setSavedRequestsViewMode(false);
+        return;
+      }
+      // All other inputs are handled by SavedRequestsPanel
+      return;
     }
 
     // Handle history view mode
@@ -132,6 +175,18 @@ export const App: React.FC = () => {
       // Open history view
       if (input === "r" || input === "5") {
         setHistoryViewMode(true);
+        return;
+      }
+
+      // Save current request
+      if (input === "s") {
+        setShowSaveModal(true);
+        return;
+      }
+
+      // Open saved requests view
+      if (input === "l" || input === "6") {
+        setSavedRequestsViewMode(true);
         return;
       }
 
@@ -311,10 +366,72 @@ export const App: React.FC = () => {
     setHistoryViewMode(false);
   };
 
+  const saveCurrentRequest = (name: string) => {
+    const savedRequest: SavedRequest = {
+      id: savedRequestIdCounter,
+      name,
+      timestamp: new Date(),
+      request: {
+        method,
+        url,
+        headers: parseHeaders(headers),
+        body: body || undefined,
+      },
+    };
+    
+    setSavedRequests(prev => [...prev, savedRequest]);
+    setSavedRequestIdCounter(prev => prev + 1);
+    setShowSaveModal(false);
+  };
+
+  const loadRequestFromSaved = (request: RequestOptions) => {
+    // Safety check
+    if (!request || !request.method || !request.url) {
+      return;
+    }
+    
+    setMethod(request.method);
+    setUrl(request.url);
+    
+    // Convert headers object back to string format
+    const headersString = Object.entries(request.headers || {})
+      .map(([key, value]) => `${key}: ${value}`)
+      .join("\n");
+    setHeaders(headersString);
+    
+    setBody(request.body || "");
+    setSavedRequestsViewMode(false);
+  };
+
+  const deleteSavedRequest = (id: number) => {
+    setSavedRequests(prev => prev.filter(req => req.id !== id));
+  };
+
   return (
     <Box flexDirection="column" width="100%" height="100%">
-      {/* History View Mode - Full Screen History */}
-      {historyViewMode ? (
+      {/* Saved Requests View Mode - Full Screen Saved Requests */}
+      {savedRequestsViewMode ? (
+        <Box flexDirection="column" width="100%" height="100%">
+          <Box
+            borderStyle="round"
+            borderColor="blue"
+            paddingX={1}
+            justifyContent="center"
+          >
+            <Text bold color="cyan">
+              🌐 ShellMan - Saved Requests (ESC to return)
+            </Text>
+          </Box>
+          <Box marginTop={1} flexGrow={1}>
+            <SavedRequestsPanel
+              savedRequests={savedRequests}
+              focused={true}
+              onSelectRequest={loadRequestFromSaved}
+              onDeleteRequest={deleteSavedRequest}
+            />
+          </Box>
+        </Box>
+      ) : historyViewMode ? (
         <Box flexDirection="column" width="100%" height="100%">
           <Box
             borderStyle="round"
@@ -417,6 +534,15 @@ export const App: React.FC = () => {
       {/* Help Modal */}
       {showHelpModal && (
         <HelpModal onClose={() => setShowHelpModal(false)} />
+      )}
+
+      {/* Save Modal */}
+      {showSaveModal && (
+        <SaveModal
+          defaultName={`${method} ${url.split('/').pop() || 'request'}`}
+          onSave={saveCurrentRequest}
+          onCancel={() => setShowSaveModal(false)}
+        />
       )}
 
       {/* Exit Modal */}
