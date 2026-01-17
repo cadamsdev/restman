@@ -11,7 +11,7 @@ import { Instructions } from "./components/Instructions";
 import { ExitModal } from "./components/ExitModal";
 import { HelpModal } from "./components/HelpModal";
 
-type FocusField = "method" | "url" | "headers" | "body" | "response";
+type FocusField = "method" | "url" | "headers" | "body";
 
 export const App: React.FC = () => {
   const { exit } = useApp();
@@ -29,8 +29,9 @@ export const App: React.FC = () => {
   const [showExitModal, setShowExitModal] = useState<boolean>(false);
   const [showHelpModal, setShowHelpModal] = useState<boolean>(false);
   const [editMode, setEditMode] = useState<FocusField | null>(null);
+  const [responseViewMode, setResponseViewMode] = useState<boolean>(false);
 
-  const fields: FocusField[] = ["method", "url", "headers", "body", "response"];
+  const fields: FocusField[] = ["method", "url", "headers", "body"];
 
   // Handle keyboard input
   useInput((input, key) => {
@@ -46,6 +47,16 @@ export const App: React.FC = () => {
     // Exit modal handles its own keyboard input
     if (showExitModal) {
       return; // Ignore all keys when modal is shown - modal handles them
+    }
+
+    // Handle response view mode
+    if (responseViewMode) {
+      if (key.escape) {
+        setResponseViewMode(false);
+        return;
+      }
+      // All other inputs are handled by ResponsePanel
+      return;
     }
 
     // Exit edit mode with ESC (only if in edit mode)
@@ -75,7 +86,7 @@ export const App: React.FC = () => {
     // Only allow navigation hotkeys in readonly mode
     if (!editMode) {
       // Enter edit mode
-      if (input === "e" && focusedField !== "response") {
+      if (input === "e") {
         setEditMode(focusedField);
         return;
       }
@@ -98,11 +109,6 @@ export const App: React.FC = () => {
       }
       if (input === "b" || input === "4") {
         setFocusedField("body");
-        setEditMode(null);
-        return;
-      }
-      if (input === "r" || input === "5") {
-        setFocusedField("response");
         setEditMode(null);
         return;
       }
@@ -212,6 +218,9 @@ export const App: React.FC = () => {
 
       const result = await httpClient.sendRequest(requestOptions);
       setResponse(result);
+      // Automatically switch to response view mode after successful request
+      setResponseViewMode(true);
+      setEditMode(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
@@ -221,69 +230,85 @@ export const App: React.FC = () => {
 
   return (
     <Box flexDirection="column" width="100%" height="100%">
-      {/* Header */}
-      <Box
-        borderStyle="round"
-        borderColor="blue"
-        paddingX={1}
-        justifyContent="center"
-      >
-        <Text bold color="cyan">
-          🌐 ShellMan - REST API Client
-        </Text>
-      </Box>
+      {/* Response View Mode - Full Screen Response */}
+      {responseViewMode ? (
+        <Box flexDirection="column" width="100%" height="100%">
+          <Box
+            borderStyle="round"
+            borderColor="blue"
+            paddingX={1}
+            justifyContent="center"
+          >
+            <Text bold color="cyan">
+              🌐 ShellMan - Response View (ESC to return)
+            </Text>
+          </Box>
+          <Box marginTop={1} flexGrow={1}>
+            <ResponsePanel
+              response={response}
+              focused={true}
+            />
+          </Box>
+        </Box>
+      ) : (
+        <>
+          {/* Header */}
+          <Box
+            borderStyle="round"
+            borderColor="blue"
+            paddingX={1}
+            justifyContent="center"
+          >
+            <Text bold color="cyan">
+              🌐 ShellMan - REST API Client
+            </Text>
+          </Box>
 
-      {/* Method and URL Row */}
-      <Box marginTop={1}>
-        <MethodSelector
-          value={method}
-          onChange={setMethod}
-          focused={focusedField === "method"}
-          editMode={editMode === "method"}
-        />
-        <URLInput
-          value={url}
-          onChange={setUrl}
-          focused={focusedField === "url"}
-          editMode={editMode === "url"}
-        />
-      </Box>
+          {/* Method and URL Row */}
+          <Box marginTop={1}>
+            <MethodSelector
+              value={method}
+              onChange={setMethod}
+              focused={focusedField === "method"}
+              editMode={editMode === "method"}
+            />
+            <URLInput
+              value={url}
+              onChange={setUrl}
+              focused={focusedField === "url"}
+              editMode={editMode === "url"}
+            />
+          </Box>
 
-      {/* Headers and Body */}
-      <Box marginTop={1} height={10}>
-        <HeadersEditor
-          value={headers}
-          onChange={setHeaders}
-          focused={focusedField === "headers"}
-          editMode={editMode === "headers"}
-        />
-        <BodyEditor
-          value={body}
-          onChange={setBody}
-          focused={focusedField === "body"}
-          editMode={editMode === "body"}
-        />
-      </Box>
+          {/* Headers and Body */}
+          <Box marginTop={1} height={10}>
+            <HeadersEditor
+              value={headers}
+              onChange={setHeaders}
+              focused={focusedField === "headers"}
+              editMode={editMode === "headers"}
+            />
+            <BodyEditor
+              value={body}
+              onChange={setBody}
+              focused={focusedField === "body"}
+              editMode={editMode === "body"}
+            />
+          </Box>
 
-      {/* Status Bar */}
-      <Box marginTop={1}>
-        <StatusBar
-          loading={loading}
-          response={response}
-          error={error}
-        />
-      </Box>
+          {/* Status Bar */}
+          <Box marginTop={1}>
+            <StatusBar
+              loading={loading}
+              response={response}
+              error={error}
+            />
+          </Box>
 
-      {/* Response Panel */}
-      <Box marginTop={1} flexGrow={1}>
-        <ResponsePanel
-          response={response}
-          focused={focusedField === "response"}
-        />
-      </Box>
-
-      {/* Instructions */}
-      <Instructions editMode={editMode !== null} />
+          {/* Instructions */}
+          <Instructions editMode={editMode !== null} />
+        </>
+      )}
 
       {/* Help Modal */}
       {showHelpModal && (
