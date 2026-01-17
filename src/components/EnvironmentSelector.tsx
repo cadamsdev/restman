@@ -1,4 +1,5 @@
-import { Box, Text } from "ink";
+import { Text } from "ink";
+import { Panel } from "./Panel";
 import type { Environment } from "../environment-storage";
 
 interface EnvironmentSelectorProps {
@@ -19,17 +20,12 @@ export const EnvironmentSelector: React.FC<EnvironmentSelectorProps> = ({
   const activeEnv = environments.find((env: Environment) => env.id === activeEnvironmentId);
 
   return (
-    <Box
-      borderStyle="round"
-      borderColor={focused ? "magenta" : editMode ? "green" : "gray"}
-      paddingX={1}
-      flexDirection="column"
+    <Panel
+      title="🌍 Environment"
+      focused={focused}
+      editMode={editMode}
       width={28}
     >
-      <Text>
-        <Text bold color={focused ? "magenta" : "gray"}>🌍 Environment</Text>
-        {editMode && <Text color="green"> [↕]</Text>}
-      </Text>
       {activeEnv ? (
         <Text color={focused ? "cyan" : "gray"} bold={focused}>
           ▸ {activeEnv.name}
@@ -39,6 +35,6 @@ export const EnvironmentSelector: React.FC<EnvironmentSelectorProps> = ({
           ∅ None selected
         </Text>
       )}
-    </Box>
+    </Panel>
   );
 };

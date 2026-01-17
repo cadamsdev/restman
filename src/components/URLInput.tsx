@@ -1,6 +1,7 @@
 import React from "react";
-import { Box, Text } from "ink";
+import { Text } from "ink";
 import TextInput from "ink-text-input";
+import { Panel } from "./Panel";
 
 interface URLInputProps {
   value: string;
@@ -16,17 +17,12 @@ export const URLInput: React.FC<URLInputProps> = ({
   editMode,
 }) => {
   return (
-    <Box
-      borderStyle="round"
-      borderColor={focused ? "magenta" : editMode ? "green" : "gray"}
+    <Panel
+      title="🌐 URL"
+      focused={focused}
+      editMode={editMode}
       flexGrow={1}
-      paddingX={1}
-      flexDirection="column"
     >
-      <Text>
-        <Text bold color={focused ? "magenta" : "gray"}>🌐 URL</Text>
-        {editMode && <Text color="green"> [✎]</Text>}
-      </Text>
       {editMode ? (
         <TextInput value={value} onChange={onChange} />
       ) : (
@@ -34,6 +30,6 @@ export const URLInput: React.FC<URLInputProps> = ({
           {value || "Enter URL..."}
         </Text>
       )}
-    </Box>
+    </Panel>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Box, Text, useInput } from "ink";
+import { Panel } from "./Panel";
 
 interface BodyEditorProps {
   value: string;
@@ -98,17 +99,12 @@ export const BodyEditor: React.FC<BodyEditorProps> = ({
   }, { isActive: editMode });
 
   return (
-    <Box
-      borderStyle="round"
-      borderColor={focused ? "magenta" : editMode ? "green" : "gray"}
+    <Panel
+      title="💾 Body"
+      focused={focused}
+      editMode={editMode}
       width="50%"
-      flexDirection="column"
-      paddingX={1}
     >
-      <Text>
-        <Text bold color={focused ? "magenta" : "gray"}>💾 Body</Text>
-        {editMode && <Text color="green"> [✎]</Text>}
-      </Text>
       <Box flexDirection="column" flexGrow={1}>
         {value ? (
           lines.map((line, idx) => (
@@ -132,6 +128,6 @@ export const BodyEditor: React.FC<BodyEditorProps> = ({
           </Text>
         )}
       </Box>
-    </Box>
+    </Panel>
   );
 };

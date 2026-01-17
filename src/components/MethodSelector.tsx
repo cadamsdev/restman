@@ -1,5 +1,6 @@
 import React from "react";
-import { Box, Text } from "ink";
+import { Text } from "ink";
+import { Panel } from "./Panel";
 
 interface MethodSelectorProps {
   value: string;
@@ -28,27 +29,30 @@ export const MethodSelector: React.FC<MethodSelectorProps> = ({
   };
 
   return (
-    <Box
-      borderStyle="round"
-      borderColor={focused ? "magenta" : editMode ? "green" : "gray"}
-      width={14}
-      flexDirection="column"
-      paddingX={1}
+    <Panel
+      title={editMode ? "⚡ Method [↕]" : "⚡ Method"}
+      focused={focused}
+      editMode={editMode}
+      width={20}
     >
-      <Text>
-        <Text bold color={focused ? "magenta" : "gray"}>⚡ Method</Text>
-        {editMode && <Text color="green"> [↕]</Text>}
-      </Text>
-      {methods.map((method) => (
-        <Text
-          key={method}
-          color={method === value ? getMethodColor(method) : "gray"}
-          bold={method === value}
-          dimColor={method !== value}
-        >
-          {method === value ? `▸ ${method}` : `  ${method}`}
+      {editMode ? (
+        <>
+          {methods.map((method) => (
+            <Text
+              key={method}
+              color={method === value ? getMethodColor(method) : "gray"}
+              bold={method === value}
+              dimColor={method !== value}
+            >
+              {method === value ? `▸ ${method}` : `  ${method}`}
+            </Text>
+          ))}
+        </>
+      ) : (
+        <Text color={focused ? getMethodColor(value) : "gray"} bold={focused}>
+          ▸ {value}
         </Text>
-      ))}
-    </Box>
+      )}
+    </Panel>
   );
 };

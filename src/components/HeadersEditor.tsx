@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Box, Text, useInput } from "ink";
+import { Panel } from "./Panel";
 
 interface HeadersEditorProps {
   value: string;
@@ -98,18 +99,12 @@ export const HeadersEditor: React.FC<HeadersEditorProps> = ({
   }, { isActive: editMode });
 
   return (
-    <Box
-      borderStyle="round"
-      borderColor={focused ? "magenta" : editMode ? "green" : "gray"}
+    <Panel
+      title="📝 Headers (key: value)"
+      focused={focused}
+      editMode={editMode}
       width="50%"
-      flexDirection="column"
-      paddingX={1}
     >
-      <Text>
-        <Text bold color={focused ? "magenta" : "gray"}>📝 Headers</Text>
-        <Text dimColor> (key: value)</Text>
-        {editMode && <Text color="green"> [✎]</Text>}
-      </Text>
       <Box flexDirection="column" flexGrow={1}>
         {lines.map((line, idx) => (
           <Text key={idx} color={focused ? "cyan" : "gray"} dimColor={!focused}>
@@ -127,6 +122,6 @@ export const HeadersEditor: React.FC<HeadersEditorProps> = ({
           </Text>
         ))}
       </Box>
-    </Box>
+    </Panel>
   );
 };
