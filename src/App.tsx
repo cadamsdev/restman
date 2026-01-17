@@ -123,6 +123,22 @@ export const App: React.FC = () => {
       }
     }
 
+    // Arrow key navigation (only in readonly mode)
+    if (!editMode) {
+      if (key.upArrow) {
+        const currentIndex = fields.indexOf(focusedField);
+        const prevIndex = (currentIndex - 1 + fields.length) % fields.length;
+        setFocusedField(fields[prevIndex]);
+        return;
+      }
+      if (key.downArrow) {
+        const currentIndex = fields.indexOf(focusedField);
+        const nextIndex = (currentIndex + 1) % fields.length;
+        setFocusedField(fields[nextIndex]);
+        return;
+      }
+    }
+
     // Tab navigation
     if (key.tab) {
       if (key.shift) {
