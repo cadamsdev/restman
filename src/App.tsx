@@ -7,7 +7,7 @@ import { MethodSelector } from "./components/MethodSelector";
 import { RequestEditor } from "./components/RequestEditor";
 import { ResponseEditor } from "./components/ResponseEditor";
 import { ResponsePanel } from "./components/ResponsePanel";
-import { StatusBar } from "./components/StatusBar";
+import { Toast } from "./components/Toast";
 import { Instructions } from "./components/Instructions";
 import { ExitModal } from "./components/ExitModal";
 import { HelpModal } from "./components/HelpModal";
@@ -40,6 +40,9 @@ export const App: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [focusedField, setFocusedField] = useState<FocusField>("url");
   const [error, setError] = useState<string>("");
+  const [toastMessage, setToastMessage] = useState<string>("");
+  const [toastType, setToastType] = useState<"loading" | "error" | "success">("loading");
+  const [showToast, setShowToast] = useState<boolean>(false);
   const [showExitModal, setShowExitModal] = useState<boolean>(false);
   const [showHelpModal, setShowHelpModal] = useState<boolean>(false);
   const [showMethodModal, setShowMethodModal] = useState<boolean>(false);
@@ -117,6 +120,16 @@ export const App: React.FC = () => {
       saveEnvironments(environmentsConfig);
     }
   }, [environmentsConfig]);
+
+  // Auto-dismiss toast after 3 seconds for success/error messages
+  useEffect(() => {
+    if (showToast && toastType !== "loading") {
+      const timer = setTimeout(() => {
+        setShowToast(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showToast, toastType]);
 
   // Handle keyboard input
   useInput((input, key) => {
@@ -361,11 +374,17 @@ export const App: React.FC = () => {
   const sendRequest = async () => {
     if (!url) {
       setError("URL is required");
+      setToastMessage("URL is required");
+      setToastType("error");
+      setShowToast(true);
       return;
     }
 
     setLoading(true);
     setError("");
+    setToastMessage("Sending request...");
+    setToastType("loading");
+    setShowToast(true);
 
     try {
       // Get active environment variables
@@ -406,8 +425,17 @@ export const App: React.FC = () => {
             : entry
         )
       );
+      
+      // Show success toast
+      setToastMessage(`${result.status} ${result.statusText} (${result.time}ms)`);
+      setToastType("success");
+      setShowToast(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      setError(errorMessage);
+      setToastMessage(errorMessage);
+      setToastType("error");
+      setShowToast(true);
     } finally {
       setLoading(false);
     }
@@ -637,15 +665,6 @@ export const App: React.FC = () => {
             />
           </Box>
 
-          {/* Status Bar */}
-          <Box>
-            <StatusBar
-              loading={loading}
-              response={response}
-              error={error}
-            />
-          </Box>
-
           {/* Instructions */}
           <Instructions editMode={editMode !== null} />
         </>
@@ -695,6 +714,15 @@ export const App: React.FC = () => {
         <ExitModal
           onConfirm={() => exit()}
           onCancel={() => setShowExitModal(false)}
+        />
+      )}
+
+      {/* Toast Notification - Overlay */}
+      {showToast && (
+        <Toast
+          message={toastMessage}
+          type={toastType}
+          visible={showToast}
         />
       )}
     </Box>
