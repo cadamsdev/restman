@@ -1,0 +1,16 @@
+import React from "react";
+import { Box, Text } from "ink";
+
+export const Instructions: React.FC = () => {
+  return (
+    <Box
+      justifyContent="center"
+      paddingX={1}
+      marginTop={1}
+    >
+      <Text dimColor>
+        Ctrl+Enter: Send | Tab: Next | Shift+Tab: Prev | q/Esc: Quit
+      </Text>
+    </Box>
+  );
+};

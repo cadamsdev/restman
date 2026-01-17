@@ -1,19 +1,20 @@
 # 🚀 ShellMan - REST API Client TUI
 
-A powerful Terminal User Interface (TUI) REST API client, similar to Postman but running entirely in your terminal. Built with Bun and TypeScript.
+A powerful Terminal User Interface (TUI) REST API client, similar to Postman but running entirely in your terminal. Built with Bun, TypeScript, React, and Ink.
 
-![ShellMan](https://img.shields.io/badge/Built%20with-Bun-orange)
+![ShellMan](https://img.shields.io/badge/Built%20with-Bun-orange) ![ShellMan](https://img.shields.io/badge/UI-Ink%20%2B%20React-blue)
 
 ## Features
 
-- 🎯 **Intuitive TUI Interface** - Clean, keyboard-driven interface built with blessed
+- 🎯 **Intuitive TUI Interface** - Clean, keyboard-driven interface built with Ink and React
 - 🌐 **Full HTTP Support** - GET, POST, PUT, PATCH, DELETE methods
 - 📝 **Custom Headers** - Add and modify request headers easily
 - 📦 **Request Body** - Send JSON, XML, or plain text payloads
 - ⚡ **Fast Responses** - Built on Bun's high-performance runtime
 - 📊 **Response Viewer** - View status, headers, and formatted response body
 - ⏱️ **Request Timing** - See how long each request takes
-- 🎨 **Syntax Highlighting** - Colored output for better readability
+- 🎨 **Modern UI** - Built with React components for maintainability
+- ⚛️ **Component-based** - Modular React architecture using Ink
 
 ## Installation
 
@@ -43,13 +44,11 @@ chmod +x index.ts
 
 ### Keyboard Shortcuts
 
-- **F5 / Enter** - Send the current request
+- **Ctrl+Enter** - Send the current request
 - **Tab** - Move to next field
 - **Shift+Tab** - Move to previous field
-- **F2** - Focus method selector (GET, POST, etc.)
-- **q / Esc / Ctrl+C** - Quit application
+- **q / Esc** - Quit application
 - **Arrow Keys** - Navigate within text fields
-- **Mouse** - Click to focus fields (if supported)
 
 ### Interface Layout
 
@@ -66,18 +65,14 @@ chmod +x index.ts
 
 1. Select `GET` method (default)
 2. Enter URL: `https://jsonplaceholder.typicode.com/posts/1`
-3. Press F5 or Enter
+3. Method defaults to `GET`
+2. URL is pre-filled with an example
+3. Press Ctrl+Enter to send
 
-### POST Request
-
-1. Select `POST` method (F2 → arrow keys → Enter)
-2. Enter URL: `https://jsonplaceholder.typicode.com/posts`
-3. Add headers:
-   ```
-   Content-Type: application/json
-   Accept: application/json
-   ```
-4. Add body:
+1. Tab to method selector, use arrow keys to select `POST`
+2. Tab to URL and enter: `https://jsonplaceholder.typicode.com/posts`
+3. Headers are pre-filled with JSON content type
+4. Tab to Body and add:
    ```json
    {
      "title": "My Post",
@@ -85,7 +80,7 @@ chmod +x index.ts
      "userId": 1
    }
    ```
-5. Press F5 or Enter
+5. Press Ctrl+Enter to send
 
 ## Project Structure
 
@@ -97,8 +92,16 @@ shellman/
 │   └── ui-manager.ts     # TUI interface manager
 ├── package.json
 ├── tsconfig.json
-└── README.md
-```
+└── READApp.tsx           # Main React component
+│   ├── http-client.ts    # HTTP client implementation
+│   └── components/       # React UI components
+│       ├── URLInput.tsx
+│       ├── MethodSelector.tsx
+│       ├── HeadersEditor.tsx
+│       ├── BodyEditor.tsx
+│       ├── ResponsePanel.tsx
+│       ├── StatusBar.tsx
+│       └── Instructions.tsx
 
 ## Development
 
@@ -110,7 +113,9 @@ bun run index.ts
 bun build index.ts --outdir dist
 ```
 
-## Technologies Used
+## TReact** - Component-based UI library
+- **Ink** - React for interactive CLI apps
+- **ink-text-input** - Text input component for Ink
 
 - **Bun** - Fast JavaScript runtime and package manager
 - **TypeScript** - Type-safe JavaScript
