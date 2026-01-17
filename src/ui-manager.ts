@@ -107,8 +107,15 @@ export class UIManager {
         },
       },
       inputOnFocus: true,
+      keys: true,
+      mouse: true,
       label: " URL ",
-      content: "https://jsonplaceholder.typicode.com/posts/1",
+      value: "https://jsonplaceholder.typicode.com/posts/1",
+    });
+
+    // Clear the textbox when it receives focus to avoid duplicate input
+    urlInput.on("focus", () => {
+      urlInput.readInput();
     });
 
     this.screen.append(urlInput);
