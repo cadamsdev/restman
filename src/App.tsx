@@ -43,17 +43,9 @@ export const App: React.FC = () => {
       return; // Ignore other keys when help modal is shown
     }
 
-    // Handle exit modal responses
+    // Exit modal handles its own keyboard input
     if (showExitModal) {
-      if (input === "y" || input === "Y") {
-        exit();
-        return;
-      }
-      if (input === "n" || input === "N" || key.escape) {
-        setShowExitModal(false);
-        return;
-      }
-      return; // Ignore other keys when modal is shown
+      return; // Ignore all keys when modal is shown - modal handles them
     }
 
     // Exit edit mode with ESC (only if in edit mode)
