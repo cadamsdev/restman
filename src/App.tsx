@@ -535,7 +535,7 @@ export const App: React.FC = () => {
               🌐 ShellMan - Environments (ESC to return)
             </Text>
           </Box>
-          <Box marginTop={1} flexGrow={1}>
+          <Box flexGrow={1}>
             <EnvironmentsPanel
               config={environmentsConfig}
               focused={true}
@@ -558,7 +558,7 @@ export const App: React.FC = () => {
               🌐 ShellMan - Saved Requests (ESC to return)
             </Text>
           </Box>
-          <Box marginTop={1} flexGrow={1}>
+          <Box flexGrow={1}>
             <SavedRequestsPanel
               savedRequests={savedRequests}
               focused={true}
@@ -579,7 +579,7 @@ export const App: React.FC = () => {
               🌐 ShellMan - Request History (ESC to return)
             </Text>
           </Box>
-          <Box marginTop={1} flexGrow={1}>
+          <Box flexGrow={1}>
             <HistoryPanel
               history={history}
               focused={true}
@@ -600,7 +600,7 @@ export const App: React.FC = () => {
               🌐 ShellMan - Response View (ESC to return)
             </Text>
           </Box>
-          <Box marginTop={1} flexGrow={1}>
+          <Box flexGrow={1}>
             <ResponsePanel
               response={response}
               focused={true}
@@ -613,8 +613,7 @@ export const App: React.FC = () => {
           <Box
             borderStyle="double"
             borderColor="magenta"
-            paddingX={2}
-            paddingY={0}
+            paddingX={1}
             justifyContent="space-between"
             alignItems="center"
           >
@@ -627,7 +626,7 @@ export const App: React.FC = () => {
           </Box>
 
           {/* Environment Selector Row */}
-          <Box marginTop={1} marginBottom={0}>
+          <Box>
             <EnvironmentSelector
               environments={environmentsConfig.environments}
               activeEnvironmentId={environmentsConfig.activeEnvironmentId}
@@ -638,7 +637,7 @@ export const App: React.FC = () => {
           </Box>
 
           {/* Method and URL Row */}
-          <Box marginTop={1} gap={1}>
+          <Box gap={1}>
             <MethodSelector
               value={method}
               onChange={setMethod}
@@ -654,7 +653,7 @@ export const App: React.FC = () => {
           </Box>
 
           {/* Headers and Body */}
-          <Box marginTop={1} height={10} gap={1}>
+          <Box height={8} gap={1}>
             <HeadersEditor
               value={headers}
               onChange={setHeaders}
@@ -670,7 +669,7 @@ export const App: React.FC = () => {
           </Box>
 
           {/* Status Bar */}
-          <Box marginTop={1}>
+          <Box>
             <StatusBar
               loading={loading}
               response={response}

@@ -11,8 +11,7 @@ export const Instructions: React.FC<InstructionsProps> = ({ editMode }) => {
       borderStyle="round"
       borderColor={editMode ? "green" : "gray"}
       justifyContent="center"
-      paddingX={2}
-      marginTop={1}
+      paddingX={1}
     >
       {editMode ? (
         <Text>
