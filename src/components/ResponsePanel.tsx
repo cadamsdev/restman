@@ -128,21 +128,21 @@ export const ResponsePanel: React.FC<ResponsePanelProps> = ({
               color={activeTab === "info" ? "cyan" : "gray"}
               dimColor={activeTab !== "info"}
             >
-              {activeTab === "info" ? "▸" : "▹"} [1] Info
+              Info
             </Text>
             <Text 
               bold={activeTab === "body"} 
               color={activeTab === "body" ? "cyan" : "gray"}
               dimColor={activeTab !== "body"}
             >
-              {activeTab === "body" ? "▸" : "▹"} [2] Body
+              Body
             </Text>
             <Text 
               bold={activeTab === "cookies"} 
               color={activeTab === "cookies" ? "cyan" : "gray"}
               dimColor={activeTab !== "cookies"}
             >
-              {activeTab === "cookies" ? "▸" : "▹"} [3] Cookies
+              Cookies
             </Text>
           </Box>
 
