@@ -20,7 +20,6 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose }) => {
         position="absolute"
         width="100%"
         height="100%"
-        backgroundColor="black"
       />
       
       {/* Modal content */}

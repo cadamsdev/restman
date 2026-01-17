@@ -55,7 +55,6 @@ export const ExitModal: React.FC<ExitModalProps> = ({ onConfirm, onCancel }) => 
         position="absolute"
         width="100%"
         height="100%"
-        backgroundColor="black"
       />
       
       {/* Modal content */}
