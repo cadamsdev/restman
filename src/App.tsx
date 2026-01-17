@@ -81,27 +81,27 @@ export const App: React.FC = () => {
       }
 
       // Quick navigation hotkeys
-      if (input === "m") {
+      if (input === "m" || input === "1") {
         setFocusedField("method");
         setEditMode(null);
         return;
       }
-      if (input === "u") {
+      if (input === "u" || input === "2") {
         setFocusedField("url");
         setEditMode(null);
         return;
       }
-      if (input === "h") {
+      if (input === "h" || input === "3") {
         setFocusedField("headers");
         setEditMode(null);
         return;
       }
-      if (input === "b") {
+      if (input === "b" || input === "4") {
         setFocusedField("body");
         setEditMode(null);
         return;
       }
-      if (input === "r") {
+      if (input === "r" || input === "5") {
         setFocusedField("response");
         setEditMode(null);
         return;

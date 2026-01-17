@@ -38,11 +38,11 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose }) => {
         
         <Box marginTop={1} flexDirection="column">
           <Text bold color="yellow">Navigation:</Text>
-          <Text>  <Text color="cyan">m</Text> - Jump to Method section</Text>
-          <Text>  <Text color="cyan">u</Text> - Jump to URL section</Text>
-          <Text>  <Text color="cyan">h</Text> - Jump to Headers section</Text>
-          <Text>  <Text color="cyan">b</Text> - Jump to Body section</Text>
-          <Text>  <Text color="cyan">r</Text> - Jump to Response section</Text>
+          <Text>  <Text color="cyan">m</Text> / <Text color="cyan">1</Text> - Jump to Method section</Text>
+          <Text>  <Text color="cyan">u</Text> / <Text color="cyan">2</Text> - Jump to URL section</Text>
+          <Text>  <Text color="cyan">h</Text> / <Text color="cyan">3</Text> - Jump to Headers section</Text>
+          <Text>  <Text color="cyan">b</Text> / <Text color="cyan">4</Text> - Jump to Body section</Text>
+          <Text>  <Text color="cyan">r</Text> / <Text color="cyan">5</Text> - Jump to Response section</Text>
           <Text>  <Text color="cyan">Tab</Text> - Next section</Text>
           <Text>  <Text color="cyan">Shift+Tab</Text> - Previous section</Text>
         </Box>
