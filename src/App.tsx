@@ -246,7 +246,7 @@ export const App: React.FC = () => {
       }
 
       // Open history view
-      if (input === "i" || input === "5") {
+      if (input === "h" || input === "5") {
         setHistoryViewMode(true);
         return;
       }
