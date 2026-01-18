@@ -9,12 +9,7 @@ interface MethodSelectorProps {
   editMode: boolean;
 }
 
-export const MethodSelector: React.FC<MethodSelectorProps> = ({
-  value,
-  focused,
-  editMode,
-}) => {
-
+export const MethodSelector: React.FC<MethodSelectorProps> = ({ value, focused, editMode }) => {
   const getMethodColor = (method: string): string => {
     switch (method) {
       case 'GET':
