@@ -121,11 +121,11 @@ export const RequestEditor: React.FC<RequestEditorProps> = ({
       setActiveTab("body");
       setCursorLine(0);
       setCursorPosition(0);
-    } else if (input === "h" || input === "3") {
+    } else if (input === "3") {
       setActiveTab("headers");
       setCursorLine(0);
       setCursorPosition(0);
-    } else if (input === "b" || input === "4") {
+    } else if (input === "4") {
       setActiveTab("body");
       setCursorLine(0);
       setCursorPosition(0);

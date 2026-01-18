@@ -275,17 +275,17 @@ export const App: React.FC = () => {
         setEditMode(null);
         return;
       }
-      if (input === "m" || input === "1") {
+      if (input === "1") {
         setFocusedField("method");
         setEditMode(null);
         return;
       }
-      if (input === "u" || input === "2") {
+      if (input === "2") {
         setFocusedField("url");
         setEditMode(null);
         return;
       }
-      if (input === "r" || input === "3") {
+      if (input === "3") {
         setFocusedField("request");
         setEditMode(null);
         return;

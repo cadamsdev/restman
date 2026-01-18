@@ -75,19 +75,19 @@ export const ResponseEditor: React.FC<ResponseEditorProps> = ({
     }
     
     // Direct tab shortcuts
-    if (input === "b" || input === "5") {
+    if (input === "5") {
       setActiveTab("body");
       setScrollOffset(0);
       return;
     }
     
-    if (input === "h" || input === "6") {
+    if (input === "6") {
       setActiveTab("headers");
       setScrollOffset(0);
       return;
     }
     
-    if (input === "c" || input === "7") {
+    if (input === "7") {
       setActiveTab("cookies");
       setScrollOffset(0);
       return;
