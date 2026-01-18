@@ -27,7 +27,9 @@
     "build:darwin-x64": "bun run scripts/build-target.ts darwin-x64",
     "build": "bun build src/cli.ts --compile --outfile dist/restman",
     "fmt": "oxfmt",
-    "fmt:check": "oxfmt --check"
+    "fmt:check": "oxfmt --check",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix"
   },
   "dependencies": {
     "@types/react": "^19.2.8",
@@ -41,6 +43,7 @@
     "@types/bun": "latest",
     "archiver": "^7.0.1",
     "oxfmt": "^0.24.0",
+    "oxlint": "^1.39.0",
     "react-devtools-core": "^7.0.1"
   },
   "peerDependencies": {
