@@ -2,7 +2,7 @@
 
 import React from "react";
 import { render } from "ink";
-import { App } from "./src/App";
+import { App } from "./App";
 
 // Enable alternate screen buffer (fullscreen mode)
 process.stdout.write("\x1b[?1049h");
