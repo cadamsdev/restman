@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Box, Text, measureElement, type DOMElement } from "ink";
+import { Box, Text, measureElement, useStdout, type DOMElement } from "ink";
 
 export interface FieldsetProps {
   title: string;
@@ -56,6 +56,7 @@ export const Fieldset: React.FC<FieldsetProps> = ({
 }) => {
   const boxRef = useRef<DOMElement>(null);
   const [fragments, setFragments] = useState<BorderFragment[]>([]);
+  const { stdout } = useStdout();
   
   // Determine colors based on state
   const actualBorderColor = focused ? "magenta" : editMode ? "green" : borderColor;
@@ -86,49 +87,82 @@ export const Fieldset: React.FC<FieldsetProps> = ({
   useEffect(() => {
     if (!boxRef.current) return;
     
-    const dimensions = measureElement(boxRef.current);
-    const availableWidth = dimensions.width - 2; // Subtract left and right corners
+    const recalculateFragments = () => {
+      const dimensions = measureElement(boxRef.current!);
+      const availableWidth = dimensions.width - 2; // Subtract left and right corners
+      
+      if (availableWidth <= 0) {
+        setFragments([]);
+        return;
+      }
+      
+      // Build the top border with title embedded
+      const titleLength = getVisualWidth(paddedTitle);
+      const titlePosition = 1; // Start position after left corner
+      
+      // Build fragments array
+      const newFragments: BorderFragment[] = [];
+      
+      // Left corner
+      newFragments.push({ isTitle: false, content: chars.topLeft });
+      
+      // Before title
+      if (titlePosition > 0) {
+        newFragments.push({ 
+          isTitle: false, 
+          content: chars.horizontal.repeat(titlePosition) 
+        });
+      }
+      
+      // Title
+      newFragments.push({ isTitle: true, content: paddedTitle });
+      
+      // After title to end
+      const remainingLength = availableWidth - titlePosition - titleLength;
+      if (remainingLength > 0) {
+        newFragments.push({ 
+          isTitle: false, 
+          content: chars.horizontal.repeat(remainingLength) 
+        });
+      }
+      
+      // Right corner
+      newFragments.push({ isTitle: false, content: chars.topRight });
+      
+      setFragments(newFragments);
+    };
     
-    if (availableWidth <= 0) {
-      setFragments([]);
-      return;
-    }
+    // Initial calculation
+    recalculateFragments();
     
-    // Build the top border with title embedded
-    const titleLength = getVisualWidth(paddedTitle);
-    const titlePosition = 1; // Start position after left corner
+    // Debounce resize events to prevent excessive recalculations
+    let resizeTimeout: NodeJS.Timeout | null = null;
     
-    // Build fragments array
-    const newFragments: BorderFragment[] = [];
+    const handleResize = () => {
+      // Cancel any pending update
+      if (resizeTimeout) {
+        clearTimeout(resizeTimeout);
+      }
+      
+      // Update immediately for responsiveness
+      recalculateFragments();
+      
+      // Also schedule a final update to ensure accuracy
+      resizeTimeout = setTimeout(() => {
+        recalculateFragments();
+      }, 100);
+    };
     
-    // Left corner
-    newFragments.push({ isTitle: false, content: chars.topLeft });
+    stdout?.on('resize', handleResize);
     
-    // Before title
-    if (titlePosition > 0) {
-      newFragments.push({ 
-        isTitle: false, 
-        content: chars.horizontal.repeat(titlePosition) 
-      });
-    }
-    
-    // Title
-    newFragments.push({ isTitle: true, content: paddedTitle });
-    
-    // After title to end
-    const remainingLength = availableWidth - titlePosition - titleLength;
-    if (remainingLength > 0) {
-      newFragments.push({ 
-        isTitle: false, 
-        content: chars.horizontal.repeat(remainingLength) 
-      });
-    }
-    
-    // Right corner
-    newFragments.push({ isTitle: false, content: chars.topRight });
-    
-    setFragments(newFragments);
-  }, [boxRef.current, formattedTitle, chars, borderStyle]);
+    // Cleanup listener and timeout on unmount
+    return () => {
+      if (resizeTimeout) {
+        clearTimeout(resizeTimeout);
+      }
+      stdout?.off('resize', handleResize);
+    };
+  }, [boxRef.current, formattedTitle, chars, borderStyle, paddedTitle, stdout]);
 
   return (
     <Box
@@ -137,6 +171,7 @@ export const Fieldset: React.FC<FieldsetProps> = ({
       flexGrow={flexGrow}
       height={height}
       width={width}
+      minWidth={20}
     >
       {/* Top border with embedded title */}
       <Text color={actualBorderColor}>

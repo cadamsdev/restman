@@ -672,7 +672,7 @@ export const App: React.FC = () => {
 
 
   return (
-    <Box flexDirection="column" width="100%" height="100%">
+    <Box flexDirection="column" width="100%" height="100%" minWidth={50}>
       {/* Environment Editor Modal - Full Screen Overlay */}
       {showEnvironmentEditor ? (
         <EnvironmentEditorModal
@@ -769,7 +769,7 @@ export const App: React.FC = () => {
           </Box>
 
           {/* Request Editor (Headers, Params and Body tabs) */}
-          <Box height={10}>
+          <Box minHeight={10} flexGrow={1}>
             <RequestEditor
               url={url}
               headers={headers}
@@ -787,7 +787,7 @@ export const App: React.FC = () => {
           </Box>
 
           {/* Response Editor (Body, Headers and Cookies tabs) */}
-          <Box height={10}>
+          <Box minHeight={10} flexGrow={1}>
             <ResponseEditor
               response={response}
               focused={focusedField === "response"}
