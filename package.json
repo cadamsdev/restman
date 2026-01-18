@@ -1,6 +1,7 @@
 {
   "name": "restman",
   "version": "0.0.0",
+  "private": true,
   "author": "cadamsdev",
   "module": "src/cli.ts",
   "devDependencies": {
@@ -24,7 +25,6 @@
     "http"
   ],
   "license": "MIT",
-  "private": true,
   "scripts": {
     "start": "bun run src/cli.ts",
     "dev": "bun run src/cli.ts",
