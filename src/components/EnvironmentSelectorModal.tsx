@@ -124,7 +124,7 @@ export const EnvironmentSelectorModal: React.FC<EnvironmentSelectorModalProps> =
         
         <Box marginTop={1} flexDirection="column" paddingX={2}>
           {environments.map((env, index) => (
-            <Box key={env.id} flexDirection="column">
+            <Box key={env.id}>
               <Text
                 color={index === selectedIndex ? "cyan" : "gray"}
                 bold={index === selectedIndex}
@@ -132,13 +132,6 @@ export const EnvironmentSelectorModal: React.FC<EnvironmentSelectorModalProps> =
               >
                 {index === selectedIndex ? `▸ ${env.name}` : `  ${env.name}`}
               </Text>
-              {index === selectedIndex && Object.keys(env.variables).length > 0 && (
-                <Box marginLeft={3}>
-                  <Text dimColor color="gray">
-                    {Object.keys(env.variables).length} variable{Object.keys(env.variables).length !== 1 ? 's' : ''}
-                  </Text>
-                </Box>
-              )}
             </Box>
           ))}
         </Box>
