@@ -3,22 +3,28 @@ import { Box, Text, useInput } from "ink";
 import { Fieldset } from "./Fieldset";
 
 interface RequestEditorProps {
+  url: string;
   headers: string;
   onHeadersChange: (value: string) => void;
+  params: string;
+  onParamsChange: (value: string) => void;
   body: string;
   onBodyChange: (value: string) => void;
   focused: boolean;
   editMode: boolean;
-  activeTab: "headers" | "body";
-  onTabChange: (tab: "headers" | "body") => void;
+  activeTab: "headers" | "params" | "body";
+  onTabChange: (tab: "headers" | "params" | "body") => void;
   isModalOpen?: boolean;
 }
 
-type Tab = "headers" | "body";
+type Tab = "headers" | "params" | "body";
 
 export const RequestEditor: React.FC<RequestEditorProps> = ({
+  url,
   headers,
   onHeadersChange,
+  params,
+  onParamsChange,
   body,
   onBodyChange,
   focused,
@@ -30,8 +36,8 @@ export const RequestEditor: React.FC<RequestEditorProps> = ({
   const [cursorLine, setCursorLine] = useState(0);
   const [cursorPosition, setCursorPosition] = useState(0);
 
-  const currentValue = activeTab === "headers" ? headers : body;
-  const onChange = activeTab === "headers" ? onHeadersChange : onBodyChange;
+  const currentValue = activeTab === "headers" ? headers : activeTab === "params" ? params : body;
+  const onChange = activeTab === "headers" ? onHeadersChange : activeTab === "params" ? onParamsChange : onBodyChange;
   const lines = currentValue.split("\n");
 
   // Handle keyboard input for editing (when in edit mode)
@@ -40,13 +46,23 @@ export const RequestEditor: React.FC<RequestEditorProps> = ({
 
     // Handle left/right arrow navigation between tabs (when not in edit mode)
     if (!editMode) {
-      if (key.leftArrow && activeTab === "body") {
-        onTabChange("headers");
-        return;
+      if (key.leftArrow) {
+        if (activeTab === "body") {
+          onTabChange("params");
+          return;
+        } else if (activeTab === "params") {
+          onTabChange("headers");
+          return;
+        }
       }
-      if (key.rightArrow && activeTab === "headers") {
-        onTabChange("body");
-        return;
+      if (key.rightArrow) {
+        if (activeTab === "headers") {
+          onTabChange("params");
+          return;
+        } else if (activeTab === "params") {
+          onTabChange("body");
+          return;
+        }
       }
     }
 
@@ -142,6 +158,15 @@ export const RequestEditor: React.FC<RequestEditorProps> = ({
       </Text>
       <Text dimColor>│</Text>
       <Text
+        bold={activeTab === "params"}
+        color={activeTab === "params" ? "cyan" : "gray"}
+        backgroundColor={activeTab === "params" ? (focused ? "cyan" : undefined) : undefined}
+        inverse={activeTab === "params" && focused && !editMode}
+      >
+        Params
+      </Text>
+      <Text dimColor>│</Text>
+      <Text
         bold={activeTab === "body"}
         color={activeTab === "body" ? "cyan" : "gray"}
         backgroundColor={activeTab === "body" ? (focused ? "cyan" : undefined) : undefined}
@@ -153,6 +178,72 @@ export const RequestEditor: React.FC<RequestEditorProps> = ({
   );
 
   const renderContent = () => {
+    // Special rendering for params tab to show preview and format key-value pairs
+    if (activeTab === "params") {
+      const displayLines = lines.length > 0 && lines[0] !== "" ? lines : [""];
+      
+      // Build preview URL
+      let previewUrl = url || "";
+      if (params.trim()) {
+        const urlParams = new URLSearchParams();
+        params.split("\n").forEach(line => {
+          const trimmed = line.trim();
+          if (!trimmed) return;
+          const equalIndex = trimmed.indexOf("=");
+          if (equalIndex !== -1) {
+            const key = trimmed.substring(0, equalIndex).trim();
+            const value = trimmed.substring(equalIndex + 1).trim();
+            if (key) urlParams.append(key, value);
+          }
+        });
+        const paramString = urlParams.toString();
+        if (paramString) {
+          previewUrl += (previewUrl.includes('?') ? '&' : '?') + paramString;
+        }
+      }
+      
+      return (
+        <Box flexDirection="column" flexGrow={1}>
+          {/* URL Preview */}
+          {!editMode && params.trim() && (
+            <Box marginBottom={1}>
+              <Text dimColor>Preview: </Text>
+              <Text color="green">{previewUrl}</Text>
+            </Box>
+          )}
+          
+          {/* Params list with key-value formatting */}
+          {displayLines.map((line, idx) => {
+            const equalIndex = line.indexOf("=");
+            const hasKeyValue = equalIndex !== -1 && !editMode;
+            
+            return (
+              <Text key={idx} color={focused ? "cyan" : "gray"} dimColor={!focused}>
+                {editMode && idx === cursorLine ? (
+                  <>
+                    {line.slice(0, cursorPosition)}
+                    <Text backgroundColor="magenta" color="black">
+                      {line[cursorPosition] || " "}
+                    </Text>
+                    {line.slice(cursorPosition + 1)}
+                  </>
+                ) : hasKeyValue ? (
+                  <>
+                    <Text color="yellow" bold>{line.substring(0, equalIndex)}</Text>
+                    <Text dimColor>=</Text>
+                    <Text color="cyan">{'"'}{line.substring(equalIndex + 1)}{'"'}</Text>
+                  </>
+                ) : (
+                  line || (idx === 0 ? "key=value" : " ")
+                )}
+              </Text>
+            );
+          })}
+        </Box>
+      );
+    }
+    
+    // Default rendering for headers and body
     const displayLines = lines.length > 0 && lines[0] !== "" ? lines : [""];
     
     return (

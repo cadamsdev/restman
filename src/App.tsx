@@ -36,6 +36,7 @@ export const App: React.FC = () => {
   const [method, setMethod] = useState<string>("GET");
   const [url, setUrl] = useState<string>("https://jsonplaceholder.typicode.com/posts/1");
   const [headers, setHeaders] = useState<string>("Content-Type: application/json\nAccept: application/json");
+  const [params, setParams] = useState<string>("");
   const [body, setBody] = useState<string>("");
   const [response, setResponse] = useState<Response | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -61,7 +62,7 @@ export const App: React.FC = () => {
   const [environmentsViewMode, setEnvironmentsViewMode] = useState<boolean>(false);
   const [showEnvironmentEditor, setShowEnvironmentEditor] = useState<boolean>(false);
   const [editingEnvironmentId, setEditingEnvironmentId] = useState<number | null>(null);
-  const [requestActiveTab, setRequestActiveTab] = useState<"headers" | "body">("headers");
+  const [requestActiveTab, setRequestActiveTab] = useState<"headers" | "params" | "body">("headers");
   const [responseActiveTab, setResponseActiveTab] = useState<"body" | "headers" | "cookies">("body");
 
   const fields: FocusField[] = ["url", "request", "response", "environment", "method"];
@@ -324,6 +325,9 @@ export const App: React.FC = () => {
         // Shift+Tab - previous tab/field
         if (focusedField === "request") {
           if (requestActiveTab === "body") {
+            setRequestActiveTab("params");
+            return;
+          } else if (requestActiveTab === "params") {
             setRequestActiveTab("headers");
             return;
           }
@@ -353,6 +357,9 @@ export const App: React.FC = () => {
         // Tab - next tab/field
         if (focusedField === "request") {
           if (requestActiveTab === "headers") {
+            setRequestActiveTab("params");
+            return;
+          } else if (requestActiveTab === "params") {
             setRequestActiveTab("body");
             return;
           }
@@ -420,6 +427,28 @@ export const App: React.FC = () => {
     return headers;
   };
 
+  const parseParams = (paramsText: string): URLSearchParams => {
+    const params = new URLSearchParams();
+    const lines = paramsText.split("\n");
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed) continue;
+
+      const equalIndex = trimmed.indexOf("=");
+      if (equalIndex === -1) continue;
+
+      const key = trimmed.substring(0, equalIndex).trim();
+      const value = trimmed.substring(equalIndex + 1).trim();
+
+      if (key) {
+        params.append(key, value);
+      }
+    }
+
+    return params;
+  };
+
   const sendRequest = async () => {
     if (!url) {
       setError("URL is required");
@@ -441,10 +470,25 @@ export const App: React.FC = () => {
       const variables = activeEnv?.variables || {};
 
       // Apply variable substitution
-      const substitutedUrl = substituteVariables(url, variables);
+      let substitutedUrl = substituteVariables(url, variables);
       const substitutedBody = body ? substituteVariables(body, variables) : undefined;
       const parsedHeaders = parseHeaders(headers);
       const substitutedHeaders = substituteVariablesInHeaders(parsedHeaders, variables);
+
+      // Add query parameters to URL
+      if (params) {
+        const urlParams = parseParams(params);
+        // Apply variable substitution to param values
+        const substitutedParams = new URLSearchParams();
+        urlParams.forEach((value, key) => {
+          substitutedParams.append(key, substituteVariables(value, variables));
+        });
+        
+        const paramString = substitutedParams.toString();
+        if (paramString) {
+          substitutedUrl += (substitutedUrl.includes('?') ? '&' : '?') + paramString;
+        }
+      }
 
       const requestOptions: RequestOptions = {
         method,
@@ -497,7 +541,17 @@ export const App: React.FC = () => {
     }
     
     setMethod(request.method);
-    setUrl(request.url);
+    
+    // Separate URL and query params
+    const urlObj = new URL(request.url);
+    setUrl(urlObj.origin + urlObj.pathname);
+    
+    // Convert URL params to string format
+    const paramsArray: string[] = [];
+    urlObj.searchParams.forEach((value, key) => {
+      paramsArray.push(`${key}=${value}`);
+    });
+    setParams(paramsArray.join("\n"));
     
     // Convert headers object back to string format
     const headersString = Object.entries(request.headers || {})
@@ -510,13 +564,23 @@ export const App: React.FC = () => {
   };
 
   const saveCurrentRequest = (name: string) => {
+    // Build final URL with params for saving
+    let finalUrl = url;
+    if (params) {
+      const urlParams = parseParams(params);
+      const paramString = urlParams.toString();
+      if (paramString) {
+        finalUrl += (finalUrl.includes('?') ? '&' : '?') + paramString;
+      }
+    }
+    
     const savedRequest: SavedRequest = {
       id: savedRequestIdCounter,
       name,
       timestamp: new Date(),
       request: {
         method,
-        url,
+        url: finalUrl,
         headers: parseHeaders(headers),
         body: body || undefined,
       },
@@ -534,7 +598,23 @@ export const App: React.FC = () => {
     }
     
     setMethod(request.method);
-    setUrl(request.url);
+    
+    // Separate URL and query params
+    try {
+      const urlObj = new URL(request.url);
+      setUrl(urlObj.origin + urlObj.pathname);
+      
+      // Convert URL params to string format
+      const paramsArray: string[] = [];
+      urlObj.searchParams.forEach((value, key) => {
+        paramsArray.push(`${key}=${value}`);
+      });
+      setParams(paramsArray.join("\n"));
+    } catch (e) {
+      // If URL parsing fails, just set the whole URL
+      setUrl(request.url);
+      setParams("");
+    }
     
     // Convert headers object back to string format
     const headersString = Object.entries(request.headers || {})
@@ -694,11 +774,14 @@ export const App: React.FC = () => {
             />
           </Box>
 
-          {/* Request Editor (Headers and Body tabs) */}
+          {/* Request Editor (Headers, Params and Body tabs) */}
           <Box height={10}>
             <RequestEditor
+              url={url}
               headers={headers}
               onHeadersChange={setHeaders}
+              params={params}
+              onParamsChange={setParams}
               body={body}
               onBodyChange={setBody}
               focused={focusedField === "request"}
