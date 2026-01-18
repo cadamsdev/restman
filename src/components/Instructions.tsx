@@ -26,6 +26,7 @@ export const Instructions: React.FC<InstructionsProps> = ({ editMode }) => {
         <Text>
           <Text color="green">Enter</Text><Text dimColor> Send │ </Text>
           <Text color="cyan">e</Text><Text dimColor> Edit │ </Text>
+          <Text color="cyan">Space</Text><Text dimColor> Full View │ </Text>
           <Text color="cyan">s</Text><Text dimColor> Save │ </Text>
           <Text color="cyan">l</Text><Text dimColor> Load │ </Text>
           <Text color="cyan">h</Text><Text dimColor> History │ </Text>

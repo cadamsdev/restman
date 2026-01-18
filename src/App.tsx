@@ -21,6 +21,7 @@ import { EnvironmentSelector } from "./components/EnvironmentSelector";
 import { EnvironmentSelectorModal } from "./components/EnvironmentSelectorModal";
 import { EnvironmentsPanel } from "./components/EnvironmentsPanel";
 import { EnvironmentEditorModal } from "./components/EnvironmentEditorModal";
+import { ResponseBodyModal } from "./components/ResponseBodyModal";
 import { loadHistory, saveHistory } from "./history-storage";
 import { loadSavedRequests, saveSavedRequests, type SavedRequest } from "./saved-requests-storage";
 import { loadEnvironments, saveEnvironments, setActiveEnvironment, addEnvironment, updateEnvironment, deleteEnvironment, getActiveEnvironment, type EnvironmentsConfig } from "./environment-storage";
@@ -50,7 +51,7 @@ export const App: React.FC = () => {
   const [showMethodModal, setShowMethodModal] = useState<boolean>(false);
   const [showEnvironmentSelectorModal, setShowEnvironmentSelectorModal] = useState<boolean>(false);
   const [editMode, setEditMode] = useState<FocusField | null>(null);
-  const [responseViewMode, setResponseViewMode] = useState<boolean>(false);
+  const [showResponseBodyModal, setShowResponseBodyModal] = useState<boolean>(false);
   const [historyViewMode, setHistoryViewMode] = useState<boolean>(false);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [historyIdCounter, setHistoryIdCounter] = useState<number>(1);
@@ -171,6 +172,11 @@ export const App: React.FC = () => {
       return; // Ignore all keys when modal is shown - modal handles them
     }
 
+    // Response body modal handles its own keyboard input
+    if (showResponseBodyModal) {
+      return; // Ignore all keys when modal is shown - modal handles them
+    }
+
     // Handle environments view mode
     if (environmentsViewMode) {
       if (key.escape) {
@@ -201,13 +207,10 @@ export const App: React.FC = () => {
       return;
     }
 
-    // Handle response view mode
-    if (responseViewMode) {
-      if (key.escape) {
-        setResponseViewMode(false);
-        return;
-      }
-      // All other inputs are handled by ResponsePanel
+    // Open response body modal with spacebar when response is in edit mode
+    if (editMode === "response" && input === " " && response) {
+      setShowResponseBodyModal(true);
+      setEditMode(null); // Exit edit mode when opening modal
       return;
     }
 
@@ -246,6 +249,12 @@ export const App: React.FC = () => {
         } else {
           setEditMode(focusedField);
         }
+        return;
+      }
+
+      // Open response body modal with spacebar when response is focused
+      if (input === " " && focusedField === "response" && response) {
+        setShowResponseBodyModal(true);
         return;
       }
 
@@ -725,21 +734,6 @@ export const App: React.FC = () => {
             />
           </Box>
         </Box>
-      ) : responseViewMode ? (
-        /* Response View Mode - Full Screen Response */
-        <Box flexDirection="column" width="100%" height="100%">
-          <Box paddingX={1} marginBottom={1}>
-            <Text bold color="magenta">
-              🚀 RestMan <Text dimColor italic>v{packageJson.version}</Text> <Text color="cyan">- Response View</Text> <Text dimColor>(ESC to return)</Text>
-            </Text>
-          </Box>
-          <Box flexGrow={1}>
-            <ResponsePanel
-              response={response}
-              focused={true}
-            />
-          </Box>
-        </Box>
       ) : (
         <>
           {/* Header */}
@@ -788,7 +782,7 @@ export const App: React.FC = () => {
               editMode={editMode === "request"}
               activeTab={requestActiveTab}
               onTabChange={setRequestActiveTab}
-              isModalOpen={showExitModal || showHelpModal || showMethodModal || showSaveModal || showEnvironmentSelectorModal || showEnvironmentEditor}
+              isModalOpen={showExitModal || showHelpModal || showMethodModal || showSaveModal || showEnvironmentSelectorModal || showEnvironmentEditor || showResponseBodyModal}
             />
           </Box>
 
@@ -800,13 +794,21 @@ export const App: React.FC = () => {
               editMode={editMode === "response"}
               activeTab={responseActiveTab}
               onTabChange={setResponseActiveTab}
-              isModalOpen={showExitModal || showHelpModal || showMethodModal || showSaveModal || showEnvironmentSelectorModal || showEnvironmentEditor}
+              isModalOpen={showExitModal || showHelpModal || showMethodModal || showSaveModal || showEnvironmentSelectorModal || showEnvironmentEditor || showResponseBodyModal}
             />
           </Box>
 
           {/* Instructions */}
           <Instructions editMode={editMode !== null} />
         </>
+      )}
+
+      {/* Response Body Modal */}
+      {showResponseBodyModal && response && (
+        <ResponseBodyModal
+          body={response.body}
+          onClose={() => setShowResponseBodyModal(false)}
+        />
       )}
 
       {/* Help Modal */}

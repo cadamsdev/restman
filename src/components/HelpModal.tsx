@@ -50,6 +50,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose }) => {
         <Box marginTop={1} flexDirection="column">
           <Text bold color="cyan">▸ Actions:</Text>
           <Text>  <Text color="yellow">e</Text> - Enter edit mode for focused section</Text>
+          <Text>  <Text color="yellow">Space</Text> - View full response (when focused on Response)</Text>
           <Text>  <Text color="yellow">s</Text> - Save current request</Text>
           <Text>  <Text color="green">Enter</Text> - Send request (readonly mode)</Text>
           <Text>  <Text color="green">Ctrl+S</Text> - Send request (any mode)</Text>
