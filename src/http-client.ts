@@ -1,3 +1,5 @@
+import packageJson from "../package.json";
+
 export interface RequestOptions {
   method: string;
   url: string;
@@ -18,9 +20,15 @@ export class HTTPClient {
     const startTime = Date.now();
 
     try {
+      // Add default User-Agent if not provided
+      const headers = {
+        "User-Agent": `RestMan/${packageJson.version} (https://github.com/cadamsdev/restman)`,
+        ...options.headers,
+      };
+
       const fetchOptions: RequestInit = {
         method: options.method,
-        headers: options.headers,
+        headers: headers,
       };
 
       if (options.body && ["POST", "PUT", "PATCH"].includes(options.method)) {
@@ -31,9 +39,9 @@ export class HTTPClient {
       const time = Date.now() - startTime;
 
       // Get response headers
-      const headers: Record<string, string> = {};
+      const responseHeaders: Record<string, string> = {};
       response.headers.forEach((value, key) => {
-        headers[key] = value;
+        responseHeaders[key] = value;
       });
 
       // Get response body
@@ -54,7 +62,7 @@ export class HTTPClient {
       return {
         status: response.status,
         statusText: response.statusText,
-        headers,
+        headers: responseHeaders,
         body,
         time,
       };
