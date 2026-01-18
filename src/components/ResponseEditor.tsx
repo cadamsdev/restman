@@ -9,6 +9,7 @@ interface ResponseEditorProps {
   editMode?: boolean;
   activeTab: "body" | "headers" | "cookies";
   onTabChange: (tab: "body" | "headers" | "cookies") => void;
+  isModalOpen?: boolean;
 }
 
 type Tab = "body" | "headers" | "cookies";
@@ -19,13 +20,14 @@ export const ResponseEditor: React.FC<ResponseEditorProps> = ({
   editMode = false,
   activeTab,
   onTabChange,
+  isModalOpen = false,
 }) => {
   const [scrollOffset, setScrollOffset] = useState(0);
   const maxVisibleLines = 5; // Lines visible in the response fieldset (plus 1 for line count indicator)
 
   // Handle keyboard input for scrolling
   useInput((input, key) => {
-    if (!focused) return;
+    if (!focused || isModalOpen) return;
 
     // Handle left/right arrow navigation between tabs
     if (key.leftArrow) {

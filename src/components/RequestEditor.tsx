@@ -11,6 +11,7 @@ interface RequestEditorProps {
   editMode: boolean;
   activeTab: "headers" | "body";
   onTabChange: (tab: "headers" | "body") => void;
+  isModalOpen?: boolean;
 }
 
 type Tab = "headers" | "body";
@@ -24,6 +25,7 @@ export const RequestEditor: React.FC<RequestEditorProps> = ({
   editMode,
   activeTab,
   onTabChange,
+  isModalOpen = false,
 }) => {
   const [cursorLine, setCursorLine] = useState(0);
   const [cursorPosition, setCursorPosition] = useState(0);
@@ -34,7 +36,7 @@ export const RequestEditor: React.FC<RequestEditorProps> = ({
 
   // Handle keyboard input for editing (when in edit mode)
   useInput((input, key) => {
-    if (!focused) return;
+    if (!focused || isModalOpen) return;
 
     // Handle left/right arrow navigation between tabs (when not in edit mode)
     if (!editMode) {

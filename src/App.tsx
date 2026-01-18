@@ -704,6 +704,7 @@ export const App: React.FC = () => {
               editMode={editMode === "request"}
               activeTab={requestActiveTab}
               onTabChange={setRequestActiveTab}
+              isModalOpen={showExitModal || showHelpModal || showMethodModal || showSaveModal || showEnvironmentSelectorModal || showEnvironmentEditor}
             />
           </Box>
 
@@ -715,6 +716,7 @@ export const App: React.FC = () => {
               editMode={editMode === "response"}
               activeTab={responseActiveTab}
               onTabChange={setResponseActiveTab}
+              isModalOpen={showExitModal || showHelpModal || showMethodModal || showSaveModal || showEnvironmentSelectorModal || showEnvironmentEditor}
             />
           </Box>
 
