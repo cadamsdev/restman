@@ -225,8 +225,8 @@ export const App: React.FC = () => {
       return;
     }
 
-    // Show help modal
-    if (input === "/") {
+    // Show help modal (only in readonly mode)
+    if (!editMode && input === "/") {
       setShowHelpModal(true);
       return;
     }
