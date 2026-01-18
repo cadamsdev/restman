@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { Box, Text, useInput } from "ink";
-import { Fieldset } from "./Fieldset";
-import type { Response } from "../http-client";
+import React, { useState, useEffect } from 'react';
+import { Box, Text, useInput } from 'ink';
+import { Fieldset } from './Fieldset';
+import type { Response } from '../http-client';
 
 interface ResponseEditorProps {
   response: Response | null;
   focused: boolean;
   editMode?: boolean;
-  activeTab: "body" | "headers" | "cookies";
-  onTabChange: (tab: "body" | "headers" | "cookies") => void;
+  activeTab: 'body' | 'headers' | 'cookies';
+  onTabChange: (tab: 'body' | 'headers' | 'cookies') => void;
   isModalOpen?: boolean;
 }
 
-type Tab = "body" | "headers" | "cookies";
+type Tab = 'body' | 'headers' | 'cookies';
 
 export const ResponseEditor: React.FC<ResponseEditorProps> = ({
   response,
@@ -26,82 +26,89 @@ export const ResponseEditor: React.FC<ResponseEditorProps> = ({
   const maxVisibleLines = 5; // Lines visible in the response fieldset (plus 1 for line count indicator)
 
   // Handle keyboard input for scrolling
-  useInput((input, key) => {
-    if (!focused || isModalOpen) return;
+  useInput(
+    (input, key) => {
+      if (!focused || isModalOpen) return;
 
-    // Handle left/right arrow navigation between tabs
-    if (key.leftArrow) {
-      if (activeTab === "cookies") {
-        onTabChange("headers");
-        setScrollOffset(0);
-        return;
-      } else if (activeTab === "headers") {
-        onTabChange("body");
-        setScrollOffset(0);
-        return;
-      }
-      // Already on first tab, do nothing
-      return;
-    }
-    
-    if (key.rightArrow) {
-      if (activeTab === "body") {
-        onTabChange("headers");
-        setScrollOffset(0);
-        return;
-      } else if (activeTab === "headers") {
-        onTabChange("cookies");
-        setScrollOffset(0);
+      // Handle left/right arrow navigation between tabs
+      if (key.leftArrow) {
+        if (activeTab === 'cookies') {
+          onTabChange('headers');
+          setScrollOffset(0);
+          return;
+        } else if (activeTab === 'headers') {
+          onTabChange('body');
+          setScrollOffset(0);
+          return;
+        }
+        // Already on first tab, do nothing
         return;
       }
-      // Already on last tab, do nothing
-      return;
-    }
 
-    // Scrolling (up/down arrows)
-    if (response) {
-      const lines = getTabLines();
-      const totalLines = lines.length;
+      if (key.rightArrow) {
+        if (activeTab === 'body') {
+          onTabChange('headers');
+          setScrollOffset(0);
+          return;
+        } else if (activeTab === 'headers') {
+          onTabChange('cookies');
+          setScrollOffset(0);
+          return;
+        }
+        // Already on last tab, do nothing
+        return;
+      }
 
-      if (editMode && key.upArrow) {
-        setScrollOffset(Math.max(0, scrollOffset - 1));
-        return;
+      // Scrolling (up/down arrows)
+      if (response) {
+        const lines = getTabLines();
+        const totalLines = lines.length;
+
+        if (editMode && key.upArrow) {
+          setScrollOffset(Math.max(0, scrollOffset - 1));
+          return;
+        }
+
+        if (editMode && key.downArrow) {
+          setScrollOffset(Math.min(Math.max(0, totalLines - maxVisibleLines), scrollOffset + 1));
+          return;
+        }
+
+        if (key.pageUp) {
+          setScrollOffset(Math.max(0, scrollOffset - maxVisibleLines));
+          return;
+        }
+
+        if (key.pageDown) {
+          setScrollOffset(
+            Math.min(Math.max(0, totalLines - maxVisibleLines), scrollOffset + maxVisibleLines),
+          );
+          return;
+        }
+
+        if (input === 'g') {
+          setScrollOffset(0);
+          return;
+        }
+
+        if (input === 'G') {
+          setScrollOffset(Math.max(0, totalLines - maxVisibleLines));
+          return;
+        }
       }
-      
-      if (editMode && key.downArrow) {
-        setScrollOffset(Math.min(Math.max(0, totalLines - maxVisibleLines), scrollOffset + 1));
-        return;
-      }
-      
-      if (key.pageUp) {
-        setScrollOffset(Math.max(0, scrollOffset - maxVisibleLines));
-        return;
-      }
-      
-      if (key.pageDown) {
-        setScrollOffset(Math.min(Math.max(0, totalLines - maxVisibleLines), scrollOffset + maxVisibleLines));
-        return;
-      }
-      
-      if (input === 'g') {
-        setScrollOffset(0);
-        return;
-      }
-      
-      if (input === 'G') {
-        setScrollOffset(Math.max(0, totalLines - maxVisibleLines));
-        return;
-      }
-    }
-  }, { isActive: focused });
+    },
+    { isActive: focused },
+  );
 
   const formatBody = (body: string, headers: Record<string, string>): string => {
-    const contentType = Object.entries(headers).find(
-      ([key]) => key.toLowerCase() === 'content-type'
-    )?.[1] || '';
-    
+    const contentType =
+      Object.entries(headers).find(([key]) => key.toLowerCase() === 'content-type')?.[1] || '';
+
     // If it's JSON content, ensure it's formatted (it should already be formatted by HTTPClient)
-    if (contentType.includes('application/json') || contentType.includes('application/vnd.api+json')) {
+    if (
+      contentType.includes('application/json') ||
+      contentType.includes('application/vnd.api+json')
+    ) {
       try {
         // Try to parse to verify it's valid JSON, but return original if already formatted
         const parsed = JSON.parse(body);
@@ -117,14 +124,16 @@ export const ResponseEditor: React.FC<ResponseEditorProps> = ({
     return body;
   };
 
-  const parseCookies = (headers: Record<string, string>): Array<{ name: string; value: string; attributes: string }> => {
+  const parseCookies = (
+    headers: Record<string, string>,
+  ): Array<{ name: string; value: string; attributes: string }> => {
     const cookies: Array<{ name: string; value: string; attributes: string }> = [];
-    
+
     Object.entries(headers).forEach(([key, value]) => {
       if (key.toLowerCase() === 'set-cookie') {
         const cookieStrings = value.split(/,(?=\s*[a-zA-Z0-9_-]+=)/);
-        
-        cookieStrings.forEach(cookieStr => {
+
+        cookieStrings.forEach((cookieStr) => {
           const parts = cookieStr.trim().split(';');
           if (parts.length > 0) {
             const [nameValue, ...attrs] = parts;
@@ -132,32 +141,32 @@ export const ResponseEditor: React.FC<ResponseEditorProps> = ({
             cookies.push({
               name: name?.trim() || '',
               value: val?.trim() || '',
-              attributes: attrs.join('; ').trim()
+              attributes: attrs.join('; ').trim(),
             });
           }
         });
       }
     });
-    
+
     return cookies;
   };
 
   const getTabLines = (): string[] => {
     if (!response) return [];
 
-    if (activeTab === "body") {
+    if (activeTab === 'body') {
       const formattedBody = formatBody(response.body, response.headers);
-      return formattedBody.split("\n");
-    } else if (activeTab === "headers") {
+      return formattedBody.split('\n');
+    } else if (activeTab === 'headers') {
       return Object.entries(response.headers).map(([key, value]) => `${key}: ${value}`);
     } else {
       // cookies
       const cookies = parseCookies(response.headers);
       if (cookies.length === 0) {
-        return ["No cookies set"];
+        return ['No cookies set'];
       }
       const lines: string[] = [];
-      cookies.forEach(cookie => {
+      cookies.forEach((cookie) => {
         lines.push(`${cookie.name} = ${cookie.value}`);
         if (cookie.attributes) {
           lines.push(`  ${cookie.attributes}`);
@@ -170,28 +179,28 @@ export const ResponseEditor: React.FC<ResponseEditorProps> = ({
   const renderTabBar = () => (
     <Box gap={1} marginBottom={1}>
       <Text
-        bold={activeTab === "body"}
-        color={activeTab === "body" ? "cyan" : "gray"}
-        backgroundColor={activeTab === "body" ? (focused ? "cyan" : undefined) : undefined}
-        inverse={activeTab === "body" && focused}
+        bold={activeTab === 'body'}
+        color={activeTab === 'body' ? 'cyan' : 'gray'}
+        backgroundColor={activeTab === 'body' ? (focused ? 'cyan' : undefined) : undefined}
+        inverse={activeTab === 'body' && focused}
       >
         Body
       </Text>
       <Text dimColor>│</Text>
       <Text
-        bold={activeTab === "headers"}
-        color={activeTab === "headers" ? "cyan" : "gray"}
-        backgroundColor={activeTab === "headers" ? (focused ? "cyan" : undefined) : undefined}
-        inverse={activeTab === "headers" && focused}
+        bold={activeTab === 'headers'}
+        color={activeTab === 'headers' ? 'cyan' : 'gray'}
+        backgroundColor={activeTab === 'headers' ? (focused ? 'cyan' : undefined) : undefined}
+        inverse={activeTab === 'headers' && focused}
       >
         Headers
       </Text>
       <Text dimColor>│</Text>
       <Text
-        bold={activeTab === "cookies"}
-        color={activeTab === "cookies" ? "cyan" : "gray"}
-        backgroundColor={activeTab === "cookies" ? (focused ? "cyan" : undefined) : undefined}
-        inverse={activeTab === "cookies" && focused}
+        bold={activeTab === 'cookies'}
+        color={activeTab === 'cookies' ? 'cyan' : 'gray'}
+        backgroundColor={activeTab === 'cookies' ? (focused ? 'cyan' : undefined) : undefined}
+        inverse={activeTab === 'cookies' && focused}
       >
         Cookies
       </Text>
@@ -209,22 +218,23 @@ export const ResponseEditor: React.FC<ResponseEditorProps> = ({
 
     const truncateLine = (line: string, maxLength: number = 120): string => {
       if (line.length <= maxLength) return line;
-      return line.substring(0, maxLength) + "...";
+      return line.substring(0, maxLength) + '...';
     };
 
     const lines = getTabLines();
     const totalLines = lines.length;
     const visibleLines = lines.slice(scrollOffset, scrollOffset + maxVisibleLines);
-    
+
     return (
       <Box flexDirection="column" flexGrow={1}>
         {visibleLines.map((line, idx) => (
-          <Text key={idx} color={focused ? "cyan" : "gray"} dimColor={!focused}>
-            {truncateLine(line) || " "}
+          <Text key={idx} color={focused ? 'cyan' : 'gray'} dimColor={!focused}>
+            {truncateLine(line) || ' '}
           </Text>
         ))}
         <Text dimColor italic>
-          [{scrollOffset + 1}-{Math.min(scrollOffset + maxVisibleLines, totalLines)} of {totalLines} lines]
+          [{scrollOffset + 1}-{Math.min(scrollOffset + maxVisibleLines, totalLines)} of {totalLines}{' '}
+          lines]
         </Text>
       </Box>
     );
@@ -232,7 +242,7 @@ export const ResponseEditor: React.FC<ResponseEditorProps> = ({
 
   const getTitle = () => {
     if (!response) {
-      return "📊 Response";
+      return '📊 Response';
     }
     return `📊 Response - ${response.status} ${response.statusText} (${response.time}ms)`;
   };
@@ -242,11 +252,11 @@ export const ResponseEditor: React.FC<ResponseEditorProps> = ({
       return undefined; // Use default color
     }
     if (response.status >= 200 && response.status < 300) {
-      return "green";
+      return 'green';
     } else if (response.status >= 400) {
-      return "red";
+      return 'red';
     } else {
-      return "yellow";
+      return 'yellow';
     }
   };
 

@@ -1,10 +1,10 @@
-import { existsSync, mkdirSync } from "fs";
-import { readFile, writeFile } from "fs/promises";
-import { join } from "path";
-import { homedir } from "os";
+import { existsSync, mkdirSync } from 'fs';
+import { readFile, writeFile } from 'fs/promises';
+import { join } from 'path';
+import { homedir } from 'os';
 
-const RESTMAN_DIR = join(homedir(), ".restman");
-const ENVIRONMENTS_FILE = join(RESTMAN_DIR, "environments.json");
+const RESTMAN_DIR = join(homedir(), '.restman');
+const ENVIRONMENTS_FILE = join(RESTMAN_DIR, 'environments.json');
 
 export interface Environment {
   id: number;
@@ -35,26 +35,26 @@ const getDefaultConfig = (): EnvironmentsConfig => {
     environments: [
       {
         id: 1,
-        name: "Development",
+        name: 'Development',
         variables: {
-          BASE_URL: "http://localhost:3000",
-          API_KEY: "dev-api-key",
+          BASE_URL: 'http://localhost:3000',
+          API_KEY: 'dev-api-key',
         },
       },
       {
         id: 2,
-        name: "Staging",
+        name: 'Staging',
         variables: {
-          BASE_URL: "https://staging.example.com",
-          API_KEY: "staging-api-key",
+          BASE_URL: 'https://staging.example.com',
+          API_KEY: 'staging-api-key',
         },
       },
       {
         id: 3,
-        name: "Production",
+        name: 'Production',
         variables: {
-          BASE_URL: "https://api.example.com",
-          API_KEY: "prod-api-key",
+          BASE_URL: 'https://api.example.com',
+          API_KEY: 'prod-api-key',
         },
       },
     ],
@@ -68,7 +68,7 @@ const getDefaultConfig = (): EnvironmentsConfig => {
 export const loadEnvironments = async (): Promise<EnvironmentsConfig> => {
   try {
     ensureDirectoryExists();
-    
+
     if (!existsSync(ENVIRONMENTS_FILE)) {
       // Create default environments file
       const defaultConfig = getDefaultConfig();
@@ -76,17 +76,17 @@ export const loadEnvironments = async (): Promise<EnvironmentsConfig> => {
       return defaultConfig;
     }
 
-    const data = await readFile(ENVIRONMENTS_FILE, "utf-8");
+    const data = await readFile(ENVIRONMENTS_FILE, 'utf-8');
     const parsed = JSON.parse(data);
-    
+
     // Validate config structure
     if (!parsed || !Array.isArray(parsed.environments)) {
       return getDefaultConfig();
     }
-    
+
     return parsed;
   } catch (error) {
-    console.error("Failed to load environments:", error);
+    console.error('Failed to load environments:', error);
     return getDefaultConfig();
   }
 };
@@ -98,9 +98,9 @@ export const saveEnvironments = async (config: EnvironmentsConfig): Promise<void
   try {
     ensureDirectoryExists();
     const data = JSON.stringify(config, null, 2);
-    await writeFile(ENVIRONMENTS_FILE, data, "utf-8");
+    await writeFile(ENVIRONMENTS_FILE, data, 'utf-8');
   } catch (error) {
-    console.error("Failed to save environments:", error);
+    console.error('Failed to save environments:', error);
   }
 };
 
@@ -111,13 +111,16 @@ export const getActiveEnvironment = (config: EnvironmentsConfig): Environment | 
   if (config.activeEnvironmentId === null) {
     return null;
   }
-  return config.environments.find(env => env.id === config.activeEnvironmentId) || null;
+  return config.environments.find((env) => env.id === config.activeEnvironmentId) || null;
 };
 
 /**
  * Set the active environment
  */
-export const setActiveEnvironment = (config: EnvironmentsConfig, environmentId: number): EnvironmentsConfig => {
+export const setActiveEnvironment = (
+  config: EnvironmentsConfig,
+  environmentId: number,
+): EnvironmentsConfig => {
   return {
     ...config,
     activeEnvironmentId: environmentId,
@@ -127,17 +130,20 @@ export const setActiveEnvironment = (config: EnvironmentsConfig, environmentId: 
 /**
  * Add a new environment
  */
-export const addEnvironment = (config: EnvironmentsConfig, name: string, variables: Record<string, string>): EnvironmentsConfig => {
-  const maxId = config.environments.length > 0 
-    ? Math.max(...config.environments.map(e => e.id))
-    : 0;
-  
+export const addEnvironment = (
+  config: EnvironmentsConfig,
+  name: string,
+  variables: Record<string, string>,
+): EnvironmentsConfig => {
+  const maxId =
+    config.environments.length > 0 ? Math.max(...config.environments.map((e) => e.id)) : 0;
+
   const newEnvironment: Environment = {
     id: maxId + 1,
     name,
     variables,
   };
-  
+
   return {
     ...config,
     environments: [...config.environments, newEnvironment],
@@ -147,11 +153,16 @@ export const addEnvironment = (config: EnvironmentsConfig, name: string, variabl
 /**
  * Update an environment
  */
-export const updateEnvironment = (config: EnvironmentsConfig, id: number, name: string, variables: Record<string, string>): EnvironmentsConfig => {
+export const updateEnvironment = (
+  config: EnvironmentsConfig,
+  id: number,
+  name: string,
+  variables: Record<string, string>,
+): EnvironmentsConfig => {
   return {
     ...config,
-    environments: config.environments.map(env => 
-      env.id === id ? { ...env, name, variables } : env
+    environments: config.environments.map((env) =>
+      env.id === id ? { ...env, name, variables } : env,
     ),
   };
 };
@@ -160,11 +171,14 @@ export const updateEnvironment = (config: EnvironmentsConfig, id: number, name: 
  * Delete an environment
  */
 export const deleteEnvironment = (config: EnvironmentsConfig, id: number): EnvironmentsConfig => {
-  const newEnvironments = config.environments.filter(env => env.id !== id);
-  const newActiveId = config.activeEnvironmentId === id 
-    ? (newEnvironments.length > 0 && newEnvironments[0] ? newEnvironments[0].id : null)
-    : config.activeEnvironmentId;
-  
+  const newEnvironments = config.environments.filter((env) => env.id !== id);
+  const newActiveId =
+    config.activeEnvironmentId === id
+      ? newEnvironments.length > 0 && newEnvironments[0]
+        ? newEnvironments[0].id
+        : null
+      : config.activeEnvironmentId;
+
   return {
     activeEnvironmentId: newActiveId,
     environments: newEnvironments,

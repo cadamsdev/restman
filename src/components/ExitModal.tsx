@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Box, Text, useInput } from "ink";
+import React, { useState } from 'react';
+import { Box, Text, useInput } from 'ink';
 
 interface ExitModalProps {
   onConfirm: () => void;
@@ -7,22 +7,22 @@ interface ExitModalProps {
 }
 
 export const ExitModal: React.FC<ExitModalProps> = ({ onConfirm, onCancel }) => {
-  const [selectedOption, setSelectedOption] = useState<"yes" | "no">("no");
+  const [selectedOption, setSelectedOption] = useState<'yes' | 'no'>('no');
 
   useInput((input, key) => {
     // Handle arrow keys for navigation
     if (key.leftArrow) {
-      setSelectedOption("yes");
+      setSelectedOption('yes');
       return;
     }
     if (key.rightArrow) {
-      setSelectedOption("no");
+      setSelectedOption('no');
       return;
     }
 
     // Handle Enter to confirm selection
     if (key.return) {
-      if (selectedOption === "yes") {
+      if (selectedOption === 'yes') {
         onConfirm();
       } else {
         onCancel();
@@ -31,11 +31,11 @@ export const ExitModal: React.FC<ExitModalProps> = ({ onConfirm, onCancel }) => 
     }
 
     // Handle Y/N keys directly
-    if (input === "y" || input === "Y") {
+    if (input === 'y' || input === 'Y') {
       onConfirm();
       return;
     }
-    if (input === "n" || input === "N" || key.escape) {
+    if (input === 'n' || input === 'N' || key.escape) {
       onCancel();
       return;
     }
@@ -51,12 +51,8 @@ export const ExitModal: React.FC<ExitModalProps> = ({ onConfirm, onCancel }) => 
       flexDirection="column"
     >
       {/* Backdrop overlay */}
-      <Box
-        position="absolute"
-        width="100%"
-        height="100%"
-      />
-      
+      <Box position="absolute" width="100%" height="100%" />
+
       {/* Modal content */}
       <Box
         borderStyle="double"
@@ -73,30 +69,32 @@ export const ExitModal: React.FC<ExitModalProps> = ({ onConfirm, onCancel }) => 
           </Text>
         </Box>
         <Box marginTop={1} justifyContent="center">
-          <Text dimColor>
-            Are you sure you want to quit?
-          </Text>
+          <Text dimColor>Are you sure you want to quit?</Text>
         </Box>
         <Box marginTop={1} justifyContent="center" gap={3}>
-          <Text 
-            backgroundColor={selectedOption === "yes" ? "red" : undefined}
-            color={selectedOption === "yes" ? "black" : "red"} 
+          <Text
+            backgroundColor={selectedOption === 'yes' ? 'red' : undefined}
+            color={selectedOption === 'yes' ? 'black' : 'red'}
             bold
           >
-            {selectedOption === "yes" ? "[✓ Yes]" : "  Yes  "}
+            {selectedOption === 'yes' ? '[✓ Yes]' : '  Yes  '}
           </Text>
-          <Text 
-            backgroundColor={selectedOption === "no" ? "green" : undefined}
-            color={selectedOption === "no" ? "black" : "green"} 
+          <Text
+            backgroundColor={selectedOption === 'no' ? 'green' : undefined}
+            color={selectedOption === 'no' ? 'black' : 'green'}
             bold
           >
-            {selectedOption === "no" ? "[✓ No]" : "  No  "}
+            {selectedOption === 'no' ? '[✓ No]' : '  No  '}
           </Text>
         </Box>
-        <Box marginTop={1} justifyContent="center" borderStyle="single" borderColor="gray" paddingX={1}>
-          <Text dimColor>
-            ←→ select │ Enter confirm │ Y/N quick select
-          </Text>
+        <Box
+          marginTop={1}
+          justifyContent="center"
+          borderStyle="single"
+          borderColor="gray"
+          paddingX={1}
+        >
+          <Text dimColor>←→ select │ Enter confirm │ Y/N quick select</Text>
         </Box>
       </Box>
     </Box>

@@ -1,6 +1,6 @@
-import React from "react";
-import { Box, Text } from "ink";
-import { Response } from "../http-client";
+import React from 'react';
+import { Box, Text } from 'ink';
+import { Response } from '../http-client';
 
 interface StatusBarProps {
   loading: boolean;
@@ -8,31 +8,27 @@ interface StatusBarProps {
   error: string;
 }
 
-export const StatusBar: React.FC<StatusBarProps> = ({
-  loading,
-  response,
-  error,
-}) => {
+export const StatusBar: React.FC<StatusBarProps> = ({ loading, response, error }) => {
   const getStatusColor = (status: number): string => {
-    if (status >= 200 && status < 300) return "green";
-    if (status >= 300 && status < 400) return "cyan";
-    if (status >= 400 && status < 500) return "yellow";
-    if (status >= 500) return "red";
-    return "white";
+    if (status >= 200 && status < 300) return 'green';
+    if (status >= 300 && status < 400) return 'cyan';
+    if (status >= 400 && status < 500) return 'yellow';
+    if (status >= 500) return 'red';
+    return 'white';
   };
 
   const getStatusIcon = (status: number): string => {
-    if (status >= 200 && status < 300) return "✓";
-    if (status >= 300 && status < 400) return "↪";
-    if (status >= 400 && status < 500) return "⚠";
-    if (status >= 500) return "✗";
-    return "●";
+    if (status >= 200 && status < 300) return '✓';
+    if (status >= 300 && status < 400) return '↪';
+    if (status >= 400 && status < 500) return '⚠';
+    if (status >= 500) return '✗';
+    return '●';
   };
 
   return (
     <Box
       borderStyle="round"
-      borderColor={loading ? "yellow" : error ? "red" : response ? "green" : "gray"}
+      borderColor={loading ? 'yellow' : error ? 'red' : response ? 'green' : 'gray'}
       paddingX={2}
       paddingY={0}
       width="100%"
@@ -47,7 +43,9 @@ export const StatusBar: React.FC<StatusBarProps> = ({
           </Text>
         ) : error ? (
           <Text>
-            <Text color="red" bold>✗ Error:</Text>
+            <Text color="red" bold>
+              ✗ Error:
+            </Text>
             <Text> {error}</Text>
           </Text>
         ) : response ? (
@@ -58,13 +56,15 @@ export const StatusBar: React.FC<StatusBarProps> = ({
             <Text color={getStatusColor(response.status)}> {response.statusText}</Text>
           </Text>
         ) : (
-          <Text dimColor italic>Ready to send request</Text>
+          <Text dimColor italic>
+            Ready to send request
+          </Text>
         )}
       </Box>
       {response && (
         <Text>
           <Text dimColor>⏱ </Text>
-          <Text color={response.time < 200 ? "green" : response.time < 1000 ? "yellow" : "red"}>
+          <Text color={response.time < 200 ? 'green' : response.time < 1000 ? 'yellow' : 'red'}>
             {response.time}ms
           </Text>
         </Text>

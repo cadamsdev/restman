@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useState } from "react";
-import { Box, Text, measureElement, useStdout, type DOMElement } from "ink";
+import React, { useRef, useEffect, useState } from 'react';
+import { Box, Text, measureElement, useStdout, type DOMElement } from 'ink';
 
 export interface FieldsetProps {
   title: string;
@@ -13,25 +13,25 @@ export interface FieldsetProps {
   width?: number | string;
   paddingX?: number;
   paddingY?: number;
-  borderStyle?: "round" | "single" | "double";
+  borderStyle?: 'round' | 'single' | 'double';
 }
 
 // Border character sets for different styles
 const borderChars = {
   round: {
-    topLeft: "╭",
-    horizontal: "─",
-    topRight: "╮",
+    topLeft: '╭',
+    horizontal: '─',
+    topRight: '╮',
   },
   single: {
-    topLeft: "┌",
-    horizontal: "─",
-    topRight: "┐",
+    topLeft: '┌',
+    horizontal: '─',
+    topRight: '┐',
   },
   double: {
-    topLeft: "╔",
-    horizontal: "═",
-    topRight: "╗",
+    topLeft: '╔',
+    horizontal: '═',
+    topRight: '╗',
   },
 };
 
@@ -43,7 +43,7 @@ type BorderFragment = {
 export const Fieldset: React.FC<FieldsetProps> = ({
   title,
   children,
-  borderColor = "gray",
+  borderColor = 'gray',
   titleColor,
   focused = false,
   editMode = false,
@@ -52,19 +52,19 @@ export const Fieldset: React.FC<FieldsetProps> = ({
   width,
   paddingX = 1,
   paddingY = 0,
-  borderStyle = "round",
+  borderStyle = 'round',
 }) => {
   const boxRef = useRef<DOMElement>(null);
   const [fragments, setFragments] = useState<BorderFragment[]>([]);
   const { stdout } = useStdout();
-  
+
   // Determine colors based on state
-  const actualBorderColor = focused ? "magenta" : editMode ? "green" : borderColor;
-  const actualTitleColor = titleColor || (focused ? "magenta" : "gray");
-  
+  const actualBorderColor = focused ? 'magenta' : editMode ? 'green' : borderColor;
+  const actualTitleColor = titleColor || (focused ? 'magenta' : 'gray');
+
   // Get border characters for the selected style
   const chars = borderChars[borderStyle];
-  
+
   // Format the title with edit mode indicator
   const formattedTitle = editMode ? `${title} [✎]` : title;
   const paddedTitle = ` ${formattedTitle} `;
@@ -75,7 +75,7 @@ export const Fieldset: React.FC<FieldsetProps> = ({
     for (const char of str) {
       const code = char.codePointAt(0);
       // Emoji and wide characters typically take 2 columns
-      if (code && (code > 0x1F300 || code === 0x26A1 || code === 0x270E || code === 0x2195)) {
+      if (code && (code > 0x1f300 || code === 0x26a1 || code === 0x270e || code === 0x2195)) {
         width += 2;
       } else {
         width += 1;
@@ -86,75 +86,75 @@ export const Fieldset: React.FC<FieldsetProps> = ({
 
   useEffect(() => {
     if (!boxRef.current) return;
-    
+
     const recalculateFragments = () => {
       const dimensions = measureElement(boxRef.current!);
       const availableWidth = dimensions.width - 2; // Subtract left and right corners
-      
+
       if (availableWidth <= 0) {
         setFragments([]);
         return;
       }
-      
+
       // Build the top border with title embedded
       const titleLength = getVisualWidth(paddedTitle);
       const titlePosition = 1; // Start position after left corner
-      
+
       // Build fragments array
       const newFragments: BorderFragment[] = [];
-      
+
       // Left corner
       newFragments.push({ isTitle: false, content: chars.topLeft });
-      
+
       // Before title
       if (titlePosition > 0) {
-        newFragments.push({ 
-          isTitle: false, 
-          content: chars.horizontal.repeat(titlePosition) 
+        newFragments.push({
+          isTitle: false,
+          content: chars.horizontal.repeat(titlePosition),
         });
       }
-      
+
       // Title
       newFragments.push({ isTitle: true, content: paddedTitle });
-      
+
       // After title to end
       const remainingLength = availableWidth - titlePosition - titleLength;
       if (remainingLength > 0) {
-        newFragments.push({ 
-          isTitle: false, 
-          content: chars.horizontal.repeat(remainingLength) 
+        newFragments.push({
+          isTitle: false,
+          content: chars.horizontal.repeat(remainingLength),
         });
       }
-      
+
       // Right corner
       newFragments.push({ isTitle: false, content: chars.topRight });
-      
+
       setFragments(newFragments);
     };
-    
+
     // Initial calculation
     recalculateFragments();
-    
+
     // Debounce resize events to prevent excessive recalculations
     let resizeTimeout: NodeJS.Timeout | null = null;
-    
+
     const handleResize = () => {
       // Cancel any pending update
       if (resizeTimeout) {
         clearTimeout(resizeTimeout);
       }
-      
+
       // Update immediately for responsiveness
       recalculateFragments();
-      
+
       // Also schedule a final update to ensure accuracy
       resizeTimeout = setTimeout(() => {
         recalculateFragments();
       }, 100);
     };
-    
+
     stdout?.on('resize', handleResize);
-    
+
     // Cleanup listener and timeout on unmount
     return () => {
       if (resizeTimeout) {
@@ -175,17 +175,17 @@ export const Fieldset: React.FC<FieldsetProps> = ({
     >
       {/* Top border with embedded title */}
       <Text color={actualBorderColor}>
-        {fragments.map((fragment, i) => 
+        {fragments.map((fragment, i) =>
           fragment.isTitle ? (
             <Text key={i} bold color={actualTitleColor}>
               {fragment.content}
             </Text>
           ) : (
             <Text key={i}>{fragment.content}</Text>
-          )
+          ),
         )}
       </Text>
-      
+
       {/* Box with left, right, and bottom borders */}
       <Box
         borderStyle={borderStyle}

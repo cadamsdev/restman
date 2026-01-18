@@ -2,30 +2,20 @@
   "name": "restman",
   "version": "0.0.0",
   "private": true,
-  "author": "cadamsdev",
-  "module": "src/cli.ts",
-  "devDependencies": {
-    "@lazy-release/changesets": "^0.5.0",
-    "@types/archiver": "^7.0.0",
-    "@types/bun": "latest",
-    "archiver": "^7.0.1",
-    "oxfmt": "^0.24.0",
-    "react-devtools-core": "^7.0.1"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  },
   "description": "A powerful REST API client TUI built with Bun",
   "keywords": [
-    "rest",
     "api",
     "client",
-    "tui",
+    "http",
     "postman",
+    "rest",
     "terminal",
-    "http"
+    "tui"
   ],
   "license": "MIT",
+  "author": "cadamsdev",
+  "type": "module",
+  "module": "src/cli.ts",
   "scripts": {
     "start": "bun run src/cli.ts",
     "dev": "bun run src/cli.ts",
@@ -39,11 +29,21 @@
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check"
   },
-  "type": "module",
   "dependencies": {
     "@types/react": "^19.2.8",
     "ink": "^6.6.0",
     "ink-text-input": "^6.0.0",
     "react": "^19.2.3"
+  },
+  "devDependencies": {
+    "@lazy-release/changesets": "^0.5.0",
+    "@types/archiver": "^7.0.0",
+    "@types/bun": "latest",
+    "archiver": "^7.0.1",
+    "oxfmt": "^0.24.0",
+    "react-devtools-core": "^7.0.1"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
   }
 }

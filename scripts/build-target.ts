@@ -52,7 +52,7 @@ async function build() {
     'src/cli.ts',
     '--compile',
     `--target=bun-${target}`,
-    `--outfile=${outfile}`
+    `--outfile=${outfile}`,
   ]);
 
   const exitCode = await buildProcess.exited;
@@ -101,7 +101,7 @@ async function createArchive(
     const output = createWriteStream(outputPath);
     const archive = archiver(format, {
       gzip: format === 'tar',
-      gzipOptions: { level: 9 }
+      gzipOptions: { level: 9 },
     });
 
     output.on('close', () => resolve());

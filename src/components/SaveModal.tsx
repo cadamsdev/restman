@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Box, Text, useInput } from "ink";
-import TextInput from "ink-text-input";
+import React, { useState } from 'react';
+import { Box, Text, useInput } from 'ink';
+import TextInput from 'ink-text-input';
 
 interface SaveModalProps {
   defaultName: string;
@@ -8,11 +8,7 @@ interface SaveModalProps {
   onCancel: () => void;
 }
 
-export const SaveModal: React.FC<SaveModalProps> = ({
-  defaultName,
-  onSave,
-  onCancel,
-}) => {
+export const SaveModal: React.FC<SaveModalProps> = ({ defaultName, onSave, onCancel }) => {
   const [name, setName] = useState(defaultName);
 
   useInput((input, key) => {
@@ -38,12 +34,8 @@ export const SaveModal: React.FC<SaveModalProps> = ({
       flexDirection="column"
     >
       {/* Backdrop overlay */}
-      <Box
-        position="absolute"
-        width="100%"
-        height="100%"
-      />
-      
+      <Box position="absolute" width="100%" height="100%" />
+
       {/* Modal content */}
       <Box
         borderStyle="double"
@@ -63,16 +55,27 @@ export const SaveModal: React.FC<SaveModalProps> = ({
           <Text dimColor>Enter a name for this request:</Text>
         </Box>
         <Box marginTop={1} borderStyle="round" borderColor="cyan" paddingX={1}>
-          <Text color="cyan" bold>📝 </Text>
-          <TextInput
-            value={name}
-            onChange={setName}
-            placeholder="e.g., Get User Profile"
-          />
+          <Text color="cyan" bold>
+            📝{' '}
+          </Text>
+          <TextInput value={name} onChange={setName} placeholder="e.g., Get User Profile" />
         </Box>
-        <Box marginTop={1} justifyContent="center" borderStyle="single" borderColor="gray" paddingX={1}>
+        <Box
+          marginTop={1}
+          justifyContent="center"
+          borderStyle="single"
+          borderColor="gray"
+          paddingX={1}
+        >
           <Text dimColor>
-            <Text color="green" bold>Enter</Text> Save │ <Text color="yellow" bold>ESC</Text> Cancel
+            <Text color="green" bold>
+              Enter
+            </Text>{' '}
+            Save │{' '}
+            <Text color="yellow" bold>
+              ESC
+            </Text>{' '}
+            Cancel
           </Text>
         </Box>
       </Box>

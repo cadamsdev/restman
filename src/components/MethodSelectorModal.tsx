@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Box, Text, useInput } from "ink";
+import React, { useState } from 'react';
+import { Box, Text, useInput } from 'ink';
 
 interface MethodSelectorModalProps {
   currentMethod: string;
@@ -12,17 +12,23 @@ export const MethodSelectorModal: React.FC<MethodSelectorModalProps> = ({
   onSelect,
   onCancel,
 }) => {
-  const methods = ["GET", "POST", "PUT", "PATCH", "DELETE"];
+  const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
   const [selectedIndex, setSelectedIndex] = useState(methods.indexOf(currentMethod));
 
   const getMethodColor = (method: string): string => {
     switch (method) {
-      case "GET": return "blue";
-      case "POST": return "green";
-      case "PUT": return "yellow";
-      case "PATCH": return "cyan";
-      case "DELETE": return "red";
-      default: return "white";
+      case 'GET':
+        return 'blue';
+      case 'POST':
+        return 'green';
+      case 'PUT':
+        return 'yellow';
+      case 'PATCH':
+        return 'cyan';
+      case 'DELETE':
+        return 'red';
+      default:
+        return 'white';
     }
   };
 
@@ -31,7 +37,7 @@ export const MethodSelectorModal: React.FC<MethodSelectorModalProps> = ({
       onCancel();
       return;
     }
-    
+
     if (key.return) {
       const selectedMethod = methods[selectedIndex];
       if (selectedMethod) {
@@ -52,7 +58,7 @@ export const MethodSelectorModal: React.FC<MethodSelectorModalProps> = ({
 
     // Quick selection by first letter
     const upperInput = input.toUpperCase();
-    const methodIndex = methods.findIndex(m => m.startsWith(upperInput));
+    const methodIndex = methods.findIndex((m) => m.startsWith(upperInput));
     if (methodIndex !== -1) {
       setSelectedIndex(methodIndex);
     }
@@ -68,12 +74,8 @@ export const MethodSelectorModal: React.FC<MethodSelectorModalProps> = ({
       flexDirection="column"
     >
       {/* Backdrop overlay */}
-      <Box
-        position="absolute"
-        width="100%"
-        height="100%"
-      />
-      
+      <Box position="absolute" width="100%" height="100%" />
+
       {/* Modal content */}
       <Box
         borderStyle="double"
@@ -89,12 +91,12 @@ export const MethodSelectorModal: React.FC<MethodSelectorModalProps> = ({
             ⚡ Select HTTP Method
           </Text>
         </Box>
-        
+
         <Box marginTop={1} flexDirection="column" paddingX={2}>
           {methods.map((method, index) => (
             <Text
               key={method}
-              color={index === selectedIndex ? getMethodColor(method) : "gray"}
+              color={index === selectedIndex ? getMethodColor(method) : 'gray'}
               bold={index === selectedIndex}
               dimColor={index !== selectedIndex}
             >
@@ -102,10 +104,27 @@ export const MethodSelectorModal: React.FC<MethodSelectorModalProps> = ({
             </Text>
           ))}
         </Box>
-        
-        <Box marginTop={1} justifyContent="center" borderStyle="single" borderColor="gray" paddingX={1}>
+
+        <Box
+          marginTop={1}
+          justifyContent="center"
+          borderStyle="single"
+          borderColor="gray"
+          paddingX={1}
+        >
           <Text dimColor>
-            <Text color="cyan" bold>↕</Text> Navigate │ <Text color="green" bold>Enter</Text> Select │ <Text color="yellow" bold>ESC</Text> Cancel
+            <Text color="cyan" bold>
+              ↕
+            </Text>{' '}
+            Navigate │{' '}
+            <Text color="green" bold>
+              Enter
+            </Text>{' '}
+            Select │{' '}
+            <Text color="yellow" bold>
+              ESC
+            </Text>{' '}
+            Cancel
           </Text>
         </Box>
       </Box>

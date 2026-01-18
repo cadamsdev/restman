@@ -1,50 +1,61 @@
-import React, { useState, useEffect } from "react";
-import { Box, Text, useInput, useApp } from "ink";
-import { HTTPClient } from "./http-client";
-import packageJson from "../package.json";
-import type { RequestOptions, Response } from "./http-client";
-import { URLInput } from "./components/URLInput";
-import { MethodSelector } from "./components/MethodSelector";
-import { RequestEditor } from "./components/RequestEditor";
-import { ResponseEditor } from "./components/ResponseEditor";
-import { ResponsePanel } from "./components/ResponsePanel";
-import { Toast } from "./components/Toast";
-import { Instructions } from "./components/Instructions";
-import { ExitModal } from "./components/ExitModal";
-import { HelpModal } from "./components/HelpModal";
-import { MethodSelectorModal } from "./components/MethodSelectorModal";
-import { HistoryPanel } from "./components/HistoryPanel";
-import type { HistoryEntry } from "./components/HistoryPanel";
-import { SaveModal } from "./components/SaveModal";
-import { SavedRequestsPanel } from "./components/SavedRequestsPanel";
-import { EnvironmentSelector } from "./components/EnvironmentSelector";
-import { EnvironmentSelectorModal } from "./components/EnvironmentSelectorModal";
-import { EnvironmentsPanel } from "./components/EnvironmentsPanel";
-import { EnvironmentEditorModal } from "./components/EnvironmentEditorModal";
-import { ResponseBodyModal } from "./components/ResponseBodyModal";
-import { loadHistory, saveHistory } from "./history-storage";
-import { loadSavedRequests, saveSavedRequests, type SavedRequest } from "./saved-requests-storage";
-import { loadEnvironments, saveEnvironments, setActiveEnvironment, addEnvironment, updateEnvironment, deleteEnvironment, getActiveEnvironment, type EnvironmentsConfig } from "./environment-storage";
-import { substituteVariables, substituteVariablesInHeaders } from "./variable-substitution";
+import React, { useState, useEffect } from 'react';
+import { Box, Text, useInput, useApp } from 'ink';
+import { HTTPClient } from './http-client';
+import packageJson from '../package.json';
+import type { RequestOptions, Response } from './http-client';
+import { URLInput } from './components/URLInput';
+import { MethodSelector } from './components/MethodSelector';
+import { RequestEditor } from './components/RequestEditor';
+import { ResponseEditor } from './components/ResponseEditor';
+import { ResponsePanel } from './components/ResponsePanel';
+import { Toast } from './components/Toast';
+import { Instructions } from './components/Instructions';
+import { ExitModal } from './components/ExitModal';
+import { HelpModal } from './components/HelpModal';
+import { MethodSelectorModal } from './components/MethodSelectorModal';
+import { HistoryPanel } from './components/HistoryPanel';
+import type { HistoryEntry } from './components/HistoryPanel';
+import { SaveModal } from './components/SaveModal';
+import { SavedRequestsPanel } from './components/SavedRequestsPanel';
+import { EnvironmentSelector } from './components/EnvironmentSelector';
+import { EnvironmentSelectorModal } from './components/EnvironmentSelectorModal';
+import { EnvironmentsPanel } from './components/EnvironmentsPanel';
+import { EnvironmentEditorModal } from './components/EnvironmentEditorModal';
+import { ResponseBodyModal } from './components/ResponseBodyModal';
+import { loadHistory, saveHistory } from './history-storage';
+import { loadSavedRequests, saveSavedRequests, type SavedRequest } from './saved-requests-storage';
+import {
+  loadEnvironments,
+  saveEnvironments,
+  setActiveEnvironment,
+  addEnvironment,
+  updateEnvironment,
+  deleteEnvironment,
+  getActiveEnvironment,
+  type EnvironmentsConfig,
+} from './environment-storage';
+import { substituteVariables, substituteVariablesInHeaders } from './variable-substitution';
 
-type FocusField = "method" | "url" | "request" | "response" | "environment";
+type FocusField = 'method' | 'url' | 'request' | 'response' | 'environment';
 
 export const App: React.FC = () => {
   const { exit } = useApp();
   const httpClient = new HTTPClient();
 
   // State
-  const [method, setMethod] = useState<string>("GET");
-  const [url, setUrl] = useState<string>("https://jsonplaceholder.typicode.com/posts/1");
-  const [headers, setHeaders] = useState<string>("Content-Type: application/json\nAccept: application/json");
-  const [params, setParams] = useState<string>("");
-  const [body, setBody] = useState<string>("");
+  const [method, setMethod] = useState<string>('GET');
+  const [url, setUrl] = useState<string>('https://jsonplaceholder.typicode.com/posts/1');
+  const [headers, setHeaders] = useState<string>(
+    'Content-Type: application/json\nAccept: application/json',
+  );
+  const [params, setParams] = useState<string>('');
+  const [body, setBody] = useState<string>('');
   const [response, setResponse] = useState<Response | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [focusedField, setFocusedField] = useState<FocusField>("url");
-  const [error, setError] = useState<string>("");
-  const [toastMessage, setToastMessage] = useState<string>("");
-  const [toastType, setToastType] = useState<"loading" | "error" | "success">("loading");
+  const [focusedField, setFocusedField] = useState<FocusField>('url');
+  const [error, setError] = useState<string>('');
+  const [toastMessage, setToastMessage] = useState<string>('');
+  const [toastType, setToastType] = useState<'loading' | 'error' | 'success'>('loading');
   const [showToast, setShowToast] = useState<boolean>(false);
   const [showExitModal, setShowExitModal] = useState<boolean>(false);
   const [showHelpModal, setShowHelpModal] = useState<boolean>(false);
@@ -59,14 +70,21 @@ export const App: React.FC = () => {
   const [savedRequestsViewMode, setSavedRequestsViewMode] = useState<boolean>(false);
   const [savedRequests, setSavedRequests] = useState<SavedRequest[]>([]);
   const [savedRequestIdCounter, setSavedRequestIdCounter] = useState<number>(1);
-  const [environmentsConfig, setEnvironmentsConfig] = useState<EnvironmentsConfig>({ activeEnvironmentId: null, environments: [] });
+  const [environmentsConfig, setEnvironmentsConfig] = useState<EnvironmentsConfig>({
+    activeEnvironmentId: null,
+    environments: [],
+  });
   const [environmentsViewMode, setEnvironmentsViewMode] = useState<boolean>(false);
   const [showEnvironmentEditor, setShowEnvironmentEditor] = useState<boolean>(false);
   const [editingEnvironmentId, setEditingEnvironmentId] = useState<number | null>(null);
-  const [requestActiveTab, setRequestActiveTab] = useState<"headers" | "params" | "body">("headers");
-  const [responseActiveTab, setResponseActiveTab] = useState<"body" | "headers" | "cookies">("body");
+  const [requestActiveTab, setRequestActiveTab] = useState<'headers' | 'params' | 'body'>(
+    'headers',
+  );
+  const [responseActiveTab, setResponseActiveTab] = useState<'body' | 'headers' | 'cookies'>(
+    'body',
+  );
 
-  const fields: FocusField[] = ["url", "request", "response", "environment", "method"];
+  const fields: FocusField[] = ['url', 'request', 'response', 'environment', 'method'];
 
   // Load history from disk on startup
   useEffect(() => {
@@ -75,7 +93,7 @@ export const App: React.FC = () => {
       if (loadedHistory.length > 0) {
         setHistory(loadedHistory);
         // Set the counter to be one more than the highest ID
-        const maxId = Math.max(...loadedHistory.map(h => h.id));
+        const maxId = Math.max(...loadedHistory.map((h) => h.id));
         setHistoryIdCounter(maxId + 1);
       }
     };
@@ -89,7 +107,7 @@ export const App: React.FC = () => {
       if (loaded.length > 0) {
         setSavedRequests(loaded);
         // Set the counter to be one more than the highest ID
-        const maxId = Math.max(...loaded.map(r => r.id));
+        const maxId = Math.max(...loaded.map((r) => r.id));
         setSavedRequestIdCounter(maxId + 1);
       }
     };
@@ -128,7 +146,7 @@ export const App: React.FC = () => {
 
   // Auto-dismiss toast after 3 seconds for success/error messages
   useEffect(() => {
-    if (showToast && toastType !== "loading") {
+    if (showToast && toastType !== 'loading') {
       const timer = setTimeout(() => {
         setShowToast(false);
       }, 3000);
@@ -140,7 +158,7 @@ export const App: React.FC = () => {
   useInput((input, key) => {
     // Handle help modal
     if (showHelpModal) {
-      if (input === "/" || key.escape) {
+      if (input === '/' || key.escape) {
         setShowHelpModal(false);
         return;
       }
@@ -208,7 +226,7 @@ export const App: React.FC = () => {
     }
 
     // Open response body modal with spacebar when response is in edit mode
-    if (editMode === "response" && input === " " && response) {
+    if (editMode === 'response' && input === ' ' && response) {
       setShowResponseBodyModal(true);
       setEditMode(null); // Exit edit mode when opening modal
       return;
@@ -221,19 +239,19 @@ export const App: React.FC = () => {
     }
 
     // Show exit confirmation (only in readonly mode)
-    if (!editMode && (input === "q" || key.escape)) {
+    if (!editMode && (input === 'q' || key.escape)) {
       setShowExitModal(true);
       return;
     }
 
     // Force quit without confirmation
-    if (key.ctrl && input === "c") {
+    if (key.ctrl && input === 'c') {
       exit();
       return;
     }
 
     // Show help modal (only in readonly mode)
-    if (!editMode && input === "/") {
+    if (!editMode && input === '/') {
       setShowHelpModal(true);
       return;
     }
@@ -241,10 +259,10 @@ export const App: React.FC = () => {
     // Only allow navigation hotkeys in readonly mode
     if (!editMode) {
       // Enter edit mode (or open modal for method/environment)
-      if (input === "e") {
-        if (focusedField === "method") {
+      if (input === 'e') {
+        if (focusedField === 'method') {
           setShowMethodModal(true);
-        } else if (focusedField === "environment") {
+        } else if (focusedField === 'environment') {
           setShowEnvironmentSelectorModal(true);
         } else {
           setEditMode(focusedField);
@@ -253,58 +271,58 @@ export const App: React.FC = () => {
       }
 
       // Open response body modal with spacebar when response is focused
-      if (input === " " && focusedField === "response" && response) {
+      if (input === ' ' && focusedField === 'response' && response) {
         setShowResponseBodyModal(true);
         return;
       }
 
       // Open history view
-      if (input === "h" || input === "5") {
+      if (input === 'h' || input === '5') {
         setHistoryViewMode(true);
         return;
       }
 
       // Save current request
-      if (input === "s") {
+      if (input === 's') {
         setShowSaveModal(true);
         return;
       }
 
       // Open saved requests view
-      if (input === "l" || input === "6") {
+      if (input === 'l' || input === '6') {
         setSavedRequestsViewMode(true);
         return;
       }
 
       // Open environments view
-      if (input === "v" || input === "7") {
+      if (input === 'v' || input === '7') {
         setEnvironmentsViewMode(true);
         return;
       }
 
       // Quick navigation hotkeys
-      if (input === "0") {
-        setFocusedField("environment");
+      if (input === '0') {
+        setFocusedField('environment');
         setEditMode(null);
         return;
       }
-      if (input === "1") {
-        setFocusedField("method");
+      if (input === '1') {
+        setFocusedField('method');
         setEditMode(null);
         return;
       }
-      if (input === "2") {
-        setFocusedField("url");
+      if (input === '2') {
+        setFocusedField('url');
         setEditMode(null);
         return;
       }
-      if (input === "3") {
-        setFocusedField("request");
+      if (input === '3') {
+        setFocusedField('request');
         setEditMode(null);
         return;
       }
-      if (input === "p" || input === "4") {
-        setFocusedField("response");
+      if (input === 'p' || input === '4') {
+        setFocusedField('response');
         setEditMode(null);
         return;
       }
@@ -332,26 +350,26 @@ export const App: React.FC = () => {
     if (key.tab) {
       if (key.shift) {
         // Shift+Tab - previous tab/field
-        if (focusedField === "request") {
-          if (requestActiveTab === "body") {
-            setRequestActiveTab("params");
+        if (focusedField === 'request') {
+          if (requestActiveTab === 'body') {
+            setRequestActiveTab('params');
             return;
-          } else if (requestActiveTab === "params") {
-            setRequestActiveTab("headers");
+          } else if (requestActiveTab === 'params') {
+            setRequestActiveTab('headers');
             return;
           }
           // On first tab, move to previous field
-        } else if (focusedField === "response") {
-          if (responseActiveTab === "cookies") {
-            setResponseActiveTab("headers");
+        } else if (focusedField === 'response') {
+          if (responseActiveTab === 'cookies') {
+            setResponseActiveTab('headers');
             return;
-          } else if (responseActiveTab === "headers") {
-            setResponseActiveTab("body");
+          } else if (responseActiveTab === 'headers') {
+            setResponseActiveTab('body');
             return;
           }
           // On first tab, move to previous field
         }
-        
+
         // Move to previous field
         const currentIndex = fields.indexOf(focusedField);
         const prevIndex = (currentIndex - 1 + fields.length) % fields.length;
@@ -359,31 +377,31 @@ export const App: React.FC = () => {
         if (prevField) {
           setFocusedField(prevField);
           // Reset to first tab when entering a panel
-          if (prevField === "request") setRequestActiveTab("headers");
-          if (prevField === "response") setResponseActiveTab("body");
+          if (prevField === 'request') setRequestActiveTab('headers');
+          if (prevField === 'response') setResponseActiveTab('body');
         }
       } else {
         // Tab - next tab/field
-        if (focusedField === "request") {
-          if (requestActiveTab === "headers") {
-            setRequestActiveTab("params");
+        if (focusedField === 'request') {
+          if (requestActiveTab === 'headers') {
+            setRequestActiveTab('params');
             return;
-          } else if (requestActiveTab === "params") {
-            setRequestActiveTab("body");
+          } else if (requestActiveTab === 'params') {
+            setRequestActiveTab('body');
             return;
           }
           // On last tab, move to next field
-        } else if (focusedField === "response") {
-          if (responseActiveTab === "body") {
-            setResponseActiveTab("headers");
+        } else if (focusedField === 'response') {
+          if (responseActiveTab === 'body') {
+            setResponseActiveTab('headers');
             return;
-          } else if (responseActiveTab === "headers") {
-            setResponseActiveTab("cookies");
+          } else if (responseActiveTab === 'headers') {
+            setResponseActiveTab('cookies');
             return;
           }
           // On last tab, move to next field
         }
-        
+
         // Move to next field
         const currentIndex = fields.indexOf(focusedField);
         const nextIndex = (currentIndex + 1) % fields.length;
@@ -391,8 +409,8 @@ export const App: React.FC = () => {
         if (nextField) {
           setFocusedField(nextField);
           // Reset to first tab when entering a panel
-          if (nextField === "request") setRequestActiveTab("headers");
-          if (nextField === "response") setResponseActiveTab("body");
+          if (nextField === 'request') setRequestActiveTab('headers');
+          if (nextField === 'response') setResponseActiveTab('body');
         }
       }
       return;
@@ -406,9 +424,9 @@ export const App: React.FC = () => {
         return;
       }
     }
-    
+
     // Ctrl+S always sends request (works in both modes)
-    if (input === "s" && key.ctrl) {
+    if (input === 's' && key.ctrl) {
       sendRequest();
       return;
     }
@@ -416,13 +434,13 @@ export const App: React.FC = () => {
 
   const parseHeaders = (headersText: string): Record<string, string> => {
     const headers: Record<string, string> = {};
-    const lines = headersText.split("\n");
+    const lines = headersText.split('\n');
 
     for (const line of lines) {
       const trimmed = line.trim();
       if (!trimmed) continue;
 
-      const colonIndex = trimmed.indexOf(":");
+      const colonIndex = trimmed.indexOf(':');
       if (colonIndex === -1) continue;
 
       const key = trimmed.substring(0, colonIndex).trim();
@@ -438,13 +456,13 @@ export const App: React.FC = () => {
 
   const parseParams = (paramsText: string): URLSearchParams => {
     const params = new URLSearchParams();
-    const lines = paramsText.split("\n");
+    const lines = paramsText.split('\n');
 
     for (const line of lines) {
       const trimmed = line.trim();
       if (!trimmed) continue;
 
-      const equalIndex = trimmed.indexOf("=");
+      const equalIndex = trimmed.indexOf('=');
       if (equalIndex === -1) continue;
 
       const key = trimmed.substring(0, equalIndex).trim();
@@ -460,17 +478,17 @@ export const App: React.FC = () => {
 
   const sendRequest = async () => {
     if (!url) {
-      setError("URL is required");
-      setToastMessage("URL is required");
-      setToastType("error");
+      setError('URL is required');
+      setToastMessage('URL is required');
+      setToastType('error');
       setShowToast(true);
       return;
     }
 
     setLoading(true);
-    setError("");
-    setToastMessage("Sending request...");
-    setToastType("loading");
+    setError('');
+    setToastMessage('Sending request...');
+    setToastType('loading');
     setShowToast(true);
 
     try {
@@ -492,7 +510,7 @@ export const App: React.FC = () => {
         urlParams.forEach((value, key) => {
           substitutedParams.append(key, substituteVariables(value, variables));
         });
-        
+
         const paramString = substitutedParams.toString();
         if (paramString) {
           substitutedUrl += (substitutedUrl.includes('?') ? '&' : '?') + paramString;
@@ -512,31 +530,31 @@ export const App: React.FC = () => {
         timestamp: new Date(),
         request: requestOptions,
       };
-      
-      setHistory(prev => [...prev, historyEntry]);
-      setHistoryIdCounter(prev => prev + 1);
+
+      setHistory((prev) => [...prev, historyEntry]);
+      setHistoryIdCounter((prev) => prev + 1);
 
       const result = await httpClient.sendRequest(requestOptions);
       setResponse(result);
-      
+
       // Update history entry with response info
-      setHistory(prev => 
-        prev.map(entry => 
-          entry.id === historyEntry.id 
+      setHistory((prev) =>
+        prev.map((entry) =>
+          entry.id === historyEntry.id
             ? { ...entry, status: result.status, statusText: result.statusText, time: result.time }
-            : entry
-        )
+            : entry,
+        ),
       );
-      
+
       // Show success toast
       setToastMessage(`${result.status} ${result.statusText} (${result.time}ms)`);
-      setToastType("success");
+      setToastType('success');
       setShowToast(true);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       setError(errorMessage);
       setToastMessage(errorMessage);
-      setToastType("error");
+      setToastType('error');
       setShowToast(true);
     } finally {
       setLoading(false);
@@ -548,27 +566,27 @@ export const App: React.FC = () => {
     if (!request || !request.method || !request.url) {
       return;
     }
-    
+
     setMethod(request.method);
-    
+
     // Separate URL and query params
     const urlObj = new URL(request.url);
     setUrl(urlObj.origin + urlObj.pathname);
-    
+
     // Convert URL params to string format
     const paramsArray: string[] = [];
     urlObj.searchParams.forEach((value, key) => {
       paramsArray.push(`${key}=${value}`);
     });
-    setParams(paramsArray.join("\n"));
-    
+    setParams(paramsArray.join('\n'));
+
     // Convert headers object back to string format
     const headersString = Object.entries(request.headers || {})
       .map(([key, value]) => `${key}: ${value}`)
-      .join("\n");
+      .join('\n');
     setHeaders(headersString);
-    
-    setBody(request.body || "");
+
+    setBody(request.body || '');
     setHistoryViewMode(false);
   };
 
@@ -582,7 +600,7 @@ export const App: React.FC = () => {
         finalUrl += (finalUrl.includes('?') ? '&' : '?') + paramString;
       }
     }
-    
+
     const savedRequest: SavedRequest = {
       id: savedRequestIdCounter,
       name,
@@ -594,9 +612,9 @@ export const App: React.FC = () => {
         body: body || undefined,
       },
     };
-    
-    setSavedRequests(prev => [...prev, savedRequest]);
-    setSavedRequestIdCounter(prev => prev + 1);
+
+    setSavedRequests((prev) => [...prev, savedRequest]);
+    setSavedRequestIdCounter((prev) => prev + 1);
     setShowSaveModal(false);
   };
 
@@ -605,38 +623,38 @@ export const App: React.FC = () => {
     if (!request || !request.method || !request.url) {
       return;
     }
-    
+
     setMethod(request.method);
-    
+
     // Separate URL and query params
     try {
       const urlObj = new URL(request.url);
       setUrl(urlObj.origin + urlObj.pathname);
-      
+
       // Convert URL params to string format
       const paramsArray: string[] = [];
       urlObj.searchParams.forEach((value, key) => {
         paramsArray.push(`${key}=${value}`);
       });
-      setParams(paramsArray.join("\n"));
+      setParams(paramsArray.join('\n'));
     } catch (e) {
       // If URL parsing fails, just set the whole URL
       setUrl(request.url);
-      setParams("");
+      setParams('');
     }
-    
+
     // Convert headers object back to string format
     const headersString = Object.entries(request.headers || {})
       .map(([key, value]) => `${key}: ${value}`)
-      .join("\n");
+      .join('\n');
     setHeaders(headersString);
-    
-    setBody(request.body || "");
+
+    setBody(request.body || '');
     setSavedRequestsViewMode(false);
   };
 
   const deleteSavedRequest = (id: number) => {
-    setSavedRequests(prev => prev.filter(req => req.id !== id));
+    setSavedRequests((prev) => prev.filter((req) => req.id !== id));
   };
 
   const handleAddEnvironment = () => {
@@ -655,7 +673,9 @@ export const App: React.FC = () => {
       setEnvironmentsConfig(addEnvironment(environmentsConfig, name, variables));
     } else {
       // Update existing environment
-      setEnvironmentsConfig(updateEnvironment(environmentsConfig, editingEnvironmentId, name, variables));
+      setEnvironmentsConfig(
+        updateEnvironment(environmentsConfig, editingEnvironmentId, name, variables),
+      );
     }
     setShowEnvironmentEditor(false);
     setEditingEnvironmentId(null);
@@ -670,14 +690,22 @@ export const App: React.FC = () => {
     setEnvironmentsViewMode(false);
   };
 
-
   return (
     <Box flexDirection="column" width="100%" height="100%" minWidth={50}>
       {/* Environment Editor Modal - Full Screen Overlay */}
       {showEnvironmentEditor ? (
         <EnvironmentEditorModal
-          environmentName={editingEnvironmentId ? environmentsConfig.environments.find(e => e.id === editingEnvironmentId)?.name : ""}
-          variables={editingEnvironmentId ? environmentsConfig.environments.find(e => e.id === editingEnvironmentId)?.variables : {}}
+          environmentName={
+            editingEnvironmentId
+              ? environmentsConfig.environments.find((e) => e.id === editingEnvironmentId)?.name
+              : ''
+          }
+          variables={
+            editingEnvironmentId
+              ? environmentsConfig.environments.find((e) => e.id === editingEnvironmentId)
+                  ?.variables
+              : {}
+          }
           onSave={handleSaveEnvironment}
           onCancel={() => {
             setShowEnvironmentEditor(false);
@@ -689,7 +717,11 @@ export const App: React.FC = () => {
         <Box flexDirection="column" width="100%" height="100%">
           <Box paddingX={1} marginBottom={1}>
             <Text bold color="magenta">
-              🚀 RestMan <Text dimColor italic>v{packageJson.version}</Text> <Text color="cyan">- Environments</Text> <Text dimColor>(ESC to return)</Text>
+              🚀 RestMan{' '}
+              <Text dimColor italic>
+                v{packageJson.version}
+              </Text>{' '}
+              <Text color="cyan">- Environments</Text> <Text dimColor>(ESC to return)</Text>
             </Text>
           </Box>
           <Box flexGrow={1}>
@@ -707,7 +739,11 @@ export const App: React.FC = () => {
         <Box flexDirection="column" width="100%" height="100%">
           <Box paddingX={1} marginBottom={1}>
             <Text bold color="magenta">
-              🚀 RestMan <Text dimColor italic>v{packageJson.version}</Text> <Text color="cyan">- Saved Requests</Text> <Text dimColor>(ESC to return)</Text>
+              🚀 RestMan{' '}
+              <Text dimColor italic>
+                v{packageJson.version}
+              </Text>{' '}
+              <Text color="cyan">- Saved Requests</Text> <Text dimColor>(ESC to return)</Text>
             </Text>
           </Box>
           <Box flexGrow={1}>
@@ -723,7 +759,11 @@ export const App: React.FC = () => {
         <Box flexDirection="column" width="100%" height="100%">
           <Box paddingX={1} marginBottom={1}>
             <Text bold color="magenta">
-              🚀 RestMan <Text dimColor italic>v{packageJson.version}</Text> <Text color="cyan">- Request History</Text> <Text dimColor>(ESC to return)</Text>
+              🚀 RestMan{' '}
+              <Text dimColor italic>
+                v{packageJson.version}
+              </Text>{' '}
+              <Text color="cyan">- Request History</Text> <Text dimColor>(ESC to return)</Text>
             </Text>
           </Box>
           <Box flexGrow={1}>
@@ -738,7 +778,12 @@ export const App: React.FC = () => {
         <>
           {/* Header */}
           <Box paddingX={1} marginBottom={1}>
-            <Text bold color="magenta">🚀 RestMan <Text dimColor italic>v{packageJson.version}</Text></Text>
+            <Text bold color="magenta">
+              🚀 RestMan{' '}
+              <Text dimColor italic>
+                v{packageJson.version}
+              </Text>
+            </Text>
           </Box>
 
           {/* Environment Selector Row */}
@@ -746,9 +791,11 @@ export const App: React.FC = () => {
             <EnvironmentSelector
               environments={environmentsConfig.environments}
               activeEnvironmentId={environmentsConfig.activeEnvironmentId}
-              focused={focusedField === "environment"}
-              editMode={editMode === "environment"}
-              onSelect={(id: number) => setEnvironmentsConfig(setActiveEnvironment(environmentsConfig, id))}
+              focused={focusedField === 'environment'}
+              editMode={editMode === 'environment'}
+              onSelect={(id: number) =>
+                setEnvironmentsConfig(setActiveEnvironment(environmentsConfig, id))
+              }
             />
           </Box>
 
@@ -757,14 +804,14 @@ export const App: React.FC = () => {
             <MethodSelector
               value={method}
               onChange={setMethod}
-              focused={focusedField === "method"}
-              editMode={editMode === "method"}
+              focused={focusedField === 'method'}
+              editMode={editMode === 'method'}
             />
             <URLInput
               value={url}
               onChange={setUrl}
-              focused={focusedField === "url"}
-              editMode={editMode === "url"}
+              focused={focusedField === 'url'}
+              editMode={editMode === 'url'}
             />
           </Box>
 
@@ -778,11 +825,19 @@ export const App: React.FC = () => {
               onParamsChange={setParams}
               body={body}
               onBodyChange={setBody}
-              focused={focusedField === "request"}
-              editMode={editMode === "request"}
+              focused={focusedField === 'request'}
+              editMode={editMode === 'request'}
               activeTab={requestActiveTab}
               onTabChange={setRequestActiveTab}
-              isModalOpen={showExitModal || showHelpModal || showMethodModal || showSaveModal || showEnvironmentSelectorModal || showEnvironmentEditor || showResponseBodyModal}
+              isModalOpen={
+                showExitModal ||
+                showHelpModal ||
+                showMethodModal ||
+                showSaveModal ||
+                showEnvironmentSelectorModal ||
+                showEnvironmentEditor ||
+                showResponseBodyModal
+              }
             />
           </Box>
 
@@ -790,11 +845,19 @@ export const App: React.FC = () => {
           <Box minHeight={10} flexGrow={1}>
             <ResponseEditor
               response={response}
-              focused={focusedField === "response"}
-              editMode={editMode === "response"}
+              focused={focusedField === 'response'}
+              editMode={editMode === 'response'}
               activeTab={responseActiveTab}
               onTabChange={setResponseActiveTab}
-              isModalOpen={showExitModal || showHelpModal || showMethodModal || showSaveModal || showEnvironmentSelectorModal || showEnvironmentEditor || showResponseBodyModal}
+              isModalOpen={
+                showExitModal ||
+                showHelpModal ||
+                showMethodModal ||
+                showSaveModal ||
+                showEnvironmentSelectorModal ||
+                showEnvironmentEditor ||
+                showResponseBodyModal
+              }
             />
           </Box>
 
@@ -805,16 +868,11 @@ export const App: React.FC = () => {
 
       {/* Response Body Modal */}
       {showResponseBodyModal && response && (
-        <ResponseBodyModal
-          body={response.body}
-          onClose={() => setShowResponseBodyModal(false)}
-        />
+        <ResponseBodyModal body={response.body} onClose={() => setShowResponseBodyModal(false)} />
       )}
 
       {/* Help Modal */}
-      {showHelpModal && (
-        <HelpModal onClose={() => setShowHelpModal(false)} />
-      )}
+      {showHelpModal && <HelpModal onClose={() => setShowHelpModal(false)} />}
 
       {/* Method Selector Modal */}
       {showMethodModal && (
@@ -852,20 +910,11 @@ export const App: React.FC = () => {
 
       {/* Exit Modal */}
       {showExitModal && (
-        <ExitModal
-          onConfirm={() => exit()}
-          onCancel={() => setShowExitModal(false)}
-        />
+        <ExitModal onConfirm={() => exit()} onCancel={() => setShowExitModal(false)} />
       )}
 
       {/* Toast Notification - Overlay */}
-      {showToast && (
-        <Toast
-          message={toastMessage}
-          type={toastType}
-          visible={showToast}
-        />
-      )}
+      {showToast && <Toast message={toastMessage} type={toastType} visible={showToast} />}
     </Box>
   );
 };

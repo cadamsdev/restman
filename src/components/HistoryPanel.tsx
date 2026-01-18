@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Box, Text, useInput } from "ink";
-import type { RequestOptions } from "../http-client";
-import { Fieldset } from "./Fieldset";
+import React, { useState, useEffect } from 'react';
+import { Box, Text, useInput } from 'ink';
+import type { RequestOptions } from '../http-client';
+import { Fieldset } from './Fieldset';
 
 export interface HistoryEntry {
   id: number;
@@ -42,54 +42,57 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
     }
   }, [history, selectedIndex]);
 
-  useInput((input, key) => {
-    if (!focused || history.length === 0) return;
+  useInput(
+    (input, key) => {
+      if (!focused || history.length === 0) return;
 
-    // Navigate through history
-    if (key.upArrow) {
-      const newIndex = Math.min(history.length - 1, selectedIndex + 1);
-      setSelectedIndex(newIndex);
-      // Adjust scroll if needed
-      if (newIndex >= scrollOffset + maxVisibleLines) {
-        setScrollOffset(newIndex - maxVisibleLines + 1);
+      // Navigate through history
+      if (key.upArrow) {
+        const newIndex = Math.min(history.length - 1, selectedIndex + 1);
+        setSelectedIndex(newIndex);
+        // Adjust scroll if needed
+        if (newIndex >= scrollOffset + maxVisibleLines) {
+          setScrollOffset(newIndex - maxVisibleLines + 1);
+        }
+      } else if (key.downArrow) {
+        const newIndex = Math.max(0, selectedIndex - 1);
+        setSelectedIndex(newIndex);
+        // Adjust scroll if needed
+        if (newIndex < scrollOffset) {
+          setScrollOffset(newIndex);
+        }
+      } else if (key.pageUp) {
+        const newIndex = Math.max(0, selectedIndex - maxVisibleLines);
+        setSelectedIndex(newIndex);
+        setScrollOffset(Math.max(0, newIndex));
+      } else if (key.pageDown) {
+        const newIndex = Math.min(history.length - 1, selectedIndex + maxVisibleLines);
+        setSelectedIndex(newIndex);
+        setScrollOffset(Math.min(Math.max(0, history.length - maxVisibleLines), newIndex));
+      } else if (input === 'g') {
+        // Go to top
+        setSelectedIndex(0);
+        setScrollOffset(0);
+      } else if (input === 'G') {
+        // Go to bottom
+        const lastIndex = history.length - 1;
+        setSelectedIndex(lastIndex);
+        setScrollOffset(Math.max(0, lastIndex - maxVisibleLines + 1));
+      } else if (key.return) {
+        // Load selected request
+        if (history[selectedIndex]) {
+          onSelectRequest(history[selectedIndex].request);
+        }
       }
-    } else if (key.downArrow) {
-      const newIndex = Math.max(0, selectedIndex - 1);
-      setSelectedIndex(newIndex);
-      // Adjust scroll if needed
-      if (newIndex < scrollOffset) {
-        setScrollOffset(newIndex);
-      }
-    } else if (key.pageUp) {
-      const newIndex = Math.max(0, selectedIndex - maxVisibleLines);
-      setSelectedIndex(newIndex);
-      setScrollOffset(Math.max(0, newIndex));
-    } else if (key.pageDown) {
-      const newIndex = Math.min(history.length - 1, selectedIndex + maxVisibleLines);
-      setSelectedIndex(newIndex);
-      setScrollOffset(Math.min(Math.max(0, history.length - maxVisibleLines), newIndex));
-    } else if (input === 'g') {
-      // Go to top
-      setSelectedIndex(0);
-      setScrollOffset(0);
-    } else if (input === 'G') {
-      // Go to bottom
-      const lastIndex = history.length - 1;
-      setSelectedIndex(lastIndex);
-      setScrollOffset(Math.max(0, lastIndex - maxVisibleLines + 1));
-    } else if (key.return) {
-      // Load selected request
-      if (history[selectedIndex]) {
-        onSelectRequest(history[selectedIndex].request);
-      }
-    }
-  }, { isActive: focused });
+    },
+    { isActive: focused },
+  );
 
   const getStatusColor = (status?: number): string => {
-    if (!status) return "gray";
-    if (status >= 200 && status < 300) return "green";
-    if (status >= 400) return "red";
-    return "yellow";
+    if (!status) return 'gray';
+    if (status >= 200 && status < 300) return 'green';
+    if (status >= 400) return 'red';
+    return 'yellow';
   };
 
   const formatTimestamp = (date: Date): string => {
@@ -108,7 +111,7 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
 
   const truncateUrl = (url: string, maxLength: number): string => {
     if (url.length <= maxLength) return url;
-    return url.substring(0, maxLength - 3) + "...";
+    return url.substring(0, maxLength - 3) + '...';
   };
 
   if (history.length === 0) {
@@ -122,14 +125,10 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
         height="100%"
       >
         <Box marginTop={1}>
-          <Text dimColor>
-            No requests sent yet. Send your first request to see it here!
-          </Text>
+          <Text dimColor>No requests sent yet. Send your first request to see it here!</Text>
         </Box>
         <Box marginTop={2}>
-          <Text dimColor>
-            • ↑↓: Navigate • Enter: Load request • ESC: Return
-          </Text>
+          <Text dimColor>• ↑↓: Navigate • Enter: Load request • ESC: Return</Text>
         </Box>
       </Fieldset>
     );
@@ -157,33 +156,30 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
       {reversedVisible.map((entry, index) => {
         const actualIndex = history.length - 1 - (scrollOffset + index);
         const isSelected = actualIndex === selectedIndex;
-        
+
         // Safety check for invalid entries
         if (!entry || !entry.request || !entry.request.method || !entry.request.url) {
           return null;
         }
-        
+
         return (
           <Box key={entry.id} marginBottom={0}>
             <Text
-              backgroundColor={isSelected ? "magenta" : undefined}
-              color={isSelected ? "black" : undefined}
+              backgroundColor={isSelected ? 'magenta' : undefined}
+              color={isSelected ? 'black' : undefined}
               wrap="truncate"
             >
-              {isSelected ? "▶ " : "  "}
-              <Text bold color={isSelected ? "black" : getStatusColor(entry.status)}>
+              {isSelected ? '▶ ' : '  '}
+              <Text bold color={isSelected ? 'black' : getStatusColor(entry.status)}>
                 {entry.request.method.padEnd(6)}
-              </Text>
-              {" "}
-              <Text color={isSelected ? "black" : "white"}>
+              </Text>{' '}
+              <Text color={isSelected ? 'black' : 'white'}>
                 {truncateUrl(entry.request.url, 50)}
-              </Text>
-              {" "}
-              <Text dimColor={!isSelected} color={isSelected ? "black" : undefined}>
-                {entry.status ? `(${entry.status})` : "(pending)"}
-              </Text>
-              {" "}
-              <Text dimColor color={isSelected ? "black" : undefined}>
+              </Text>{' '}
+              <Text dimColor={!isSelected} color={isSelected ? 'black' : undefined}>
+                {entry.status ? `(${entry.status})` : '(pending)'}
+              </Text>{' '}
+              <Text dimColor color={isSelected ? 'black' : undefined}>
                 {formatTimestamp(entry.timestamp)}
               </Text>
             </Text>

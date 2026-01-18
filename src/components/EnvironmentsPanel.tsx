@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { Box, Text, useInput } from "ink";
-import type { Environment, EnvironmentsConfig } from "../environment-storage";
-import { Fieldset } from "./Fieldset";
+import { useState } from 'react';
+import { Box, Text, useInput } from 'ink';
+import type { Environment, EnvironmentsConfig } from '../environment-storage';
+import { Fieldset } from './Fieldset';
 
 interface EnvironmentsPanelProps {
   config: EnvironmentsConfig;
@@ -35,16 +35,16 @@ export const EnvironmentsPanel: React.FC<EnvironmentsPanelProps> = ({
       if (selectedEnv) {
         onSelectEnvironment(selectedEnv.id);
       }
-    } else if (input === "n") {
+    } else if (input === 'n') {
       // Add new environment
       onAddEnvironment();
-    } else if (input === "e") {
+    } else if (input === 'e') {
       // Edit selected environment
       const selectedEnv = config.environments[selectedIndex];
       if (selectedEnv) {
         onEditEnvironment(selectedEnv.id);
       }
-    } else if (input === "d" && key.shift) {
+    } else if (input === 'd' && key.shift) {
       // Delete selected environment (Shift+D for safety)
       const selectedEnv = config.environments[selectedIndex];
       if (selectedEnv && config.environments.length > 1) {
@@ -78,20 +78,18 @@ export const EnvironmentsPanel: React.FC<EnvironmentsPanelProps> = ({
           {config.environments.map((env: Environment, index: number) => {
             const isSelected = index === selectedIndex;
             const isActive = env.id === config.activeEnvironmentId;
-            
+
             return (
               <Box key={env.id} marginBottom={1} flexDirection="column">
                 <Box>
                   <Box width={3}>
-                    <Text color={isActive ? "green" : undefined}>
-                      {isActive ? "▶" : " "}
-                    </Text>
+                    <Text color={isActive ? 'green' : undefined}>{isActive ? '▶' : ' '}</Text>
                   </Box>
                   <Box flexGrow={1}>
-                    <Text 
-                      bold 
-                      color={isSelected ? "yellow" : (isActive ? "green" : "cyan")}
-                      backgroundColor={isSelected ? "blue" : undefined}
+                    <Text
+                      bold
+                      color={isSelected ? 'yellow' : isActive ? 'green' : 'cyan'}
+                      backgroundColor={isSelected ? 'blue' : undefined}
                     >
                       {env.name}
                     </Text>
@@ -100,22 +98,24 @@ export const EnvironmentsPanel: React.FC<EnvironmentsPanelProps> = ({
                 <Box marginLeft={3} flexDirection="column">
                   <Box>
                     <Text dimColor>Variables: </Text>
-                    <Text color="cyan">
-                      {Object.keys(env.variables).length} defined
-                    </Text>
+                    <Text color="cyan">{Object.keys(env.variables).length} defined</Text>
                   </Box>
-                  {Object.entries(env.variables).slice(0, 3).map(([key, value]: [string, string]) => (
-                    <Box key={key} marginLeft={2}>
-                      <Text dimColor>
-                        {key}: <Text color="gray">{value.substring(0, 30)}{value.length > 30 ? "..." : ""}</Text>
-                      </Text>
-                    </Box>
-                  ))}
+                  {Object.entries(env.variables)
+                    .slice(0, 3)
+                    .map(([key, value]: [string, string]) => (
+                      <Box key={key} marginLeft={2}>
+                        <Text dimColor>
+                          {key}:{' '}
+                          <Text color="gray">
+                            {value.substring(0, 30)}
+                            {value.length > 30 ? '...' : ''}
+                          </Text>
+                        </Text>
+                      </Box>
+                    ))}
                   {Object.keys(env.variables).length > 3 && (
                     <Box marginLeft={2}>
-                      <Text dimColor>
-                        ... and {Object.keys(env.variables).length - 3} more
-                      </Text>
+                      <Text dimColor>... and {Object.keys(env.variables).length - 3} more</Text>
                     </Box>
                   )}
                 </Box>
@@ -127,10 +127,7 @@ export const EnvironmentsPanel: React.FC<EnvironmentsPanelProps> = ({
 
       {/* Instructions */}
       <Box marginTop={1}>
-        <Fieldset
-          title="⌨️  Controls"
-          borderColor="gray"
-        >
+        <Fieldset title="⌨️  Controls" borderColor="gray">
           <Text dimColor>
             ↑↓: Navigate | Enter: Activate | n: New | e: Edit | Shift+D: Delete | ESC: Close
           </Text>
