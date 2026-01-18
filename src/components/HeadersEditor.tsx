@@ -40,13 +40,13 @@ export const HeadersEditor: React.FC<HeadersEditorProps> = ({
           setCursorPosition(cursorPosition - 1);
         } else if (cursorLine > 0) {
           setCursorLine(cursorLine - 1);
-          setCursorPosition(lines[cursorLine - 1].length);
+          setCursorPosition(lines[cursorLine - 1]?.length || 0);
         }
         return;
       }
 
       if (key.rightArrow) {
-        if (cursorPosition < lines[cursorLine].length) {
+        if (cursorPosition < (lines[cursorLine]?.length || 0)) {
           setCursorPosition(cursorPosition + 1);
         } else if (cursorLine < lines.length - 1) {
           setCursorLine(cursorLine + 1);
@@ -57,6 +57,7 @@ export const HeadersEditor: React.FC<HeadersEditorProps> = ({
 
       if (key.return) {
         const currentLine = lines[cursorLine];
+        if (!currentLine) return;
         const before = currentLine.slice(0, cursorPosition);
         const after = currentLine.slice(cursorPosition);
         const newLines = [...lines];
@@ -71,6 +72,7 @@ export const HeadersEditor: React.FC<HeadersEditorProps> = ({
       if (key.backspace || key.delete) {
         if (cursorPosition > 0) {
           const currentLine = lines[cursorLine];
+          if (!currentLine) return;
           const newLine =
             currentLine.slice(0, cursorPosition - 1) + currentLine.slice(cursorPosition);
           const newLines = [...lines];
@@ -80,6 +82,7 @@ export const HeadersEditor: React.FC<HeadersEditorProps> = ({
         } else if (cursorLine > 0) {
           const currentLine = lines[cursorLine];
           const previousLine = lines[cursorLine - 1];
+          if (!previousLine || !currentLine) return;
           const newLines = [...lines];
           newLines[cursorLine - 1] = previousLine + currentLine;
           newLines.splice(cursorLine, 1);
@@ -92,6 +95,7 @@ export const HeadersEditor: React.FC<HeadersEditorProps> = ({
 
       if (input && !key.ctrl && !key.meta) {
         const currentLine = lines[cursorLine];
+        if (!currentLine) return;
         const newLine =
           currentLine.slice(0, cursorPosition) + input + currentLine.slice(cursorPosition);
         const newLines = [...lines];

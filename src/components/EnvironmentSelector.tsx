@@ -15,7 +15,6 @@ export const EnvironmentSelector: React.FC<EnvironmentSelectorProps> = ({
   activeEnvironmentId,
   focused,
   editMode,
-  onSelect,
 }) => {
   const activeEnv = environments.find((env: Environment) => env.id === activeEnvironmentId);
 

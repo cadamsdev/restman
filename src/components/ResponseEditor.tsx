@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Box, Text, useInput } from 'ink';
 import { Fieldset } from './Fieldset';
 import type { Response } from '../http-client';
@@ -11,8 +11,6 @@ interface ResponseEditorProps {
   onTabChange: (tab: 'body' | 'headers' | 'cookies') => void;
   isModalOpen?: boolean;
 }
-
-type Tab = 'body' | 'headers' | 'cookies';
 
 export const ResponseEditor: React.FC<ResponseEditorProps> = ({
   response,
@@ -137,7 +135,7 @@ export const ResponseEditor: React.FC<ResponseEditorProps> = ({
           const parts = cookieStr.trim().split(';');
           if (parts.length > 0) {
             const [nameValue, ...attrs] = parts;
-            const [name, val] = nameValue.split('=');
+            const [name, val] = nameValue?.split('=') || ['', ''];
             cookies.push({
               name: name?.trim() || '',
               value: val?.trim() || '',

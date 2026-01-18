@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Box, Text, useInput } from 'ink';
 import { Fieldset } from './Fieldset';
 
@@ -16,8 +16,6 @@ interface RequestEditorProps {
   onTabChange: (tab: 'headers' | 'params' | 'body') => void;
   isModalOpen?: boolean;
 }
-
-type Tab = 'headers' | 'params' | 'body';
 
 export const RequestEditor: React.FC<RequestEditorProps> = ({
   url,
@@ -97,7 +95,7 @@ export const RequestEditor: React.FC<RequestEditorProps> = ({
         }
 
         if (key.rightArrow) {
-          if (cursorPosition < lines[cursorLine].length) {
+          if (cursorPosition < (lines[cursorLine]?.length || 0)) {
             setCursorPosition(cursorPosition + 1);
           } else if (cursorLine < lines.length - 1) {
             setCursorLine(cursorLine + 1);
@@ -108,6 +106,7 @@ export const RequestEditor: React.FC<RequestEditorProps> = ({
 
         if (key.return) {
           const currentLine = lines[cursorLine];
+          if (!currentLine) return;
           const before = currentLine.slice(0, cursorPosition);
           const after = currentLine.slice(cursorPosition);
           const newLines = [...lines];
@@ -122,6 +121,7 @@ export const RequestEditor: React.FC<RequestEditorProps> = ({
         if (key.backspace || key.delete) {
           if (cursorPosition > 0) {
             const currentLine = lines[cursorLine];
+            if (!currentLine) return;
             const newLine =
               currentLine.slice(0, cursorPosition - 1) + currentLine.slice(cursorPosition);
             const newLines = [...lines];
@@ -131,6 +131,7 @@ export const RequestEditor: React.FC<RequestEditorProps> = ({
           } else if (cursorLine > 0) {
             const currentLine = lines[cursorLine];
             const previousLine = lines[cursorLine - 1];
+            if (!previousLine || !currentLine) return;
             const newLines = [...lines];
             newLines[cursorLine - 1] = previousLine + currentLine;
             newLines.splice(cursorLine, 1);
@@ -143,6 +144,7 @@ export const RequestEditor: React.FC<RequestEditorProps> = ({
 
         if (input && !key.ctrl && !key.meta && !key.escape) {
           const currentLine = lines[cursorLine];
+          if (!currentLine) return;
           const newLine =
             currentLine.slice(0, cursorPosition) + input + currentLine.slice(cursorPosition);
           const newLines = [...lines];
