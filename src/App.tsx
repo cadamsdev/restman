@@ -60,8 +60,10 @@ export const App: React.FC = () => {
   const [environmentsViewMode, setEnvironmentsViewMode] = useState<boolean>(false);
   const [showEnvironmentEditor, setShowEnvironmentEditor] = useState<boolean>(false);
   const [editingEnvironmentId, setEditingEnvironmentId] = useState<number | null>(null);
+  const [requestActiveTab, setRequestActiveTab] = useState<"headers" | "body">("headers");
+  const [responseActiveTab, setResponseActiveTab] = useState<"body" | "headers" | "cookies">("body");
 
-  const fields: FocusField[] = ["environment", "method", "url", "request", "response"];
+  const fields: FocusField[] = ["url", "request", "response", "environment", "method"];
 
   // Load history from disk on startup
   useEffect(() => {
@@ -315,20 +317,66 @@ export const App: React.FC = () => {
       }
     }
 
-    // Tab navigation
+    // Tab navigation with sub-tab support
     if (key.tab) {
       if (key.shift) {
-        // Shift+Tab - previous field
+        // Shift+Tab - previous tab/field
+        if (focusedField === "request") {
+          if (requestActiveTab === "body") {
+            setRequestActiveTab("headers");
+            return;
+          }
+          // On first tab, move to previous field
+        } else if (focusedField === "response") {
+          if (responseActiveTab === "cookies") {
+            setResponseActiveTab("headers");
+            return;
+          } else if (responseActiveTab === "headers") {
+            setResponseActiveTab("body");
+            return;
+          }
+          // On first tab, move to previous field
+        }
+        
+        // Move to previous field
         const currentIndex = fields.indexOf(focusedField);
         const prevIndex = (currentIndex - 1 + fields.length) % fields.length;
         const prevField = fields[prevIndex];
-        if (prevField) setFocusedField(prevField);
+        if (prevField) {
+          setFocusedField(prevField);
+          // Reset to first tab when entering a panel
+          if (prevField === "request") setRequestActiveTab("headers");
+          if (prevField === "response") setResponseActiveTab("body");
+        }
       } else {
-        // Tab - next field
+        // Tab - next tab/field
+        if (focusedField === "request") {
+          if (requestActiveTab === "headers") {
+            setRequestActiveTab("body");
+            return;
+          }
+          // On last tab, move to next field
+        } else if (focusedField === "response") {
+          if (responseActiveTab === "body") {
+            setResponseActiveTab("headers");
+            return;
+          } else if (responseActiveTab === "headers") {
+            setResponseActiveTab("cookies");
+            return;
+          }
+          // On last tab, move to next field
+        }
+        
+        // Move to next field
         const currentIndex = fields.indexOf(focusedField);
         const nextIndex = (currentIndex + 1) % fields.length;
         const nextField = fields[nextIndex];
-        if (nextField) setFocusedField(nextField);
+        if (nextField) {
+          setFocusedField(nextField);
+          // Reset to first tab when entering a panel
+          if (nextField === "request") setRequestActiveTab("headers");
+          if (nextField === "response") setResponseActiveTab("body");
+        }
       }
       return;
     }
@@ -654,6 +702,8 @@ export const App: React.FC = () => {
               onBodyChange={setBody}
               focused={focusedField === "request"}
               editMode={editMode === "request"}
+              activeTab={requestActiveTab}
+              onTabChange={setRequestActiveTab}
             />
           </Box>
 
@@ -663,6 +713,8 @@ export const App: React.FC = () => {
               response={response}
               focused={focusedField === "response"}
               editMode={editMode === "response"}
+              activeTab={responseActiveTab}
+              onTabChange={setResponseActiveTab}
             />
           </Box>
 

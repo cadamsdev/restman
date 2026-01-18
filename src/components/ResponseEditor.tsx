@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Text, useInput } from "ink";
 import { Fieldset } from "./Fieldset";
 import type { Response } from "../http-client";
@@ -7,6 +7,8 @@ interface ResponseEditorProps {
   response: Response | null;
   focused: boolean;
   editMode?: boolean;
+  activeTab: "body" | "headers" | "cookies";
+  onTabChange: (tab: "body" | "headers" | "cookies") => void;
 }
 
 type Tab = "body" | "headers" | "cookies";
@@ -15,85 +17,46 @@ export const ResponseEditor: React.FC<ResponseEditorProps> = ({
   response,
   focused,
   editMode = false,
+  activeTab,
+  onTabChange,
 }) => {
-  const [activeTab, setActiveTab] = useState<Tab>("body");
   const [scrollOffset, setScrollOffset] = useState(0);
   const maxVisibleLines = 5; // Lines visible in the response fieldset (plus 1 for line count indicator)
 
-  // Handle keyboard input for tab switching and scrolling
+  // Handle keyboard input for scrolling
   useInput((input, key) => {
     if (!focused) return;
 
-    // Tab switching with left/right arrows (no wrapping)
+    // Handle left/right arrow navigation between tabs
     if (key.leftArrow) {
       if (activeTab === "cookies") {
-        setActiveTab("headers");
+        onTabChange("headers");
         setScrollOffset(0);
+        return;
       } else if (activeTab === "headers") {
-        setActiveTab("body");
+        onTabChange("body");
         setScrollOffset(0);
+        return;
       }
-      // Do nothing if already on first tab (body)
+      // Already on first tab, do nothing
       return;
     }
     
     if (key.rightArrow) {
       if (activeTab === "body") {
-        setActiveTab("headers");
+        onTabChange("headers");
         setScrollOffset(0);
+        return;
       } else if (activeTab === "headers") {
-        setActiveTab("cookies");
+        onTabChange("cookies");
         setScrollOffset(0);
+        return;
       }
-      // Do nothing if already on last tab (cookies)
-      return;
-    }
-    
-    // Tab key continues to wrap around for convenience
-    if (key.tab && key.shift) {
-      if (activeTab === "body") {
-        setActiveTab("cookies");
-      } else if (activeTab === "cookies") {
-        setActiveTab("headers");
-      } else {
-        setActiveTab("body");
-      }
-      setScrollOffset(0);
-      return;
-    }
-    
-    if (key.tab) {
-      if (activeTab === "body") {
-        setActiveTab("headers");
-      } else if (activeTab === "headers") {
-        setActiveTab("cookies");
-      } else {
-        setActiveTab("body");
-      }
-      setScrollOffset(0);
-      return;
-    }
-    
-    // Direct tab shortcuts
-    if (input === "5") {
-      setActiveTab("body");
-      setScrollOffset(0);
-      return;
-    }
-    
-    if (input === "6") {
-      setActiveTab("headers");
-      setScrollOffset(0);
-      return;
-    }
-    
-    if (input === "7") {
-      setActiveTab("cookies");
-      setScrollOffset(0);
+      // Already on last tab, do nothing
       return;
     }
 
-    // Scrolling (up/down arrows work only in edit mode)
+    // Scrolling (up/down arrows)
     if (response) {
       const lines = getTabLines();
       const totalLines = lines.length;

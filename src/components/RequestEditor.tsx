@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Text, useInput } from "ink";
 import { Fieldset } from "./Fieldset";
 
@@ -9,6 +9,8 @@ interface RequestEditorProps {
   onBodyChange: (value: string) => void;
   focused: boolean;
   editMode: boolean;
+  activeTab: "headers" | "body";
+  onTabChange: (tab: "headers" | "body") => void;
 }
 
 type Tab = "headers" | "body";
@@ -20,8 +22,9 @@ export const RequestEditor: React.FC<RequestEditorProps> = ({
   onBodyChange,
   focused,
   editMode,
+  activeTab,
+  onTabChange,
 }) => {
-  const [activeTab, setActiveTab] = useState<Tab>("headers");
   const [cursorLine, setCursorLine] = useState(0);
   const [cursorPosition, setCursorPosition] = useState(0);
 
@@ -29,9 +32,21 @@ export const RequestEditor: React.FC<RequestEditorProps> = ({
   const onChange = activeTab === "headers" ? onHeadersChange : onBodyChange;
   const lines = currentValue.split("\n");
 
-  // Handle keyboard input for tab switching (when not in edit mode)
+  // Handle keyboard input for editing (when in edit mode)
   useInput((input, key) => {
     if (!focused) return;
+
+    // Handle left/right arrow navigation between tabs (when not in edit mode)
+    if (!editMode) {
+      if (key.leftArrow && activeTab === "body") {
+        onTabChange("headers");
+        return;
+      }
+      if (key.rightArrow && activeTab === "headers") {
+        onTabChange("body");
+        return;
+      }
+    }
 
     // Handle edit mode - multi-line text editing
     if (editMode) {
@@ -110,25 +125,6 @@ export const RequestEditor: React.FC<RequestEditorProps> = ({
         setCursorPosition(cursorPosition + input.length);
       }
       return;
-    }
-
-    // Tab switching when not in edit mode
-    if (key.leftArrow || (key.tab && key.shift)) {
-      setActiveTab("headers");
-      setCursorLine(0);
-      setCursorPosition(0);
-    } else if (key.rightArrow || key.tab) {
-      setActiveTab("body");
-      setCursorLine(0);
-      setCursorPosition(0);
-    } else if (input === "3") {
-      setActiveTab("headers");
-      setCursorLine(0);
-      setCursorPosition(0);
-    } else if (input === "4") {
-      setActiveTab("body");
-      setCursorLine(0);
-      setCursorPosition(0);
     }
   }, { isActive: focused });
 
