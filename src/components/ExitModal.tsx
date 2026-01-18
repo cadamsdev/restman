@@ -69,7 +69,7 @@ export const ExitModal: React.FC<ExitModalProps> = ({ onConfirm, onCancel }) => 
       >
         <Box justifyContent="center">
           <Text bold color="red">
-            🚻 Exit ShellMan?
+            🚻 Exit RestMan?
           </Text>
         </Box>
         <Box marginTop={1} justifyContent="center">

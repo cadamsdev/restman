@@ -1,5 +1,5 @@
 {
-  "name": "shellman",
+  "name": "restman",
   "version": "0.0.0",
   "author": "cadamsdev",
   "module": "index.ts",
@@ -11,7 +11,7 @@
     "typescript": "^5"
   },
   "bin": {
-    "shellman": "./index.ts"
+    "restman": "./index.ts"
   },
   "description": "A powerful REST API client TUI built with Bun",
   "keywords": [

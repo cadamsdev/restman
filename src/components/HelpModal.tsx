@@ -34,7 +34,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose }) => {
       >
         <Box justifyContent="center">
           <Text bold color="magenta">
-            ⌨️  ShellMan Keyboard Shortcuts
+            ⌨️  RestMan Keyboard Shortcuts
           </Text>
         </Box>
         

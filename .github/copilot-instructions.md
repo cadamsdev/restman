@@ -1,6 +1,6 @@
-# ShellMan AI Development Guide
+# RestMan AI Development Guide
 
-ShellMan is a Terminal User Interface (TUI) REST API client built with Bun, React, and Ink. Think "Postman for the terminal."
+RestMan is a Terminal User Interface (TUI) REST API client built with Bun, React, and Ink. Think "Postman for the terminal."
 
 ## Architecture Overview
 
@@ -8,8 +8,8 @@ ShellMan is a Terminal User Interface (TUI) REST API client built with Bun, Reac
 
 **Modal-based View Modes**: The UI operates in exclusive modes (response view, history view, saved requests view, edit mode) controlled by boolean state flags (`responseViewMode`, `historyViewMode`, `savedRequestsViewMode`, `editMode`). Only one mode is active at a time - keyboard input handlers check these flags first to determine routing.
 
-**Persistent Storage Pattern**: User data (history, saved requests) is stored in `~/.shellman/` directory as JSON files. The storage modules ([history-storage.ts](../src/history-storage.ts), [saved-requests-storage.ts](../src/saved-requests-storage.ts)) follow this pattern:
-- `ensureDirectoryExists()` creates `~/.shellman/` on first access
+**Persistent Storage Pattern**: User data (history, saved requests) is stored in `~/.restman/` directory as JSON files. The storage modules ([history-storage.ts](../src/history-storage.ts), [saved-requests-storage.ts](../src/saved-requests-storage.ts)) follow this pattern:
+- `ensureDirectoryExists()` creates `~/.restman/` on first access
 - `load*()` functions handle missing files gracefully (return empty arrays)
 - `save*()` functions are called via `useEffect` hooks when state changes
 - History is auto-limited to 100 entries to prevent unbounded growth
@@ -77,7 +77,7 @@ Response timing is calculated by diffing `Date.now()` before/after the request.
 
 ❌ **Don't forget to update the Instructions component** - When adding new keyboard shortcuts, document them in [src/components/Instructions.tsx](../src/components/Instructions.tsx).
 
-❌ **Don't use process.cwd() for user data paths** - Always use `homedir()` from `os` module for persistent storage. The `.shellman` directory is specifically in the user's home directory, not the project directory.
+❌ **Don't use process.cwd() for user data paths** - Always use `homedir()` from `os` module for persistent storage. The `.restman` directory is specifically in the user's home directory, not the project directory.
 
 ## TODO Priorities
 

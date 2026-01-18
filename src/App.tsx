@@ -551,7 +551,7 @@ export const App: React.FC = () => {
         <Box flexDirection="column" width="100%" height="100%">
           <Box paddingX={1} marginBottom={1}>
             <Text bold color="magenta">
-              🚀 ShellMan <Text dimColor italic>v1.0</Text> <Text color="cyan">- Environments</Text> <Text dimColor>(ESC to return)</Text>
+              🚀 RestMan <Text dimColor italic>v1.0</Text> <Text color="cyan">- Environments</Text> <Text dimColor>(ESC to return)</Text>
             </Text>
           </Box>
           <Box flexGrow={1}>
@@ -569,7 +569,7 @@ export const App: React.FC = () => {
         <Box flexDirection="column" width="100%" height="100%">
           <Box paddingX={1} marginBottom={1}>
             <Text bold color="magenta">
-              🚀 ShellMan <Text dimColor italic>v1.0</Text> <Text color="cyan">- Saved Requests</Text> <Text dimColor>(ESC to return)</Text>
+              🚀 RestMan <Text dimColor italic>v1.0</Text> <Text color="cyan">- Saved Requests</Text> <Text dimColor>(ESC to return)</Text>
             </Text>
           </Box>
           <Box flexGrow={1}>
@@ -585,7 +585,7 @@ export const App: React.FC = () => {
         <Box flexDirection="column" width="100%" height="100%">
           <Box paddingX={1} marginBottom={1}>
             <Text bold color="magenta">
-              🚀 ShellMan <Text dimColor italic>v1.0</Text> <Text color="cyan">- Request History</Text> <Text dimColor>(ESC to return)</Text>
+              🚀 RestMan <Text dimColor italic>v1.0</Text> <Text color="cyan">- Request History</Text> <Text dimColor>(ESC to return)</Text>
             </Text>
           </Box>
           <Box flexGrow={1}>
@@ -601,7 +601,7 @@ export const App: React.FC = () => {
         <Box flexDirection="column" width="100%" height="100%">
           <Box paddingX={1} marginBottom={1}>
             <Text bold color="magenta">
-              🚀 ShellMan <Text dimColor italic>v1.0</Text> <Text color="cyan">- Response View</Text> <Text dimColor>(ESC to return)</Text>
+              🚀 RestMan <Text dimColor italic>v1.0</Text> <Text color="cyan">- Response View</Text> <Text dimColor>(ESC to return)</Text>
             </Text>
           </Box>
           <Box flexGrow={1}>
@@ -615,7 +615,7 @@ export const App: React.FC = () => {
         <>
           {/* Header */}
           <Box paddingX={1} marginBottom={1}>
-            <Text bold color="magenta">🚀 ShellMan <Text dimColor italic>v1.0</Text></Text>
+            <Text bold color="magenta">🚀 RestMan <Text dimColor italic>v1.0</Text></Text>
           </Box>
 
           {/* Environment Selector Row */}

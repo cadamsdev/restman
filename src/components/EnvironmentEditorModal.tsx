@@ -130,7 +130,7 @@ export const EnvironmentEditorModal: React.FC<EnvironmentEditorModalProps> = ({
       {/* Header */}
       <Box paddingX={1} marginBottom={1}>
         <Text bold color="magenta">
-          🚀 ShellMan <Text dimColor italic>v1.0</Text> <Text color="cyan">- {environmentName ? "Edit Environment" : "New Environment"}</Text> <Text dimColor>(ESC to cancel)</Text>
+          🚀 RestMan <Text dimColor italic>v1.0</Text> <Text color="cyan">- {environmentName ? "Edit Environment" : "New Environment"}</Text> <Text dimColor>(ESC to cancel)</Text>
         </Text>
       </Box>
 

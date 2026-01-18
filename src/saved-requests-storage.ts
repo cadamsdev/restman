@@ -4,8 +4,8 @@ import { join } from "path";
 import { homedir } from "os";
 import type { RequestOptions } from "./http-client";
 
-const SHELLMAN_DIR = join(homedir(), ".shellman");
-const SAVED_REQUESTS_FILE = join(SHELLMAN_DIR, "saved-requests.json");
+const RESTMAN_DIR = join(homedir(), ".restman");
+const SAVED_REQUESTS_FILE = join(RESTMAN_DIR, "saved-requests.json");
 
 export interface SavedRequest {
   id: number;
@@ -15,11 +15,11 @@ export interface SavedRequest {
 }
 
 /**
- * Ensures the .shellman directory exists
+ * Ensures the .restman directory exists
  */
 const ensureDirectoryExists = (): void => {
-  if (!existsSync(SHELLMAN_DIR)) {
-    mkdirSync(SHELLMAN_DIR, { recursive: true });
+  if (!existsSync(RESTMAN_DIR)) {
+    mkdirSync(RESTMAN_DIR, { recursive: true });
   }
 };
 

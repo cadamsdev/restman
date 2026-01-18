@@ -3,8 +3,8 @@ import { readFile, writeFile } from "fs/promises";
 import { join } from "path";
 import { homedir } from "os";
 
-const SHELLMAN_DIR = join(homedir(), ".shellman");
-const ENVIRONMENTS_FILE = join(SHELLMAN_DIR, "environments.json");
+const RESTMAN_DIR = join(homedir(), ".restman");
+const ENVIRONMENTS_FILE = join(RESTMAN_DIR, "environments.json");
 
 export interface Environment {
   id: number;
@@ -18,11 +18,11 @@ export interface EnvironmentsConfig {
 }
 
 /**
- * Ensures the .shellman directory exists
+ * Ensures the .restman directory exists
  */
 const ensureDirectoryExists = (): void => {
-  if (!existsSync(SHELLMAN_DIR)) {
-    mkdirSync(SHELLMAN_DIR, { recursive: true });
+  if (!existsSync(RESTMAN_DIR)) {
+    mkdirSync(RESTMAN_DIR, { recursive: true });
   }
 };
 

@@ -4,15 +4,15 @@ import { join } from "path";
 import { homedir } from "os";
 import type { HistoryEntry } from "./components/HistoryPanel";
 
-const SHELLMAN_DIR = join(homedir(), ".shellman");
-const HISTORY_FILE = join(SHELLMAN_DIR, "history.json");
+const RESTMAN_DIR = join(homedir(), ".restman");
+const HISTORY_FILE = join(RESTMAN_DIR, "history.json");
 
 /**
- * Ensures the .shellman directory exists
+ * Ensures the .restman directory exists
  */
 const ensureDirectoryExists = (): void => {
-  if (!existsSync(SHELLMAN_DIR)) {
-    mkdirSync(SHELLMAN_DIR, { recursive: true });
+  if (!existsSync(RESTMAN_DIR)) {
+    mkdirSync(RESTMAN_DIR, { recursive: true });
   }
 };
 

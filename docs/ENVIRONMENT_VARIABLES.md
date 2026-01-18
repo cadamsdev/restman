@@ -1,6 +1,6 @@
 # Environment Variables Guide
 
-ShellMan now supports environment variables and request templates, allowing you to easily switch between different API environments and reuse configuration across requests.
+RestMan now supports environment variables and request templates, allowing you to easily switch between different API environments and reuse configuration across requests.
 
 ## Quick Start
 
@@ -75,7 +75,7 @@ Content-Type: application/json
 ## Variable Substitution
 
 When you send a request:
-1. ShellMan looks at the active environment (shown in green in the selector)
+1. RestMan looks at the active environment (shown in green in the selector)
 2. Finds all `{{VARIABLE_NAME}}` placeholders in:
    - URL
    - Headers
@@ -101,7 +101,7 @@ When you send a request:
 
 Environments are stored in:
 ```
-~/.shellman/environments.json
+~/.restman/environments.json
 ```
 
 You can:

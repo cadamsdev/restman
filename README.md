@@ -1,8 +1,8 @@
-# 🌐 ShellMan - REST API Client TUI
+# 🌐 RestMan - REST API Client TUI
 
 A powerful Terminal User Interface (TUI) REST API client, similar to Postman but running entirely in your terminal. Built with Bun, TypeScript, React, and Ink.
 
-![ShellMan](https://img.shields.io/badge/Built%20with-Bun-orange) ![ShellMan](https://img.shields.io/badge/UI-Ink%20%2B%20React-blue)
+![RestMan](https://img.shields.io/badge/Built%20with-Bun-orange) ![RestMan](https://img.shields.io/badge/UI-Ink%20%2B%20React-blue)
 
 ## Features
 
@@ -24,7 +24,7 @@ A powerful Terminal User Interface (TUI) REST API client, similar to Postman but
 ```bash
 # Clone the repository
 git clone <your-repo-url>
-cd shellman
+cd restman
 
 # Install dependencies
 bun install
@@ -68,7 +68,7 @@ chmod +x index.ts
 
 ### Environment Variables
 
-ShellMan supports environment variables for managing different API environments (dev, staging, production). Use `{{VARIABLE_NAME}}` syntax in URLs, headers, or body to substitute values from the active environment.
+RestMan supports environment variables for managing different API environments (dev, staging, production). Use `{{VARIABLE_NAME}}` syntax in URLs, headers, or body to substitute values from the active environment.
 
 **Quick start:**
 1. Press `v` to open the environments panel
@@ -113,7 +113,7 @@ See [ENVIRONMENT_VARIABLES.md](ENVIRONMENT_VARIABLES.md) for detailed documentat
 ## Project Structure
 
 ```
-shellman/
+restman/
 ├── index.ts              # Main entry point
 ├── src/
 │   ├── http-client.ts    # HTTP client implementation

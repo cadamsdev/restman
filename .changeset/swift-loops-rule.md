@@ -1,5 +1,5 @@
 ---
-"shellman": feat
+"restman": feat
 ---
 
 Added environment variables

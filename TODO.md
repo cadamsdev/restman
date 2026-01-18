@@ -1,4 +1,4 @@
-# ShellMan - Pre-Release TODO
+# RestMan - Pre-Release TODO
 
 Features to add before sharing with users for testing.
 
@@ -9,7 +9,7 @@ Features to add before sharing with users for testing.
 - [x] Navigate through previous requests with keyboard shortcuts
 - [x] Allow users to re-execute previous requests
 - [x] Show last N requests (e.g., 10-20)
-- [x] Persist history to disk (~/.shellman/history.json)
+- [x] Persist history to disk (~/.restman/history.json)
 
 ### 2. Environment Variables / Request Templates
 - [x] Support variable substitution in URLs and headers (e.g., `{{API_KEY}}`)
