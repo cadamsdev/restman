@@ -1,6 +1,6 @@
-import { Text } from "ink";
-import { Fieldset } from "./Fieldset";
-import type { Environment } from "../environment-storage";
+import { Text } from 'ink';
+import { Fieldset } from './Fieldset';
+import type { Environment } from '../environment-storage';
 
 interface EnvironmentSelectorProps {
   environments: Environment[];
@@ -20,14 +20,9 @@ export const EnvironmentSelector: React.FC<EnvironmentSelectorProps> = ({
   const activeEnv = environments.find((env: Environment) => env.id === activeEnvironmentId);
 
   return (
-    <Fieldset
-      title="🌍 Environment"
-      focused={focused}
-      editMode={editMode}
-      width={28}
-    >
+    <Fieldset title="🌍 Environment" focused={focused} editMode={editMode} width={28}>
       {activeEnv ? (
-        <Text color={focused ? "cyan" : "gray"} bold={focused}>
+        <Text color={focused ? 'cyan' : 'gray'} bold={focused}>
           ▸ {activeEnv.name}
         </Text>
       ) : (

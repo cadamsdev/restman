@@ -37,24 +37,24 @@ describe('Variable Substitution', () => {
 
   describe('substituteVariablesInHeaders', () => {
     test('should substitute variables in header values', () => {
-      const headers = { 
-        'Authorization': 'Bearer {{API_KEY}}', 
-        'Content-Type': 'application/json' 
+      const headers = {
+        Authorization: 'Bearer {{API_KEY}}',
+        'Content-Type': 'application/json',
       };
       const output = substituteVariablesInHeaders(headers, vars);
       expect(output).toEqual({
-        'Authorization': 'Bearer test-key-123',
-        'Content-Type': 'application/json'
+        Authorization: 'Bearer test-key-123',
+        'Content-Type': 'application/json',
       });
     });
 
     test('should handle multiple variables in single header', () => {
-      const headers = { 
-        'X-Custom': '{{BASE_URL}}/{{API_KEY}}' 
+      const headers = {
+        'X-Custom': '{{BASE_URL}}/{{API_KEY}}',
       };
       const output = substituteVariablesInHeaders(headers, vars);
       expect(output).toEqual({
-        'X-Custom': 'http://localhost:3000/test-key-123'
+        'X-Custom': 'http://localhost:3000/test-key-123',
       });
     });
 
@@ -64,7 +64,7 @@ describe('Variable Substitution', () => {
     });
 
     test('should not modify original headers object', () => {
-      const headers = { 'Authorization': 'Bearer {{API_KEY}}' };
+      const headers = { Authorization: 'Bearer {{API_KEY}}' };
       const originalHeaders = { ...headers };
       substituteVariablesInHeaders(headers, vars);
       expect(headers).toEqual(originalHeaders);

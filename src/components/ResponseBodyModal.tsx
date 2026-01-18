@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Box, Text, useInput } from "ink";
+import React, { useState } from 'react';
+import { Box, Text, useInput } from 'ink';
 
 interface ResponseBodyModalProps {
   body: string;
@@ -12,13 +12,13 @@ export const ResponseBodyModal: React.FC<ResponseBodyModalProps> = ({ body, onCl
 
   useInput((input, key) => {
     // Close modal
-    if (key.escape || input === " ") {
+    if (key.escape || input === ' ') {
       onClose();
       return;
     }
 
     // Scrolling
-    const lines = body.split("\n");
+    const lines = body.split('\n');
     const totalLines = lines.length;
 
     if (key.upArrow) {
@@ -37,22 +37,24 @@ export const ResponseBodyModal: React.FC<ResponseBodyModalProps> = ({ body, onCl
     }
 
     if (key.pageDown) {
-      setScrollOffset(Math.min(Math.max(0, totalLines - maxVisibleLines), scrollOffset + maxVisibleLines));
+      setScrollOffset(
+        Math.min(Math.max(0, totalLines - maxVisibleLines), scrollOffset + maxVisibleLines),
+      );
       return;
     }
 
-    if (input === "g") {
+    if (input === 'g') {
       setScrollOffset(0);
       return;
     }
 
-    if (input === "G") {
+    if (input === 'G') {
       setScrollOffset(Math.max(0, totalLines - maxVisibleLines));
       return;
     }
   });
 
-  const lines = body.split("\n");
+  const lines = body.split('\n');
   const totalLines = lines.length;
   const visibleLines = lines.slice(scrollOffset, scrollOffset + maxVisibleLines);
   const hasMoreAbove = scrollOffset > 0;
@@ -86,7 +88,8 @@ export const ResponseBodyModal: React.FC<ResponseBodyModalProps> = ({ body, onCl
             📄 Response Body
           </Text>
           <Text dimColor>
-            Lines {scrollOffset + 1}-{Math.min(scrollOffset + maxVisibleLines, totalLines)} of {totalLines}
+            Lines {scrollOffset + 1}-{Math.min(scrollOffset + maxVisibleLines, totalLines)} of{' '}
+            {totalLines}
           </Text>
         </Box>
 
@@ -98,9 +101,7 @@ export const ResponseBodyModal: React.FC<ResponseBodyModalProps> = ({ body, onCl
 
         <Box flexDirection="column" flexGrow={1} paddingX={1}>
           {visibleLines.map((line, index) => (
-            <Text key={scrollOffset + index}>
-              {line || " "}
-            </Text>
+            <Text key={scrollOffset + index}>{line || ' '}</Text>
           ))}
         </Box>
 
@@ -110,9 +111,23 @@ export const ResponseBodyModal: React.FC<ResponseBodyModalProps> = ({ body, onCl
           </Box>
         )}
 
-        <Box marginTop={1} justifyContent="center" borderStyle="single" borderColor="gray" paddingX={1}>
+        <Box
+          marginTop={1}
+          justifyContent="center"
+          borderStyle="single"
+          borderColor="gray"
+          paddingX={1}
+        >
           <Text dimColor italic>
-            Press <Text color="yellow" bold>ESC</Text> or <Text color="yellow" bold>Space</Text> to close
+            Press{' '}
+            <Text color="yellow" bold>
+              ESC
+            </Text>{' '}
+            or{' '}
+            <Text color="yellow" bold>
+              Space
+            </Text>{' '}
+            to close
           </Text>
         </Box>
       </Box>

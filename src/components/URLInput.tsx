@@ -1,7 +1,7 @@
-import React from "react";
-import { Text } from "ink";
-import TextInput from "ink-text-input";
-import { Fieldset } from "./Fieldset";
+import React from 'react';
+import { Text } from 'ink';
+import TextInput from 'ink-text-input';
+import { Fieldset } from './Fieldset';
 
 interface URLInputProps {
   value: string;
@@ -10,24 +10,14 @@ interface URLInputProps {
   editMode: boolean;
 }
 
-export const URLInput: React.FC<URLInputProps> = ({
-  value,
-  onChange,
-  focused,
-  editMode,
-}) => {
+export const URLInput: React.FC<URLInputProps> = ({ value, onChange, focused, editMode }) => {
   return (
-    <Fieldset
-      title="🌐 URL"
-      focused={focused}
-      editMode={editMode}
-      flexGrow={1}
-    >
+    <Fieldset title="🌐 URL" focused={focused} editMode={editMode} flexGrow={1}>
       {editMode ? (
         <TextInput value={value} onChange={onChange} />
       ) : (
-        <Text color={value ? "cyan" : "gray"} italic={!value}>
-          {value || "Enter URL..."}
+        <Text color={value ? 'cyan' : 'gray'} italic={!value}>
+          {value || 'Enter URL...'}
         </Text>
       )}
     </Fieldset>

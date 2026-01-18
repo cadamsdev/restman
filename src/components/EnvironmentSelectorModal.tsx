@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Box, Text, useInput } from "ink";
-import type { Environment } from "../environment-storage";
+import React, { useState } from 'react';
+import { Box, Text, useInput } from 'ink';
+import type { Environment } from '../environment-storage';
 
 interface EnvironmentSelectorModalProps {
   environments: Environment[];
@@ -15,7 +15,7 @@ export const EnvironmentSelectorModal: React.FC<EnvironmentSelectorModalProps> =
   onSelect,
   onCancel,
 }) => {
-  const currentIndex = environments.findIndex(env => env.id === currentEnvironmentId);
+  const currentIndex = environments.findIndex((env) => env.id === currentEnvironmentId);
   const [selectedIndex, setSelectedIndex] = useState(currentIndex >= 0 ? currentIndex : 0);
 
   useInput((input, key) => {
@@ -23,7 +23,7 @@ export const EnvironmentSelectorModal: React.FC<EnvironmentSelectorModalProps> =
       onCancel();
       return;
     }
-    
+
     if (key.return) {
       const selectedEnv = environments[selectedIndex];
       if (selectedEnv) {
@@ -53,12 +53,8 @@ export const EnvironmentSelectorModal: React.FC<EnvironmentSelectorModalProps> =
         alignItems="center"
         flexDirection="column"
       >
-        <Box
-          position="absolute"
-          width="100%"
-          height="100%"
-        />
-        
+        <Box position="absolute" width="100%" height="100%" />
+
         <Box
           borderStyle="double"
           borderColor="yellow"
@@ -73,16 +69,29 @@ export const EnvironmentSelectorModal: React.FC<EnvironmentSelectorModalProps> =
               🌍 No Environments Available
             </Text>
           </Box>
-          
+
           <Box marginTop={1} paddingX={2}>
             <Text dimColor>
-              No environments found. Press <Text color="cyan" bold>v</Text> to manage environments.
+              No environments found. Press{' '}
+              <Text color="cyan" bold>
+                v
+              </Text>{' '}
+              to manage environments.
             </Text>
           </Box>
-          
-          <Box marginTop={1} justifyContent="center" borderStyle="single" borderColor="gray" paddingX={1}>
+
+          <Box
+            marginTop={1}
+            justifyContent="center"
+            borderStyle="single"
+            borderColor="gray"
+            paddingX={1}
+          >
             <Text dimColor>
-              <Text color="yellow" bold>ESC</Text> Close
+              <Text color="yellow" bold>
+                ESC
+              </Text>{' '}
+              Close
             </Text>
           </Box>
         </Box>
@@ -100,12 +109,8 @@ export const EnvironmentSelectorModal: React.FC<EnvironmentSelectorModalProps> =
       flexDirection="column"
     >
       {/* Backdrop overlay */}
-      <Box
-        position="absolute"
-        width="100%"
-        height="100%"
-      />
-      
+      <Box position="absolute" width="100%" height="100%" />
+
       {/* Modal content */}
       <Box
         borderStyle="double"
@@ -121,12 +126,12 @@ export const EnvironmentSelectorModal: React.FC<EnvironmentSelectorModalProps> =
             🌍 Select Environment
           </Text>
         </Box>
-        
+
         <Box marginTop={1} flexDirection="column" paddingX={2}>
           {environments.map((env, index) => (
             <Box key={env.id}>
               <Text
-                color={index === selectedIndex ? "cyan" : "gray"}
+                color={index === selectedIndex ? 'cyan' : 'gray'}
                 bold={index === selectedIndex}
                 dimColor={index !== selectedIndex}
               >
@@ -135,10 +140,27 @@ export const EnvironmentSelectorModal: React.FC<EnvironmentSelectorModalProps> =
             </Box>
           ))}
         </Box>
-        
-        <Box marginTop={1} justifyContent="center" borderStyle="single" borderColor="gray" paddingX={1}>
+
+        <Box
+          marginTop={1}
+          justifyContent="center"
+          borderStyle="single"
+          borderColor="gray"
+          paddingX={1}
+        >
           <Text dimColor>
-            <Text color="cyan" bold>↕</Text> Navigate │ <Text color="green" bold>Enter</Text> Select │ <Text color="yellow" bold>ESC</Text> Cancel
+            <Text color="cyan" bold>
+              ↕
+            </Text>{' '}
+            Navigate │{' '}
+            <Text color="green" bold>
+              Enter
+            </Text>{' '}
+            Select │{' '}
+            <Text color="yellow" bold>
+              ESC
+            </Text>{' '}
+            Cancel
           </Text>
         </Box>
       </Box>
