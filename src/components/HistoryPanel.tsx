@@ -134,7 +134,6 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
     );
   }
 
-  const visibleHistory = history.slice(scrollOffset, scrollOffset + maxVisibleLines);
   const reversedHistory = [...history].reverse();
   const reversedVisible = reversedHistory.slice(scrollOffset, scrollOffset + maxVisibleLines);
 

@@ -7,7 +7,6 @@ import { URLInput } from './components/URLInput';
 import { MethodSelector } from './components/MethodSelector';
 import { RequestEditor } from './components/RequestEditor';
 import { ResponseEditor } from './components/ResponseEditor';
-import { ResponsePanel } from './components/ResponsePanel';
 import { Toast } from './components/Toast';
 import { Instructions } from './components/Instructions';
 import { ExitModal } from './components/ExitModal';
@@ -51,9 +50,9 @@ export const App: React.FC = () => {
   const [params, setParams] = useState<string>('');
   const [body, setBody] = useState<string>('');
   const [response, setResponse] = useState<Response | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [_loading, setLoading] = useState<boolean>(false);
   const [focusedField, setFocusedField] = useState<FocusField>('url');
-  const [error, setError] = useState<string>('');
+  const [_error, setError] = useState<string>('');
   const [toastMessage, setToastMessage] = useState<string>('');
   const [toastType, setToastType] = useState<'loading' | 'error' | 'success'>('loading');
   const [showToast, setShowToast] = useState<boolean>(false);
@@ -637,7 +636,7 @@ export const App: React.FC = () => {
         paramsArray.push(`${key}=${value}`);
       });
       setParams(paramsArray.join('\n'));
-    } catch (e) {
+    } catch {
       // If URL parsing fails, just set the whole URL
       setUrl(request.url);
       setParams('');

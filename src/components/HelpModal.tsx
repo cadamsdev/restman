@@ -5,7 +5,7 @@ interface HelpModalProps {
   onClose: () => void;
 }
 
-export const HelpModal: React.FC<HelpModalProps> = ({ onClose }) => {
+export const HelpModal: React.FC<HelpModalProps> = () => {
   return (
     <Box
       position="absolute"

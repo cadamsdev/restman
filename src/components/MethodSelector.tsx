@@ -11,11 +11,9 @@ interface MethodSelectorProps {
 
 export const MethodSelector: React.FC<MethodSelectorProps> = ({
   value,
-  onChange,
   focused,
   editMode,
 }) => {
-  const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
 
   const getMethodColor = (method: string): string => {
     switch (method) {

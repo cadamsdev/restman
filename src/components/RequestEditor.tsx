@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Box, Text, useInput } from 'ink';
 import { Fieldset } from './Fieldset';
 
@@ -16,8 +16,6 @@ interface RequestEditorProps {
   onTabChange: (tab: 'headers' | 'params' | 'body') => void;
   isModalOpen?: boolean;
 }
-
-type Tab = 'headers' | 'params' | 'body';
 
 export const RequestEditor: React.FC<RequestEditorProps> = ({
   url,
