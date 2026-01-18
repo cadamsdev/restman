@@ -2,4 +2,4 @@
 "restman": chore
 ---
 
-Update the UI to use fieldsets
+Initial release
