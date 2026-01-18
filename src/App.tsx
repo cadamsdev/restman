@@ -96,7 +96,7 @@ export const App: React.FC = () => {
         setHistoryIdCounter(maxId + 1);
       }
     };
-    initHistory();
+    void initHistory();
   }, []);
 
   // Load saved requests from disk on startup
@@ -110,7 +110,7 @@ export const App: React.FC = () => {
         setSavedRequestIdCounter(maxId + 1);
       }
     };
-    initSavedRequests();
+    void initSavedRequests();
   }, []);
 
   // Load environments from disk on startup
@@ -119,27 +119,27 @@ export const App: React.FC = () => {
       const loaded = await loadEnvironments();
       setEnvironmentsConfig(loaded);
     };
-    initEnvironments();
+    void initEnvironments();
   }, []);
 
   // Save history to disk whenever it changes
   useEffect(() => {
     if (history.length > 0) {
-      saveHistory(history);
+      void saveHistory(history);
     }
   }, [history]);
 
   // Save saved requests to disk whenever they change
   useEffect(() => {
     if (savedRequests.length > 0) {
-      saveSavedRequests(savedRequests);
+      void saveSavedRequests(savedRequests);
     }
   }, [savedRequests]);
 
   // Save environments to disk whenever they change
   useEffect(() => {
     if (environmentsConfig.environments.length > 0) {
-      saveEnvironments(environmentsConfig);
+      void saveEnvironments(environmentsConfig);
     }
   }, [environmentsConfig]);
 
@@ -419,14 +419,14 @@ export const App: React.FC = () => {
     if (!editMode) {
       // In readonly mode, Enter sends request
       if (key.return) {
-        sendRequest();
+        void sendRequest();
         return;
       }
     }
 
     // Ctrl+S always sends request (works in both modes)
     if (input === 's' && key.ctrl) {
-      sendRequest();
+      void sendRequest();
       return;
     }
   });

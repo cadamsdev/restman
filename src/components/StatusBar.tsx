@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Text } from 'ink';
-import { Response } from '../http-client';
+import type { Response } from '../http-client';
 
 interface StatusBarProps {
   loading: boolean;

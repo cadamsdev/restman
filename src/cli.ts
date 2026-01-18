@@ -15,7 +15,7 @@ const cleanup = () => {
   process.stdout.write('\x1b[?1049l');
 };
 
-app.waitUntilExit().then(cleanup);
+void app.waitUntilExit().then(cleanup);
 
 // Handle unexpected exits
 process.on('exit', cleanup);

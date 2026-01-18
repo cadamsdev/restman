@@ -135,7 +135,7 @@ export const ResponseEditor: React.FC<ResponseEditorProps> = ({
           const parts = cookieStr.trim().split(';');
           if (parts.length > 0) {
             const [nameValue, ...attrs] = parts;
-            const [name, val] = nameValue.split('=');
+            const [name, val] = nameValue?.split('=') || ['', ''];
             cookies.push({
               name: name?.trim() || '',
               value: val?.trim() || '',

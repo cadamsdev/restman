@@ -113,8 +113,8 @@ async function createArchive(
     // Add directory contents
     archive.directory(sourceDir, '');
 
-    archive.finalize();
+    void archive.finalize();
   });
 }
 
-build();
+await build();

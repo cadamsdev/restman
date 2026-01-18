@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Text, useInput } from 'ink';
-import { Response } from '../http-client';
+import type { Response } from '../http-client';
 
 interface ResponsePanelProps {
   response: Response | null;
@@ -163,7 +163,7 @@ export const ResponsePanel: React.FC<ResponsePanelProps> = ({ response, focused 
           const parts = cookieStr.trim().split(';');
           if (parts.length > 0) {
             const [nameValue, ...attrs] = parts;
-            const [name, val] = nameValue.split('=');
+            const [name, val] = nameValue?.split('=') || ['', ''];
             cookies.push({
               name: name?.trim() || '',
               value: val?.trim() || '',
@@ -396,9 +396,11 @@ export const ResponsePanel: React.FC<ResponsePanelProps> = ({ response, focused 
           </Box>
         </Box>
       ) : (
-        <Text dimColor italic marginTop={1}>
-          ∅ No response yet. Send a request to see results.
-        </Text>
+        <Box marginTop={1}>
+          <Text dimColor italic>
+            ∅ No response yet. Send a request to see results.
+          </Text>
+        </Box>
       )}
     </Box>
   );
