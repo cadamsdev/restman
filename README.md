@@ -21,13 +21,50 @@ A powerful Terminal User Interface (TUI) REST API client, similar to Postman but
 
 ## Installation
 
+### Quick Install (Recommended)
+
+**Linux & macOS:**
+```bash
+curl -fsSL https://restman.sh/install | bash
+```
+
+**Windows (PowerShell):**
+```powershell
+powershell -c "irm restman.sh/install.ps1 | iex"
+```
+
+The installer will:
+- Detect your platform and architecture
+- Download the latest release
+- Install to `~/.restman/bin` (or `%USERPROFILE%\.restman\bin` on Windows)
+- Add RestMan to your PATH
+
+### Manual Installation
+
+Download the appropriate binary for your platform from the [releases page](https://github.com/cadamsdev/restman/releases):
+- `restman-linux-x64.tar.gz` - Linux x86_64
+- `restman-linux-arm64.tar.gz` - Linux ARM64
+- `restman-darwin-x64.zip` - macOS Intel
+- `restman-darwin-arm64.zip` - macOS Apple Silicon
+- `restman-windows-x64.zip` - Windows x86_64
+
+Extract and add to your PATH.
+
+### Building from Source
+
 ```bash
 # Clone the repository
-git clone <your-repo-url>
+git clone https://github.com/cadamsdev/restman.git
 cd restman
 
 # Install dependencies
 bun install
+
+# Run directly
+bun run src/cli.ts
+
+# Or build a binary
+bun run scripts/build-target.ts linux-x64
 ```
 
 ## Usage
