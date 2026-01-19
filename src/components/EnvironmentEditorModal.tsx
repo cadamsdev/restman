@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Box, Text, useInput } from 'ink';
 import TextInput from 'ink-text-input';
 import { Fieldset } from './Fieldset';
+import packageJson from '../../package.json';
 
 interface EnvironmentEditorModalProps {
   environmentName?: string;
@@ -128,7 +129,7 @@ export const EnvironmentEditorModal: React.FC<EnvironmentEditorModalProps> = ({
         <Text bold color="magenta">
           🚀 RestMan{' '}
           <Text dimColor italic>
-            v1.0
+            v{packageJson.version}
           </Text>{' '}
           <Text color="cyan">- {environmentName ? 'Edit Environment' : 'New Environment'}</Text>{' '}
           <Text dimColor>(ESC to cancel)</Text>
