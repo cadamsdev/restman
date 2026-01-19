@@ -2,7 +2,7 @@
 
 A powerful REST API client, similar to Postman but running entirely in your terminal. Built with Bun, TypeScript, React, and Ink.
 
-![RestMan](https://img.shields.io/badge/Built%20with-Bun-orange) ![RestMan](https://img.shields.io/badge/UI-Ink%20%2B%20React-blue)
+![RestMan](https://img.shields.io/badge/Built%20with-Bun-orange) ![RestMan](https://img.shields.io/badge/UI-Ink%20%2B%20React-blue) ![License](https://img.shields.io/github/license/cadamsdev/restman) ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
 ![RestMan Preview](media/preview.png)
 
