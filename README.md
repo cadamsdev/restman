@@ -23,6 +23,9 @@ A powerful Terminal User Interface (TUI) REST API client, similar to Postman but
 
 ## Screenshots
 
+<details>
+<summary>Click to view screenshots</summary>
+
 ### Main Interface
 ![Main Interface](media/preview.png)
 
@@ -46,6 +49,8 @@ A powerful Terminal User Interface (TUI) REST API client, similar to Postman but
 
 ### Help Menu
 ![Help](media/help.png)
+
+</details>
 
 ## Installation
 
