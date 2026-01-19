@@ -33,7 +33,8 @@
               for Your Terminal
             </h1>
             <p class="hero-subtitle">
-              A simple and easy to use REST API Client that runs in your terminal. Open-source alternative to Postman.
+              A simple and easy to use REST API Client that runs in your terminal. Open-source
+              alternative to Postman.
             </p>
             <div class="hero-buttons">
               <a href="#install" class="btn-primary">Get Started</a>
