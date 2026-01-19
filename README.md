@@ -1,6 +1,6 @@
-# 🌐 RestMan - REST API Client TUI
+# RestMan - REST API Client TUI
 
-A powerful Terminal User Interface (TUI) REST API client, similar to Postman but running entirely in your terminal. Built with Bun, TypeScript, React, and Ink.
+A powerful REST API client, similar to Postman but running entirely in your terminal. Built with Bun, TypeScript, React, and Ink.
 
 ![RestMan](https://img.shields.io/badge/Built%20with-Bun-orange) ![RestMan](https://img.shields.io/badge/UI-Ink%20%2B%20React-blue)
 
