@@ -10,6 +10,7 @@
           </div>
           <div class="nav-links">
             <a href="#features" class="nav-link">Features</a>
+            <a href="#screenshots" class="nav-link">Screenshots</a>
             <a href="#install" class="nav-link">Install</a>
             <a href="#quickstart" class="nav-link">Quick Start</a>
             <a href="https://github.com/cadamsdev/restman" target="_blank" class="nav-link">
@@ -116,6 +117,76 @@
             </div>
             <h3>Smart Formatting</h3>
             <p>Automatic JSON pretty-printing, syntax highlighting, and response timing metrics.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screenshots Section -->
+    <section id="screenshots" class="screenshots">
+      <div class="container">
+        <h2 class="section-title">
+          <span class="gradient-text">See It In Action</span>
+        </h2>
+        <p class="section-subtitle">
+          A glimpse into RestMan's powerful interface
+        </p>
+        <div class="screenshots-grid">
+          <div class="screenshot-card">
+            <img src="/images/preview.png" alt="RestMan Preview" class="screenshot-img" />
+            <div class="screenshot-caption">
+              <h4>Main Interface</h4>
+              <p>Clean, focused interface for making API requests</p>
+            </div>
+          </div>
+          <div class="screenshot-card">
+            <img src="/images/change_method.png" alt="Change HTTP Method" class="screenshot-img" />
+            <div class="screenshot-caption">
+              <h4>HTTP Method Selection</h4>
+              <p>Quick method selector with keyboard shortcuts</p>
+            </div>
+          </div>
+          <div class="screenshot-card">
+            <img src="/images/view_response_body.png" alt="View Response Body" class="screenshot-img" />
+            <div class="screenshot-caption">
+              <h4>Full Response View</h4>
+              <p>Expanded view for large JSON responses</p>
+            </div>
+          </div>
+          <div class="screenshot-card">
+            <img src="/images/history.png" alt="Request History" class="screenshot-img" />
+            <div class="screenshot-caption">
+              <h4>Request History</h4>
+              <p>Browse and replay previous API requests</p>
+            </div>
+          </div>
+          <div class="screenshot-card">
+            <img src="/images/save_request.png" alt="Save Request" class="screenshot-img" />
+            <div class="screenshot-caption">
+              <h4>Save Requests</h4>
+              <p>Save and organize frequently-used requests</p>
+            </div>
+          </div>
+          <div class="screenshot-card">
+            <img src="/images/environments.png" alt="Environments" class="screenshot-img" />
+            <div class="screenshot-caption">
+              <h4>Environment Management</h4>
+              <p>Switch between dev, staging, and production</p>
+            </div>
+          </div>
+          <div class="screenshot-card">
+            <img src="/images/edit_env.png" alt="Edit Environment" class="screenshot-img" />
+            <div class="screenshot-caption">
+              <h4>Environment Variables</h4>
+              <p>Manage environment-specific variables</p>
+            </div>
+          </div>
+          <div class="screenshot-card">
+            <img src="/images/help.png" alt="Help Modal" class="screenshot-img" />
+            <div class="screenshot-caption">
+              <h4>Built-in Help</h4>
+              <p>Quick reference for all keyboard shortcuts</p>
+            </div>
           </div>
         </div>
       </div>
@@ -479,6 +550,57 @@ const copyToClipboard = (text: string) => {
   line-height: 1.6;
 }
 
+/* Screenshots Section */
+.screenshots {
+  padding: 6rem 0;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.screenshots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+}
+
+.screenshot-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.screenshot-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(102, 126, 234, 0.5);
+  box-shadow: 0 10px 40px rgba(102, 126, 234, 0.2);
+}
+
+.screenshot-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.screenshot-caption {
+  padding: 1.5rem;
+}
+
+.screenshot-caption h4 {
+  font-size: 1.25rem;
+  color: #fff;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.screenshot-caption p {
+  color: #b0b0b0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
 /* Installation Section */
 .install {
   padding: 6rem 0;
@@ -772,6 +894,10 @@ const copyToClipboard = (text: string) => {
 
   .hero-title {
     font-size: 2.5rem;
+  }
+
+  .screenshots-grid {
+    grid-template-columns: 1fr;
   }
 
   .footer-content {
