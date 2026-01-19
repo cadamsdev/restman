@@ -43,7 +43,7 @@ export const App: React.FC = () => {
 
   // State
   const [method, setMethod] = useState<string>('GET');
-  const [url, setUrl] = useState<string>('https://jsonplaceholder.typicode.com/posts/1');
+  const [url, setUrl] = useState<string>('');
   const [headers, setHeaders] = useState<string>(
     'Content-Type: application/json\nAccept: application/json',
   );
