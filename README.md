@@ -4,6 +4,8 @@ A powerful Terminal User Interface (TUI) REST API client, similar to Postman but
 
 ![RestMan](https://img.shields.io/badge/Built%20with-Bun-orange) ![RestMan](https://img.shields.io/badge/UI-Ink%20%2B%20React-blue)
 
+![RestMan Preview](media/preview.png)
+
 ## Features
 
 - 🎯 **Intuitive TUI Interface** - Clean, keyboard-driven interface built with Ink and React
@@ -18,6 +20,32 @@ A powerful Terminal User Interface (TUI) REST API client, similar to Postman but
 - 📜 **Request History** - View and re-execute previous requests
 - 💾 **Saved Requests** - Save frequently used requests for quick access
 - 🌍 **Environment Variables** - Manage multiple environments (dev, staging, prod) with variable substitution
+
+## Screenshots
+
+### Main Interface
+![Main Interface](media/preview.png)
+
+### Request History
+![Request History](media/history.png)
+
+### Save Requests
+![Save Request](media/save_request.png)
+
+### Environment Management
+![Environments](media/environments.png)
+
+### Environment Editor
+![Edit Environment](media/edit_env.png)
+
+### View Full Response
+![View Response Body](media/view_response_body.png)
+
+### Change HTTP Method
+![Change Method](media/change_method.png)
+
+### Help Menu
+![Help](media/help.png)
 
 ## Installation
 
