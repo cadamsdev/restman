@@ -65,9 +65,8 @@ export const Fieldset: React.FC<FieldsetProps> = ({
   // Get border characters for the selected style
   const chars = borderChars[borderStyle];
 
-  // Format the title with edit mode indicator
-  const formattedTitle = editMode ? `${title} [✎]` : title;
-  const paddedTitle = ` ${formattedTitle} `;
+  // Format the title
+  const paddedTitle = ` ${title} `;
 
   // Calculate visual width accounting for emoji/wide characters
   const getVisualWidth = (str: string): number => {
@@ -162,7 +161,7 @@ export const Fieldset: React.FC<FieldsetProps> = ({
       }
       stdout?.off('resize', handleResize);
     };
-  }, [boxRef.current, formattedTitle, chars, borderStyle, paddedTitle, stdout]);
+  }, [boxRef.current, title, chars, borderStyle, paddedTitle, stdout]);
 
   return (
     <Box
