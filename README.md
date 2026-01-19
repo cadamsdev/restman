@@ -6,6 +6,14 @@ A powerful REST API client, similar to Postman but running entirely in your term
 
 ![RestMan Preview](media/preview.png)
 
+## Sponsors
+
+Support RestMan development by becoming a sponsor! Your avatar or company logo will appear below.
+
+[Become a Sponsor](https://github.com/sponsors/cadamsdev)
+
+<!-- Sponsors will appear here -->
+
 ## Features
 
 - Make HTTP requests (GET, POST, PUT, PATCH, DELETE)
