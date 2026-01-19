@@ -2,6 +2,12 @@
 
 RestMan is a Terminal User Interface (TUI) REST API client built with Bun, React, and Ink. Think "Postman for the terminal."
 
+## Project Structure
+
+**Main Application**: The core TUI application lives in [src/](../src/) and is built with Bun, React, and Ink.
+
+**Marketing Website**: The [website/](../website/) folder contains a Nuxt.js-based marketing site for RestMan. This is separate from the main application and is used for documentation and promotion.
+
 ## Architecture Overview
 
 **Single Component State Management**: All application state lives in [src/App.tsx](../src/App.tsx), with no external state management library. State flows down to presentational components via props. This is intentional for simplicity in a TUI context.
