@@ -1,10 +1,6 @@
 <template>
   <div class="terminal-window">
-    <img 
-      src="/images/preview.png" 
-      alt="RestMan Terminal Interface Preview" 
-      class="preview-image"
-    />
+    <img src="/images/preview.png" alt="RestMan Terminal Interface Preview" class="preview-image" />
   </div>
 </template>
 

@@ -33,14 +33,14 @@
               for Your Terminal
             </h1>
             <p class="hero-subtitle">
-              A powerful Terminal User Interface (TUI) REST API client built with Bun. 
-              Think Postman for the terminal - fast, keyboard-driven, and built for 
-              developers who live in the command line.
+              A powerful Terminal User Interface (TUI) REST API client built with Bun. Think Postman
+              for the terminal - fast, keyboard-driven, and built for developers who live in the
+              command line.
             </p>
             <div class="hero-buttons">
               <a href="#install" class="btn-primary">Get Started</a>
               <a href="https://github.com/cadamsdev/restman" target="_blank" class="btn-secondary">
-                <Icon name="mdi:github" size="20" style="vertical-align: middle;" />
+                <Icon name="mdi:github" size="20" style="vertical-align: middle" />
                 View on GitHub
               </a>
             </div>
@@ -81,35 +81,50 @@
               <Icon name="mdi:rocket-launch" size="48" />
             </div>
             <h3>Fast & Lightweight</h3>
-            <p>Built with Bun for blazing fast performance. No bloated Electron wrapper - just pure terminal goodness.</p>
+            <p>
+              Built with Bun for blazing fast performance. No bloated Electron wrapper - just pure
+              terminal goodness.
+            </p>
           </div>
           <div class="feature-card">
             <div class="feature-icon">
               <Icon name="mdi:keyboard-variant" size="48" />
             </div>
             <h3>Keyboard-First</h3>
-            <p>Navigate entirely with keyboard shortcuts. No mouse required. Perfect for terminal power users.</p>
+            <p>
+              Navigate entirely with keyboard shortcuts. No mouse required. Perfect for terminal
+              power users.
+            </p>
           </div>
           <div class="feature-card">
             <div class="feature-icon">
               <Icon name="mdi:cloud-sync" size="48" />
             </div>
             <h3>Environment Variables</h3>
-            <p>Manage multiple environments (dev, staging, prod) with variable substitution like <code class="inline-code" v-pre>{{API_KEY}}</code>.</p>
+            <p>
+              Manage multiple environments (dev, staging, prod) with variable substitution like
+              <code class="inline-code" v-pre>{{ API_KEY }}</code
+              >.
+            </p>
           </div>
           <div class="feature-card">
             <div class="feature-icon">
               <Icon name="mdi:history" size="48" />
             </div>
             <h3>Request History</h3>
-            <p>Automatically saves your request history. Browse, search, and replay previous requests instantly.</p>
+            <p>
+              Automatically saves your request history. Browse, search, and replay previous requests
+              instantly.
+            </p>
           </div>
           <div class="feature-card">
             <div class="feature-icon">
               <Icon name="mdi:content-save" size="48" />
             </div>
             <h3>Save & Reuse</h3>
-            <p>Save frequently-used requests and organize them into collections for quick access.</p>
+            <p>
+              Save frequently-used requests and organize them into collections for quick access.
+            </p>
           </div>
           <div class="feature-card">
             <div class="feature-icon">
@@ -128,9 +143,7 @@
         <h2 class="section-title">
           <span class="gradient-text">See It In Action</span>
         </h2>
-        <p class="section-subtitle">
-          A glimpse into RestMan's powerful interface
-        </p>
+        <p class="section-subtitle">A glimpse into RestMan's powerful interface</p>
         <div class="screenshots-grid">
           <div class="screenshot-card">
             <img src="/images/preview.png" alt="RestMan Preview" class="screenshot-img" />
@@ -147,7 +160,11 @@
             </div>
           </div>
           <div class="screenshot-card">
-            <img src="/images/view_response_body.png" alt="View Response Body" class="screenshot-img" />
+            <img
+              src="/images/view_response_body.png"
+              alt="View Response Body"
+              class="screenshot-img"
+            />
             <div class="screenshot-caption">
               <h4>Full Response View</h4>
               <p>Expanded view for large JSON responses</p>
@@ -198,9 +215,7 @@
         <h2 class="section-title">
           <span class="gradient-text">Get Started in Seconds</span>
         </h2>
-        <p class="section-subtitle">
-          Installation is quick and easy with Bun or npm
-        </p>
+        <p class="section-subtitle">Installation is quick and easy with Bun or npm</p>
         <div class="install-steps">
           <div class="install-step">
             <div class="step-number">1</div>
@@ -238,15 +253,21 @@
             <div class="step-number">3</div>
             <div class="step-content">
               <h3>Start Testing APIs</h3>
-              <p>Enter a URL, configure headers, and press <code class="inline-code">Enter</code> to send your first request.</p>
-              <p class="step-note">Press <code class="inline-code">/</code> for help with all keyboard shortcuts.</p>
+              <p>
+                Enter a URL, configure headers, and press <code class="inline-code">Enter</code> to
+                send your first request.
+              </p>
+              <p class="step-note">
+                Press <code class="inline-code">/</code> for help with all keyboard shortcuts.
+              </p>
             </div>
           </div>
         </div>
         <div class="pro-tip">
           <Icon name="mdi:lightbulb-on" size="24" />
           <div>
-            <strong>Pro Tip:</strong> Run <code class="inline-code">restman --help</code> to see all available options and flags.
+            <strong>Pro Tip:</strong> Run <code class="inline-code">restman --help</code> to see all
+            available options and flags.
           </div>
         </div>
       </div>
@@ -258,9 +279,7 @@
         <h2 class="section-title">
           <span class="gradient-text">Quick Start Guide</span>
         </h2>
-        <p class="section-subtitle">
-          Master RestMan in minutes with these essential features
-        </p>
+        <p class="section-subtitle">Master RestMan in minutes with these essential features</p>
         <div class="quickstart-grid">
           <div class="quickstart-card">
             <h3>
@@ -318,7 +337,9 @@ Authorization: Bearer {{TOKEN}}</code></pre>
               <li>Staging: <code class="inline-code">staging.api.com</code></li>
               <li>Production: <code class="inline-code">api.example.com</code></li>
             </ul>
-            <p class="step-note">Press <kbd>v</kbd> to manage environments and switch between them instantly.</p>
+            <p class="step-note">
+              Press <kbd>v</kbd> to manage environments and switch between them instantly.
+            </p>
           </div>
           <div class="quickstart-card">
             <h3>
@@ -332,7 +353,9 @@ Authorization: Bearer {{TOKEN}}</code></pre>
               <li>Give it a memorable name</li>
               <li>Press <kbd>l</kbd> to load saved requests anytime</li>
             </ol>
-            <p class="step-note">Perfect for testing the same endpoints repeatedly during development.</p>
+            <p class="step-note">
+              Perfect for testing the same endpoints repeatedly during development.
+            </p>
           </div>
           <div class="quickstart-card">
             <h3>
@@ -346,7 +369,9 @@ Authorization: Bearer {{TOKEN}}</code></pre>
               <li>Replay any request instantly</li>
               <li>Last 100 requests stored locally</li>
             </ul>
-            <p class="step-note">History is stored in <code class="inline-code">~/.restman/history.json</code></p>
+            <p class="step-note">
+              History is stored in <code class="inline-code">~/.restman/history.json</code>
+            </p>
           </div>
         </div>
       </div>
@@ -365,24 +390,39 @@ Authorization: Bearer {{TOKEN}}</code></pre>
             <div class="footer-column">
               <h4>Resources</h4>
               <a href="https://github.com/cadamsdev/restman" target="_blank">GitHub</a>
-              <a href="https://github.com/cadamsdev/restman/blob/main/docs/KEYBOARD_SHORTCUTS.md" target="_blank">Keyboard Shortcuts</a>
-              <a href="https://github.com/cadamsdev/restman/blob/main/docs/ENVIRONMENT_VARIABLES.md" target="_blank">Environment Docs</a>
+              <a
+                href="https://github.com/cadamsdev/restman/blob/main/docs/KEYBOARD_SHORTCUTS.md"
+                target="_blank"
+                >Keyboard Shortcuts</a
+              >
+              <a
+                href="https://github.com/cadamsdev/restman/blob/main/docs/ENVIRONMENT_VARIABLES.md"
+                target="_blank"
+                >Environment Docs</a
+              >
             </div>
             <div class="footer-column">
               <h4>Community</h4>
               <a href="https://github.com/cadamsdev/restman/issues" target="_blank">Issues</a>
-              <a href="https://github.com/cadamsdev/restman/discussions" target="_blank">Discussions</a>
+              <a href="https://github.com/cadamsdev/restman/discussions" target="_blank"
+                >Discussions</a
+              >
               <a href="https://github.com/sponsors/cadamsdev" target="_blank">Sponsor</a>
             </div>
             <div class="footer-column">
               <h4>Legal</h4>
-              <a href="https://github.com/cadamsdev/restman/blob/main/LICENSE" target="_blank">MIT License</a>
+              <a href="https://github.com/cadamsdev/restman/blob/main/LICENSE" target="_blank"
+                >MIT License</a
+              >
               <a href="https://github.com/cadamsdev/restman" target="_blank">Source Code</a>
             </div>
           </div>
         </div>
         <div class="footer-bottom">
-          <p>&copy; 2026 RestMan. Built with ❤️ by <a href="https://github.com/cadamsdev" target="_blank">cadamsdev</a></p>
+          <p>
+            &copy; 2026 RestMan. Built with ❤️ by
+            <a href="https://github.com/cadamsdev" target="_blank">cadamsdev</a>
+          </p>
           <p class="footer-note">Powered by Bun, React, and Ink</p>
         </div>
       </div>
@@ -393,16 +433,17 @@ Authorization: Bearer {{TOKEN}}</code></pre>
 <script setup lang="ts">
 const copyToClipboard = (text: string) => {
   if (navigator.clipboard) {
-    navigator.clipboard.writeText(text)
+    navigator.clipboard
+      .writeText(text)
       .then(() => {
         // Could add a toast notification here
-        console.log('Copied to clipboard:', text)
+        console.log('Copied to clipboard:', text);
       })
-      .catch(err => {
-        console.error('Failed to copy:', err)
-      })
+      .catch((err) => {
+        console.error('Failed to copy:', err);
+      });
   }
-}
+};
 </script>
 
 <style scoped>
@@ -788,7 +829,7 @@ const copyToClipboard = (text: string) => {
 }
 
 .feature-list li::before {
-  content: "→";
+  content: '→';
   position: absolute;
   left: 0;
   color: #667eea;

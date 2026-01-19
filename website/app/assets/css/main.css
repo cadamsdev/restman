@@ -13,7 +13,8 @@ body {
   min-height: 100vh;
 }
 
-code, pre {
+code,
+pre {
   font-family: 'JetBrains Mono', monospace;
 }
 
@@ -102,9 +103,15 @@ code, pre {
   border-radius: 50%;
 }
 
-.terminal-button.red { background: #ff5f56; }
-.terminal-button.yellow { background: #ffbd2e; }
-.terminal-button.green { background: #27c93f; }
+.terminal-button.red {
+  background: #ff5f56;
+}
+.terminal-button.yellow {
+  background: #ffbd2e;
+}
+.terminal-button.green {
+  background: #27c93f;
+}
 
 .terminal-body {
   padding: 1.5rem;
@@ -130,8 +137,9 @@ code, pre {
   .container {
     padding: 0 1rem;
   }
-  
-  .btn-primary, .btn-secondary {
+
+  .btn-primary,
+  .btn-secondary {
     padding: 0.75rem 1.5rem;
     font-size: 0.9rem;
   }
