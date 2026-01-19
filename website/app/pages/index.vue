@@ -33,9 +33,7 @@
               for Your Terminal
             </h1>
             <p class="hero-subtitle">
-              A powerful Terminal User Interface (TUI) REST API client built with Bun. Think Postman
-              for the terminal - fast, keyboard-driven, and built for developers who live in the
-              command line.
+              A simple and easy to use REST API Client that runs in your terminal. Open-source alternative to Postman.
             </p>
             <div class="hero-buttons">
               <a href="#install" class="btn-primary">Get Started</a>
