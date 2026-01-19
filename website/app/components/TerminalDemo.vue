@@ -6,7 +6,7 @@
       <div class="terminal-button green"></div>
       <span class="terminal-title">restman</span>
     </div>
-    <div class="terminal-body">
+    <div class="terminal-body" v-pre>
       <div class="terminal-line">
         <span class="terminal-prompt">$ </span>
         <span class="terminal-command">restman</span>
@@ -29,7 +29,7 @@
         <span class="terminal-label">┌─ 📝 Request [Headers]</span>
       </div>
       <div class="terminal-line">
-        <span class="terminal-content">│ Authorization: Bearer {{'{{'}}token{{'}}'}}</span>
+        <span class="terminal-content">│ Authorization: Bearer {{token}}</span>
       </div>
       <div class="terminal-line">
         <span class="terminal-content">│ Content-Type: application/json</span>
