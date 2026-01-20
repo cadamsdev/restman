@@ -12,7 +12,7 @@ A simple and easy to use REST API client that runs in your terminal. Open-source
 
 ## ❤️ Sponsors
 
-Support RestMan development by becoming a sponsor! Your avatar or company logo will appear below.
+Support development by becoming a sponsor! Your avatar or company logo will appear below.
 
 [Become a Sponsor](https://github.com/sponsors/cadamsdev)
 
