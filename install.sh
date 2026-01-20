@@ -92,7 +92,6 @@ install_restman() {
   # Download and extract
   local temp_dir
   temp_dir=$(mktemp -d)
-  trap 'rm -rf "$temp_dir"' EXIT
   
   cd "$temp_dir"
   
@@ -118,6 +117,7 @@ install_restman() {
     chmod +x "$EXECUTABLE"
   else
     echo -e "${RED}Binary not found in archive${NC}" >&2
+    rm -rf "$temp_dir"
     exit 1
   fi
   
@@ -128,26 +128,41 @@ install_restman() {
   fi
   
   echo -e "${GREEN}✓ RestMan installed to $EXECUTABLE${NC}"
+  
+  # Cleanup
+  rm -rf "$temp_dir"
 }
 
 # Add to PATH by updating shell profile
 update_path() {
-  local shell_profile
+  local shell_profile shell_name
   
-  # Detect shell and corresponding profile
-  if [ -n "${BASH_VERSION:-}" ]; then
-    if [ -f "$HOME/.bashrc" ]; then
-      shell_profile="$HOME/.bashrc"
-    else
-      shell_profile="$HOME/.bash_profile"
-    fi
-  elif [ -n "${ZSH_VERSION:-}" ]; then
-    shell_profile="$HOME/.zshrc"
-  elif [ -n "${FISH_VERSION:-}" ]; then
-    shell_profile="$HOME/.config/fish/config.fish"
-  else
-    shell_profile="$HOME/.profile"
-  fi
+  # Detect shell from $SHELL environment variable
+  shell_name=$(basename "${SHELL:-/bin/sh}")
+  
+  case "$shell_name" in
+    bash)
+      if [ -f "$HOME/.bashrc" ]; then
+        shell_profile="$HOME/.bashrc"
+      elif [ -f "$HOME/.bash_profile" ]; then
+        shell_profile="$HOME/.bash_profile"
+      else
+        shell_profile="$HOME/.profile"
+      fi
+      ;;
+    zsh)
+      shell_profile="$HOME/.zshrc"
+      ;;
+    fish)
+      # Ensure fish config directory exists
+      mkdir -p "$HOME/.config/fish"
+      shell_profile="$HOME/.config/fish/config.fish"
+      ;;
+    *)
+      # Default to .profile for unknown shells
+      shell_profile="$HOME/.profile"
+      ;;
+  esac
   
   # Check if already in PATH
   if [[ ":$PATH:" == *":$BIN_DIR:"* ]]; then
@@ -157,12 +172,13 @@ update_path() {
   
   # Add to profile
   local export_line
-  if [[ "$shell_profile" == *"fish"* ]]; then
+  if [[ "$shell_name" == "fish" ]]; then
     export_line="set -gx PATH \$PATH $BIN_DIR"
   else
     export_line="export PATH=\"\$PATH:$BIN_DIR\""
   fi
   
+  # Check if BIN_DIR is already configured in the profile
   if ! grep -q "$BIN_DIR" "$shell_profile" 2>/dev/null; then
     echo "" >> "$shell_profile"
     echo "# RestMan" >> "$shell_profile"
