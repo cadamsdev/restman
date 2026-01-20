@@ -10,7 +10,7 @@ A simple and easy to use REST API client that runs in your terminal. Open-source
 
 </div>
 
-## Sponsors
+## ❤️ Sponsors
 
 Support RestMan development by becoming a sponsor! Your avatar or company logo will appear below.
 
@@ -18,7 +18,7 @@ Support RestMan development by becoming a sponsor! Your avatar or company logo w
 
 <!-- Sponsors will appear here -->
 
-## Features
+## ✨ Features
 
 - Make HTTP requests (GET, POST, PUT, PATCH, DELETE)
 - Add custom headers, query params, and request body
@@ -27,7 +27,7 @@ Support RestMan development by becoming a sponsor! Your avatar or company logo w
 - Manage environments with variable substitution (`{{BASE_URL}}`, `{{API_KEY}}`, etc.)
 - Fully keyboard-driven (no mouse required)
 
-## Screenshots
+## 📸 Screenshots
 
 <details>
 <summary>Click to view screenshots</summary>
@@ -58,13 +58,13 @@ Support RestMan development by becoming a sponsor! Your avatar or company logo w
 
 </details>
 
-## Installation
+## 📦 Installation
 
 ```bash
 TODO
 ```
 
-## Usage
+## 🚀 Usage
 
 ### Running the Application
 
@@ -72,7 +72,7 @@ TODO
 restman
 ```
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 restman/
@@ -100,15 +100,15 @@ restman/
 bun dev
 ```
 
-## Contributing
+## 🤝 Contributing
 
 Contributions are welcome! Feel free to open issues or submit pull requests.
 
-## Documentation
+## 📚 Documentation
 
 - [Keyboard Shortcuts](docs/KEYBOARD_SHORTCUTS.md) - Complete list of keyboard shortcuts and navigation
 - [Environment Variables](docs/ENVIRONMENT_VARIABLES.md) - Guide to managing environments and variable substitution
 
-## License
+## 📄 License
 
 MIT
