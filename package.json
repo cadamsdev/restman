@@ -15,7 +15,6 @@
   "license": "MIT",
   "author": "cadamsdev",
   "type": "module",
-  "module": "src/cli.ts",
   "scripts": {
     "start": "bun run src/cli.ts",
     "dev": "bun run src/cli.ts",
