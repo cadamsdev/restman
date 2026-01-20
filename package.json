@@ -3,15 +3,6 @@
   "version": "0.0.0",
   "private": true,
   "description": "A powerful REST API client TUI built with Bun",
-  "keywords": [
-    "api",
-    "client",
-    "http",
-    "postman",
-    "rest",
-    "terminal",
-    "tui"
-  ],
   "license": "MIT",
   "author": "cadamsdev",
   "type": "module",
