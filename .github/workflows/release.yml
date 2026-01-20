@@ -1,0 +1,47 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build and Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: '.bun-version'
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build for Linux x64
+        run: bun run build:linux-x64
+
+      - name: Build for Linux ARM64
+        run: bun run build:linux-arm64
+
+      - name: Build for Windows x64
+        run: bun run build:windows-x64
+
+      - name: Build for macOS ARM64
+        run: bun run build:darwin-arm64
+
+      - name: Build for macOS x64
+        run: bun run build:darwin-x64
+
+      - name: Upload artifacts to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
