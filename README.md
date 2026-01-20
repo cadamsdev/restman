@@ -92,11 +92,12 @@ restman/
 │       ├── ResponsePanel.tsx
 │       ├── StatusBar.tsx
 │       └── Instructions.tsx
+```
 
-## Development
+## 🛠️ Development
 
 ```bash
-# Run in development mode
+# Run the app
 bun dev
 ```
 
