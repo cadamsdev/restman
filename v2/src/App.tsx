@@ -17,6 +17,7 @@ import { EnvironmentSelector } from './components/EnvironmentSelector';
 import { Instructions } from './components/Instructions';
 import { ExitModal } from './components/ExitModal';
 import { EnvironmentSelectorModal } from './components/EnvironmentSelectorModal';
+import { MethodSelectorModal } from './components/MethodSelectorModal';
 
 type FocusField = 'method' | 'url' | 'request' | 'response' | 'environment';
 
@@ -39,6 +40,7 @@ export function App() {
   const [toastMessage, setToastMessage] = useState<string>('');
   const [showExitModal, setShowExitModal] = useState<boolean>(false);
   const [showEnvironmentSelectorModal, setShowEnvironmentSelectorModal] = useState<boolean>(false);
+  const [showMethodSelectorModal, setShowMethodSelectorModal] = useState<boolean>(false);
   const [requestActiveTab, setRequestActiveTab] = useState<'headers' | 'params' | 'body'>(
     'headers',
   );
@@ -203,6 +205,8 @@ export function App() {
       if (key.name === 'e') {
         if (focusedField === 'environment') {
           setShowEnvironmentSelectorModal(true);
+        } else if (focusedField === 'method') {
+          setShowMethodSelectorModal(true);
         } else {
           setEditMode(focusedField);
         }
@@ -317,7 +321,7 @@ export function App() {
         return;
       }
     },
-    [editMode, focusedField, fields, showExitModal, showEnvironmentSelectorModal],
+    [editMode, focusedField, fields, showExitModal, showEnvironmentSelectorModal, showMethodSelectorModal],
   );
 
   useKeyboard(handleKeyboard);
@@ -405,6 +409,18 @@ export function App() {
         >
           <text fg="#FFFF00">{toastMessage}</text>
         </box>
+      )}
+
+      {/* Method Selector Modal */}
+      {showMethodSelectorModal && (
+        <MethodSelectorModal
+          currentMethod={method}
+          onSelect={(newMethod) => {
+            setMethod(newMethod);
+            setShowMethodSelectorModal(false);
+          }}
+          onCancel={() => setShowMethodSelectorModal(false)}
+        />
       )}
 
       {/* Environment Selector Modal */}
