@@ -167,7 +167,7 @@ export function EnvironmentEditorModal({
             marginTop: 1,
             justifyContent: 'center',
             border: true,
-            borderColor: '#44332/↑↓2',
+            borderColor: '#555555',
             paddingLeft: 1,
             paddingRight: 1,
           }}
