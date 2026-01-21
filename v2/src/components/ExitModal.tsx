@@ -78,7 +78,7 @@ export function ExitModal({ onConfirm, onCancel }: ExitModalProps) {
         <box style={{ marginTop: 1, justifyContent: 'center' }}>
           <text fg="#888888">Are you sure you want to quit?</text>
         </box>
-        <box style={{ marginTop: 1, justifyContent: 'center', gap: 3 }}>
+        <box style={{ marginTop: 1, justifyContent: 'center', flexDirection: 'row', gap: 3 }}>
           <text
             bg={selectedOption === 'yes' ? '#FF0000' : undefined}
             fg={selectedOption === 'yes' ? '#000000' : '#FF0000'}
