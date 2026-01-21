@@ -12,6 +12,8 @@ import {
   getActiveEnvironment,
   type EnvironmentsConfig,
 } from './environment-storage';
+import { loadSavedRequests, saveSavedRequests, type SavedRequest } from './saved-requests-storage';
+import { substituteVariables, substituteVariablesInHeaders } from './variable-substitution';
 import { URLInput } from './components/URLInput';
 import { MethodSelector } from './components/MethodSelector';
 import { RequestEditor } from './components/RequestEditor';
@@ -22,6 +24,7 @@ import { ExitModal } from './components/ExitModal';
 import { EnvironmentSelectorModal } from './components/EnvironmentSelectorModal';
 import { EnvironmentsPanel } from './components/EnvironmentsPanel';
 import { EnvironmentEditorModal } from './components/EnvironmentEditorModal';
+import { SaveModal } from './components/SaveModal';
 import { MethodSelectorModal } from './components/MethodSelectorModal';
 
 type FocusField = 'method' | 'url' | 'request' | 'response' | 'environment';
@@ -49,6 +52,8 @@ export function App() {
   const [showEnvironmentEditorModal, setShowEnvironmentEditorModal] = useState<boolean>(false);
   const [editingEnvironmentId, setEditingEnvironmentId] = useState<number | null>(null);
   const [showMethodSelectorModal, setShowMethodSelectorModal] = useState<boolean>(false);
+  const [showSaveModal, setShowSaveModal] = useState<boolean>(false);
+  const [savedRequests, setSavedRequests] = useState<SavedRequest[]>([]);
   const [requestActiveTab, setRequestActiveTab] = useState<'headers' | 'params' | 'body'>(
     'headers',
   );
@@ -69,6 +74,15 @@ export function App() {
       setEnvironmentsConfig(loaded);
     };
     void initEnvironments();
+  }, []);
+
+  // Load saved requests from disk on startup
+  useEffect(() => {
+    const initSavedRequests = async () => {
+      const loaded = await loadSavedRequests();
+      setSavedRequests(loaded);
+    };
+    void initSavedRequests();
   }, []);
 
   // Save environments to disk whenever they change
@@ -192,6 +206,11 @@ export function App() {
         return;
       }
 
+      // Save modal handles its own keyboard input
+      if (showSaveModal) {
+        return;
+      }
+
       // Method selector modal handles its own keyboard input
       if (showMethodSelectorModal) {
         return;
@@ -227,6 +246,12 @@ export function App() {
       // Open environments panel
       if (key.sequence === 'v') {
         setShowEnvironmentsPanel(true);
+        return;
+      }
+
+      // Open save modal
+      if (key.sequence === 's') {
+        setShowSaveModal(true);
         return;
       }
 
@@ -516,6 +541,33 @@ export function App() {
           />
         );
       })()}
+
+      {/* Save Modal */}
+      {showSaveModal && (
+        <SaveModal
+          defaultName={`${method} ${url}`}
+          onSave={(name) => {
+            const newRequest: SavedRequest = {
+              id: Date.now(),
+              name,
+              timestamp: new Date(),
+              request: {
+                method,
+                url,
+                headers: parseHeaders(headers),
+                body: body || undefined,
+              },
+            };
+            const updatedRequests = [...savedRequests, newRequest];
+            setSavedRequests(updatedRequests);
+            void saveSavedRequests(updatedRequests);
+            setShowSaveModal(false);
+            setToastMessage(`Saved: ${name}`);
+            setTimeout(() => setToastMessage(''), 3000);
+          }}
+          onCancel={() => setShowSaveModal(false)}
+        />
+      )}
 
       {/* Exit Modal */}
       {showExitModal && (
