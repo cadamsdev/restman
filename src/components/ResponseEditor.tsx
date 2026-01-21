@@ -75,7 +75,8 @@ export function ResponseEditor({
     <box
       title="Response"
       style={{
-        flexGrow: 1,
+        height: 15,
+        flexShrink: 0,
         flexDirection: 'column',
         border: true,
         borderColor,
