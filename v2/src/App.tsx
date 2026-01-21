@@ -9,6 +9,7 @@ import { ResponseEditor } from './components/ResponseEditor';
 import { EnvironmentSelector } from './components/EnvironmentSelector';
 import { Instructions } from './components/Instructions';
 import { ExitModal } from './components/ExitModal';
+import { EnvironmentSelectorModal } from './components/EnvironmentSelectorModal';
 
 type FocusField = 'method' | 'url' | 'request' | 'response' | 'environment';
 
@@ -30,6 +31,7 @@ export function App() {
   const [editMode, setEditMode] = useState<FocusField | null>(null);
   const [toastMessage, setToastMessage] = useState<string>('');
   const [showExitModal, setShowExitModal] = useState<boolean>(false);
+  const [showEnvironmentSelectorModal, setShowEnvironmentSelectorModal] = useState<boolean>(false);
   const [requestActiveTab, setRequestActiveTab] = useState<'headers' | 'params' | 'body'>(
     'headers',
   );
@@ -133,6 +135,11 @@ export function App() {
         return;
       }
 
+      // Environment selector modal handles its own keyboard input
+      if (showEnvironmentSelectorModal) {
+        return;
+      }
+
       // Don't handle keys when in edit mode (input components handle them)
       if (editMode) return;
 
@@ -156,7 +163,11 @@ export function App() {
 
       // Edit mode toggle
       if (key.name === 'e') {
-        setEditMode(focusedField);
+        if (focusedField === 'environment') {
+          setShowEnvironmentSelectorModal(true);
+        } else {
+          setEditMode(focusedField);
+        }
         return;
       }
 
@@ -268,7 +279,7 @@ export function App() {
         return;
       }
     },
-    [editMode, focusedField, fields, showExitModal],
+    [editMode, focusedField, fields, showExitModal, showEnvironmentSelectorModal],
   );
 
   useKeyboard(handleKeyboard);
@@ -355,6 +366,19 @@ export function App() {
         >
           <text fg="#FFFF00">{toastMessage}</text>
         </box>
+      )}
+
+      {/* Environment Selector Modal */}
+      {showEnvironmentSelectorModal && (
+        <EnvironmentSelectorModal
+          environments={environments}
+          currentEnvironmentId={activeEnvironmentId}
+          onSelect={(id) => {
+            // Would call setActiveEnvironment here when we have full environment management
+            setShowEnvironmentSelectorModal(false);
+          }}
+          onCancel={() => setShowEnvironmentSelectorModal(false)}
+        />
       )}
 
       {/* Exit Modal */}

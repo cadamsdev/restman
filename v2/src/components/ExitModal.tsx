@@ -99,6 +99,8 @@ export function ExitModal({ onConfirm, onCancel }: ExitModalProps) {
             borderColor: '#888888',
             paddingLeft: 1,
             paddingRight: 1,
+            flexDirection: 'row',
+            gap: 1,
           }}
         >
           <text fg="#888888">←→ select │ Enter confirm │ Y/N quick select</text>
