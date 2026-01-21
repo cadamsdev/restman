@@ -7,8 +7,9 @@
     "restman-v2": "./index.tsx"
   },
   "scripts": {
-    "dev": "bun run index.tsx",
-    "start": "bun run index.tsx"
+    "dev": "bun run ./index.tsx",
+    "start": "bun run ./index.tsx",
+    "test": "bun run ./test.tsx"
   },
   "dependencies": {
     "@opentui/core": "^0.1.72",

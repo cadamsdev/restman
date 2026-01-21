@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useKeyboard } from '@opentui/react';
 
 interface TextAreaInputProps {
@@ -27,7 +27,7 @@ export function TextAreaInput({
     return () => clearInterval(interval);
   }, [focused]);
 
-  const handleKeyboard = (key: {
+  const handleKeyboard = useCallback((key: {
     name: string;
     ctrl?: boolean;
     sequence?: string;
@@ -55,7 +55,7 @@ export function TextAreaInput({
     if (key.sequence && key.sequence.length === 1) {
       onChange(value + key.sequence);
     }
-  };
+  }, [focused, onCancel, onChange, value]);
 
   useKeyboard(handleKeyboard);
 
