@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import { useKeyboard } from '@opentui/react';
 
 interface TextAreaInputProps {
@@ -16,64 +16,38 @@ export function TextAreaInput({
   focused = true,
   rows = 5,
 }: TextAreaInputProps) {
-  const [cursorVisible, setCursorVisible] = useState(true);
+  const textareaRef = useRef<any>(null);
 
-  // Blink cursor
-  useEffect(() => {
-    if (!focused) return;
-    const interval = setInterval(() => {
-      setCursorVisible((v) => !v);
-    }, 500);
-    return () => clearInterval(interval);
-  }, [focused]);
+  const handleKeyboard = useCallback(
+    (key: { name: string; ctrl?: boolean; sequence?: string }) => {
+      if (!focused) return;
 
-  const handleKeyboard = useCallback((key: {
-    name: string;
-    ctrl?: boolean;
-    sequence?: string;
-  }) => {
-    if (!focused) return;
-
-    if (key.name === 'escape') {
-      onCancel?.();
-      return;
-    }
-
-    if (key.name === 'return') {
-      onChange(value + '\n');
-      return;
-    }
-
-    if (key.name === 'backspace') {
-      onChange(value.slice(0, -1));
-      return;
-    }
-
-    if (key.ctrl) return; // Ignore ctrl combinations
-
-    // Add character
-    if (key.sequence && key.sequence.length === 1) {
-      onChange(value + key.sequence);
-    }
-  }, [focused, onCancel, onChange, value]);
+      if (key.name === 'escape') {
+        onCancel?.();
+        return;
+      }
+    },
+    [focused, onCancel]
+  );
 
   useKeyboard(handleKeyboard);
 
-  const lines = value.split('\n');
-  const displayLines = lines.slice(0, rows);
-  const cursor = focused && cursorVisible ? '█' : '';
+  const handleContentChange = useCallback(() => {
+    if (textareaRef.current) {
+      const newValue = textareaRef.current.plainText;
+      onChange(newValue);
+    }
+  }, [onChange]);
 
   return (
-    <box style={{ flexDirection: 'column' }}>
-      {displayLines.map((line, i) => (
-        <text key={i} fg={focused ? '#00FF00' : '#FFFFFF'}>
-          {line}
-          {i === displayLines.length - 1 ? cursor : ''}
-        </text>
-      ))}
-      {displayLines.length === 0 && (
-        <text fg={focused ? '#00FF00' : '#666666'}>{cursor || '(empty)'}</text>
-      )}
-    </box>
+    <textarea
+      ref={textareaRef}
+      initialValue={value}
+      onContentChange={handleContentChange}
+      focused={focused}
+      style={{
+        height: rows,
+      }}
+    />
   );
 }
