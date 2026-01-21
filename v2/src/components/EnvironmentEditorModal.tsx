@@ -30,8 +30,13 @@ export function EnvironmentEditorModal({
         return;
       }
 
-      if (key.name === 'tab') {
+      if (key.name === 'tab' || key.name === 'down') {
         setFocusedField(focusedField === 'name' ? 'variables' : 'name');
+        return;
+      }
+
+      if (key.name === 'up') {
+        setFocusedField(focusedField === 'variables' ? 'name' : 'variables');
         return;
       }
 
@@ -162,7 +167,7 @@ export function EnvironmentEditorModal({
             marginTop: 1,
             justifyContent: 'center',
             border: true,
-            borderColor: '#443322',
+            borderColor: '#44332/↑↓2',
             paddingLeft: 1,
             paddingRight: 1,
           }}
