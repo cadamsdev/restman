@@ -1,98 +1,65 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Text, useInput } from 'ink';
+import { useState, useCallback } from 'react';
+import { useKeyboard } from '@opentui/react';
 import type { RequestOptions } from '../http-client';
-import { Fieldset } from './Fieldset';
-
-export interface HistoryEntry {
-  id: number;
-  timestamp: Date;
-  request: RequestOptions;
-  status?: number;
-  statusText?: string;
-  time?: number;
-}
+import type { HistoryEntry } from '../history-storage';
 
 interface HistoryPanelProps {
   history: HistoryEntry[];
-  focused: boolean;
   onSelectRequest: (request: RequestOptions) => void;
+  onClose: () => void;
 }
 
-export const HistoryPanel: React.FC<HistoryPanelProps> = ({
-  history,
-  focused,
-  onSelectRequest,
-}) => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [scrollOffset, setScrollOffset] = useState(0);
-  const maxVisibleLines = 18; // Lines available for history display
+export function HistoryPanel({ history, onSelectRequest, onClose }: HistoryPanelProps) {
+  const [selectedIndex, setSelectedIndex] = useState(history.length > 0 ? history.length - 1 : 0);
 
-  useEffect(() => {
-    // When panel becomes focused, select the most recent request
-    if (focused && history.length > 0) {
-      setSelectedIndex(history.length - 1);
-      setScrollOffset(0);
-    }
-  }, [focused, history.length]);
+  const handleKeyboard = useCallback(
+    (key: { name: string; sequence?: string }) => {
+      if (key.name === 'escape') {
+        onClose();
+        return;
+      }
 
-  useEffect(() => {
-    // Reset selection when history changes
-    if (history.length > 0 && selectedIndex >= history.length) {
-      setSelectedIndex(history.length - 1);
-    }
-  }, [history, selectedIndex]);
+      if (history.length === 0) return;
 
-  useInput(
-    (input, key) => {
-      if (!focused || history.length === 0) return;
+      if (key.name === 'up') {
+        setSelectedIndex((prev) => Math.min(history.length - 1, prev + 1));
+        return;
+      }
 
-      // Navigate through history
-      if (key.upArrow) {
-        const newIndex = Math.min(history.length - 1, selectedIndex + 1);
-        setSelectedIndex(newIndex);
-        // Adjust scroll if needed
-        if (newIndex >= scrollOffset + maxVisibleLines) {
-          setScrollOffset(newIndex - maxVisibleLines + 1);
-        }
-      } else if (key.downArrow) {
-        const newIndex = Math.max(0, selectedIndex - 1);
-        setSelectedIndex(newIndex);
-        // Adjust scroll if needed
-        if (newIndex < scrollOffset) {
-          setScrollOffset(newIndex);
-        }
-      } else if (key.pageUp) {
-        const newIndex = Math.max(0, selectedIndex - maxVisibleLines);
-        setSelectedIndex(newIndex);
-        setScrollOffset(Math.max(0, newIndex));
-      } else if (key.pageDown) {
-        const newIndex = Math.min(history.length - 1, selectedIndex + maxVisibleLines);
-        setSelectedIndex(newIndex);
-        setScrollOffset(Math.min(Math.max(0, history.length - maxVisibleLines), newIndex));
-      } else if (input === 'g') {
-        // Go to top
+      if (key.name === 'down') {
+        setSelectedIndex((prev) => Math.max(0, prev - 1));
+        return;
+      }
+
+      if (key.sequence === 'g') {
         setSelectedIndex(0);
-        setScrollOffset(0);
-      } else if (input === 'G') {
-        // Go to bottom
-        const lastIndex = history.length - 1;
-        setSelectedIndex(lastIndex);
-        setScrollOffset(Math.max(0, lastIndex - maxVisibleLines + 1));
-      } else if (key.return) {
-        // Load selected request
-        if (history[selectedIndex]) {
-          onSelectRequest(history[selectedIndex].request);
+        return;
+      }
+
+      if (key.sequence === 'G') {
+        setSelectedIndex(history.length - 1);
+        return;
+      }
+
+      if (key.name === 'return') {
+        const selectedEntry = history[selectedIndex];
+        if (selectedEntry) {
+          onSelectRequest(selectedEntry.request);
+          onClose();
         }
+        return;
       }
     },
-    { isActive: focused },
+    [history, selectedIndex, onSelectRequest, onClose],
   );
 
+  useKeyboard(handleKeyboard);
+
   const getStatusColor = (status?: number): string => {
-    if (!status) return 'gray';
-    if (status >= 200 && status < 300) return 'green';
-    if (status >= 400) return 'red';
-    return 'yellow';
+    if (!status) return '#666666';
+    if (status >= 200 && status < 300) return '#99AA77';
+    if (status >= 400) return '#BB6655';
+    return '#CC9944';
   };
 
   const formatTimestamp = (date: Date): string => {
@@ -116,81 +83,146 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
 
   if (history.length === 0) {
     return (
-      <Fieldset
-        title="📜 Request History (Empty)"
-        borderColor="yellow"
-        titleColor="yellow"
-        focused={focused}
-        width="100%"
-        height="100%"
+      <box
+        style={{
+          position: 'absolute',
+          width: '100%',
+          height: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'column',
+          zIndex: 1000,
+        }}
       >
-        <Box marginTop={1}>
-          <Text dimColor>No requests sent yet. Send your first request to see it here!</Text>
-        </Box>
-        <Box marginTop={2}>
-          <Text dimColor>• ↑↓: Navigate • Enter: Load request • ESC: Return</Text>
-        </Box>
-      </Fieldset>
+        <box
+          style={{
+            border: 'double',
+            borderColor: '#665544',
+            paddingLeft: 3,
+            paddingRight: 3,
+            paddingTop: 1,
+            paddingBottom: 1,
+            flexDirection: 'column',
+            width: 60,
+            backgroundColor: '#1a1a1a',
+          }}
+        >
+          <box style={{ justifyContent: 'center' }}>
+            <text fg="#CC8844">Request History (0)</text>
+          </box>
+
+          <box style={{ marginTop: 1, justifyContent: 'center' }}>
+            <text fg="#666666">No requests sent yet</text>
+          </box>
+          <box style={{ justifyContent: 'center' }}>
+            <text fg="#666666">Send your first request to see it here</text>
+          </box>
+
+          <box
+            style={{
+              marginTop: 1,
+              justifyContent: 'center',
+              border: true,
+              borderColor: '#443322',
+              paddingLeft: 1,
+              paddingRight: 1,
+            }}
+          >
+            <text fg="#666666">ESC: Close</text>
+          </box>
+        </box>
+      </box>
     );
   }
 
   const reversedHistory = [...history].reverse();
-  const reversedVisible = reversedHistory.slice(scrollOffset, scrollOffset + maxVisibleLines);
+  const visibleHistory = reversedHistory.slice(0, 10);
+  const actualSelectedIndex = history.length - 1 - selectedIndex;
 
   return (
-    <Fieldset
-      title={`📜 Request History (${history.length} total)`}
-      borderColor="magenta"
-      titleColor="magenta"
-      focused={focused}
-      width="100%"
-      height="100%"
+    <box
+      style={{
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+        zIndex: 1000,
+      }}
     >
-      <Box justifyContent="space-between" marginBottom={1}>
-        <Text dimColor>
-          {selectedIndex + 1}/{history.length}
-        </Text>
-      </Box>
+      <box
+        style={{
+          border: 'double',
+          borderColor: '#665544',
+          paddingLeft: 3,
+          paddingRight: 3,
+          paddingTop: 1,
+          paddingBottom: 1,
+          flexDirection: 'column',
+          width: 80,
+          backgroundColor: '#1a1a1a',
+        }}
+      >
+        <box style={{ justifyContent: 'center' }}>
+          <text fg="#CC8844">Request History ({history.length}) - {selectedIndex + 1}/{history.length}</text>
+        </box>
 
-      {reversedVisible.map((entry, index) => {
-        const actualIndex = history.length - 1 - (scrollOffset + index);
-        const isSelected = actualIndex === selectedIndex;
+        <box style={{ marginTop: 1, flexDirection: 'column' }}>
+          {visibleHistory.map((entry, index) => {
+            const reverseIndex = history.length - 1 - index;
+            const isSelected = reverseIndex === selectedIndex;
 
-        // Safety check for invalid entries
-        if (!entry || !entry.request || !entry.request.method || !entry.request.url) {
-          return null;
-        }
+            if (!entry || !entry.request || !entry.request.method || !entry.request.url) {
+              return null;
+            }
 
-        return (
-          <Box key={entry.id} marginBottom={0}>
-            <Text
-              backgroundColor={isSelected ? 'magenta' : undefined}
-              color={isSelected ? 'black' : undefined}
-              wrap="truncate"
-            >
-              {isSelected ? '▶ ' : '  '}
-              <Text bold color={isSelected ? 'black' : getStatusColor(entry.status)}>
-                {entry.request.method.padEnd(6)}
-              </Text>{' '}
-              <Text color={isSelected ? 'black' : 'white'}>
-                {truncateUrl(entry.request.url, 50)}
-              </Text>{' '}
-              <Text dimColor={!isSelected} color={isSelected ? 'black' : undefined}>
-                {entry.status ? `(${entry.status})` : '(pending)'}
-              </Text>{' '}
-              <Text dimColor color={isSelected ? 'black' : undefined}>
-                {formatTimestamp(entry.timestamp)}
-              </Text>
-            </Text>
-          </Box>
-        );
-      })}
+            return (
+              <box key={entry.id} style={{ flexDirection: 'column' }}>
+                <box>
+                  <text
+                    bg={isSelected ? '#2a2520' : undefined}
+                    fg={isSelected ? '#CC8844' : getStatusColor(entry.status)}
+                  >
+                    {isSelected ? '▶ ' : '  '}
+                    {entry.request.method.padEnd(6, ' ')}
+                  </text>
+                  <text
+                    bg={isSelected ? '#2a2520' : undefined}
+                    fg={isSelected ? '#BB7733' : '#999999'}
+                  >
+                    {' '}{truncateUrl(entry.request.url, 45)}
+                  </text>
+                </box>
+                <box style={{ marginLeft: 2 }}>
+                  <text fg="#666666">
+                    {entry.status ? `${entry.status} - ` : ''}
+                    {formatTimestamp(entry.timestamp)}
+                  </text>
+                </box>
+              </box>
+            );
+          })}
+          {history.length > 10 && (
+            <box style={{ marginTop: 1 }}>
+              <text fg="#666666">... and {history.length - 10} more</text>
+            </box>
+          )}
+        </box>
 
-      <Box marginTop={1} borderStyle="single" borderColor="gray" paddingX={1}>
-        <Text dimColor>
-          ↑↓: Navigate | PgUp/PgDn: Scroll | g/G: Top/Bottom | Enter: Load | ESC: Return
-        </Text>
-      </Box>
-    </Fieldset>
+        <box
+          style={{
+            marginTop: 1,
+            justifyContent: 'center',
+            border: true,
+            borderColor: '#443322',
+            paddingLeft: 1,
+            paddingRight: 1,
+          }}
+        >
+          <text fg="#666666">↕: Navigate | g/G: Top/Bottom | Enter: Load | ESC: Close</text>
+        </box>
+      </box>
+    </box>
   );
-};
+}

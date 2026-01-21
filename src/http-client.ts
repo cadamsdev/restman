@@ -1,5 +1,3 @@
-import packageJson from '../package.json';
-
 export interface RequestOptions {
   method: string;
   url: string;
@@ -22,7 +20,7 @@ export class HTTPClient {
     try {
       // Add default User-Agent if not provided
       const headers = {
-        'User-Agent': `RestMan/${packageJson.version} (https://github.com/cadamsdev/restman)`,
+        'User-Agent': `RestMan/2.0.0 (https://github.com/cadamsdev/restman)`,
         ...options.headers,
       };
 

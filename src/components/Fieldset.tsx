@@ -1,6 +1,3 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { Box, Text, measureElement, useStdout, type DOMElement } from 'ink';
-
 export interface FieldsetProps {
   title: string;
   children: React.ReactNode;
@@ -13,37 +10,12 @@ export interface FieldsetProps {
   width?: number | string;
   paddingX?: number;
   paddingY?: number;
-  borderStyle?: 'round' | 'single' | 'double';
 }
 
-// Border character sets for different styles
-const borderChars = {
-  round: {
-    topLeft: '╭',
-    horizontal: '─',
-    topRight: '╮',
-  },
-  single: {
-    topLeft: '┌',
-    horizontal: '─',
-    topRight: '┐',
-  },
-  double: {
-    topLeft: '╔',
-    horizontal: '═',
-    topRight: '╗',
-  },
-};
-
-type BorderFragment = {
-  isTitle: boolean;
-  content: string;
-};
-
-export const Fieldset: React.FC<FieldsetProps> = ({
+export function Fieldset({
   title,
   children,
-  borderColor = 'gray',
+  borderColor = '#888888',
   titleColor,
   focused = false,
   editMode = false,
@@ -52,151 +24,27 @@ export const Fieldset: React.FC<FieldsetProps> = ({
   width,
   paddingX = 1,
   paddingY = 0,
-  borderStyle = 'round',
-}) => {
-  const boxRef = useRef<DOMElement>(null);
-  const [fragments, setFragments] = useState<BorderFragment[]>([]);
-  const { stdout } = useStdout();
-
+}: FieldsetProps) {
   // Determine colors based on state
-  const actualBorderColor = focused ? 'magenta' : editMode ? 'green' : borderColor;
-  const actualTitleColor = titleColor || (focused ? 'magenta' : 'gray');
-
-  // Get border characters for the selected style
-  const chars = borderChars[borderStyle];
-
-  // Format the title
-  const paddedTitle = ` ${title} `;
-
-  // Calculate visual width accounting for emoji/wide characters
-  const getVisualWidth = (str: string): number => {
-    let width = 0;
-    for (const char of str) {
-      const code = char.codePointAt(0);
-      // Emoji and wide characters typically take 2 columns
-      if (code && (code > 0x1f300 || code === 0x26a1 || code === 0x270e || code === 0x2195)) {
-        width += 2;
-      } else {
-        width += 1;
-      }
-    }
-    return width;
-  };
-
-  useEffect(() => {
-    if (!boxRef.current) return;
-
-    const recalculateFragments = () => {
-      const dimensions = measureElement(boxRef.current!);
-      const availableWidth = dimensions.width - 2; // Subtract left and right corners
-
-      if (availableWidth <= 0) {
-        setFragments([]);
-        return;
-      }
-
-      // Build the top border with title embedded
-      const titleLength = getVisualWidth(paddedTitle);
-      const titlePosition = 1; // Start position after left corner
-
-      // Build fragments array
-      const newFragments: BorderFragment[] = [];
-
-      // Left corner
-      newFragments.push({ isTitle: false, content: chars.topLeft });
-
-      // Before title
-      if (titlePosition > 0) {
-        newFragments.push({
-          isTitle: false,
-          content: chars.horizontal.repeat(titlePosition),
-        });
-      }
-
-      // Title
-      newFragments.push({ isTitle: true, content: paddedTitle });
-
-      // After title to end
-      const remainingLength = availableWidth - titlePosition - titleLength;
-      if (remainingLength > 0) {
-        newFragments.push({
-          isTitle: false,
-          content: chars.horizontal.repeat(remainingLength),
-        });
-      }
-
-      // Right corner
-      newFragments.push({ isTitle: false, content: chars.topRight });
-
-      setFragments(newFragments);
-    };
-
-    // Initial calculation
-    recalculateFragments();
-
-    // Debounce resize events to prevent excessive recalculations
-    let resizeTimeout: NodeJS.Timeout | null = null;
-
-    const handleResize = () => {
-      // Cancel any pending update
-      if (resizeTimeout) {
-        clearTimeout(resizeTimeout);
-      }
-
-      // Update immediately for responsiveness
-      recalculateFragments();
-
-      // Also schedule a final update to ensure accuracy
-      resizeTimeout = setTimeout(() => {
-        recalculateFragments();
-      }, 100);
-    };
-
-    stdout?.on('resize', handleResize);
-
-    // Cleanup listener and timeout on unmount
-    return () => {
-      if (resizeTimeout) {
-        clearTimeout(resizeTimeout);
-      }
-      stdout?.off('resize', handleResize);
-    };
-  }, [boxRef.current, title, chars, borderStyle, paddedTitle, stdout]);
+  const actualBorderColor = focused ? '#FF00FF' : editMode ? '#00FF00' : borderColor;
 
   return (
-    <Box
-      ref={boxRef}
-      flexDirection="column"
-      flexGrow={flexGrow}
-      height={height}
-      width={width}
-      minWidth={20}
+    <box
+      title={title}
+      style={{
+        flexGrow,
+        height,
+        width,
+        flexDirection: 'column',
+        border: true,
+        borderColor: actualBorderColor,
+        paddingLeft: paddingX,
+        paddingRight: paddingX,
+        paddingTop: paddingY,
+        paddingBottom: paddingY,
+      }}
     >
-      {/* Top border with embedded title */}
-      <Text color={actualBorderColor}>
-        {fragments.map((fragment, i) =>
-          fragment.isTitle ? (
-            <Text key={i} bold color={actualTitleColor}>
-              {fragment.content}
-            </Text>
-          ) : (
-            <Text key={i}>{fragment.content}</Text>
-          ),
-        )}
-      </Text>
-
-      {/* Box with left, right, and bottom borders */}
-      <Box
-        borderStyle={borderStyle}
-        borderColor={actualBorderColor}
-        borderTop={false}
-        paddingX={paddingX}
-        paddingY={paddingY}
-        flexDirection="column"
-        flexGrow={1}
-      >
-        {children}
-      </Box>
-    </Box>
+      {children}
+    </box>
   );
-};
+}

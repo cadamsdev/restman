@@ -1,8 +1,6 @@
-import { useState } from 'react';
-import { Box, Text, useInput } from 'ink';
-import TextInput from 'ink-text-input';
-import { Fieldset } from './Fieldset';
-import packageJson from '../../package.json';
+import { useState, useCallback } from 'react';
+import { useKeyboard } from '@opentui/react';
+import { TextInput } from './TextInput';
 
 interface EnvironmentEditorModalProps {
   environmentName?: string;
@@ -11,94 +9,56 @@ interface EnvironmentEditorModalProps {
   onCancel: () => void;
 }
 
-export const EnvironmentEditorModal: React.FC<EnvironmentEditorModalProps> = ({
+export function EnvironmentEditorModal({
   environmentName = '',
   variables = {},
   onSave,
   onCancel,
-}) => {
+}: EnvironmentEditorModalProps) {
   const [name, setName] = useState<string>(environmentName);
-  const [variablesLines, setVariablesLines] = useState<string[]>(
-    Object.entries(variables).length > 0
-      ? Object.entries(variables).map(([key, value]) => `${key}=${value}`)
-      : [''],
+  const [variablesText, setVariablesText] = useState<string>(
+    Object.entries(variables)
+      .map(([key, value]) => `${key}=${value}`)
+      .join('\n'),
   );
   const [focusedField, setFocusedField] = useState<'name' | 'variables'>('name');
-  const [currentLineIndex, setCurrentLineIndex] = useState<number>(0);
 
-  useInput((input, key) => {
-    if (key.escape) {
-      onCancel();
-      return;
-    }
-
-    if (key.tab) {
-      setFocusedField(focusedField === 'name' ? 'variables' : 'name');
-      if (focusedField === 'name') {
-        setCurrentLineIndex(0);
-      }
-      return;
-    }
-
-    if (input === 's' && key.ctrl) {
-      handleSave();
-      return;
-    }
-
-    // Arrow key navigation between fields
-    if (key.upArrow && focusedField === 'variables' && currentLineIndex === 0) {
-      // At top of variables list, go to name field
-      setFocusedField('name');
-      return;
-    }
-
-    if (key.downArrow && focusedField === 'name') {
-      // From name field, go to variables
-      setFocusedField('variables');
-      setCurrentLineIndex(0);
-      return;
-    }
-
-    // Handle arrow key navigation in variables field
-    if (focusedField === 'variables') {
-      if (key.upArrow && currentLineIndex > 0) {
-        setCurrentLineIndex(currentLineIndex - 1);
+  const handleKeyboard = useCallback(
+    (key: { name: string; ctrl?: boolean }) => {
+      if (key.name === 'escape') {
+        onCancel();
         return;
       }
-      if (key.downArrow && currentLineIndex < variablesLines.length - 1) {
-        setCurrentLineIndex(currentLineIndex + 1);
+
+      if (key.name === 'tab' || key.name === 'down') {
+        setFocusedField(focusedField === 'name' ? 'variables' : 'name');
         return;
       }
-      // Add new line with Enter
-      if (key.return) {
-        const newLines = [
-          ...variablesLines.slice(0, currentLineIndex + 1),
-          '',
-          ...variablesLines.slice(currentLineIndex + 1),
-        ];
-        setVariablesLines(newLines);
-        setCurrentLineIndex(currentLineIndex + 1);
+
+      if (key.name === 'up') {
+        setFocusedField(focusedField === 'variables' ? 'name' : 'variables');
         return;
       }
-      // Delete current line with Ctrl+D (if empty or if there are multiple lines)
-      if (input === 'd' && key.ctrl && variablesLines.length > 1) {
-        const newLines = variablesLines.filter((_, i) => i !== currentLineIndex);
-        setVariablesLines(newLines);
-        setCurrentLineIndex(Math.min(currentLineIndex, newLines.length - 1));
+
+      if (key.ctrl && key.name === 's') {
+        handleSave();
         return;
       }
-    }
-  });
+    },
+    [focusedField, onCancel],
+  );
+
+  useKeyboard(handleKeyboard);
 
   const handleSave = () => {
     if (!name.trim()) {
-      return; // Don't save without a name
+      return;
     }
 
-    // Parse variables from lines (format: KEY=value, one per line)
     const parsedVariables: Record<string, string> = {};
+    const lines = variablesText.split('\n');
 
-    for (const line of variablesLines) {
+    for (const line of lines) {
       const trimmed = line.trim();
       if (!trimmed) continue;
 
@@ -116,98 +76,105 @@ export const EnvironmentEditorModal: React.FC<EnvironmentEditorModalProps> = ({
     onSave(name, parsedVariables);
   };
 
-  const handleLineChange = (newValue: string) => {
-    const newLines = [...variablesLines];
-    newLines[currentLineIndex] = newValue;
-    setVariablesLines(newLines);
-  };
-
   return (
-    <Box flexDirection="column" width="100%" height="100%">
-      {/* Header */}
-      <Box paddingX={1} marginBottom={1}>
-        <Text bold color="magenta">
-          🚀 RestMan{' '}
-          <Text dimColor italic>
-            v{packageJson.version}
-          </Text>{' '}
-          <Text color="cyan">- {environmentName ? 'Edit Environment' : 'New Environment'}</Text>{' '}
-          <Text dimColor>(ESC to cancel)</Text>
-        </Text>
-      </Box>
+    <box
+      style={{
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+        zIndex: 1000,
+      }}
+    >
+      <box
+        style={{
+          border: 'double',
+          borderColor: '#665544',
+          paddingLeft: 3,
+          paddingRight: 3,
+          paddingTop: 1,
+          paddingBottom: 1,
+          flexDirection: 'column',
+          width: 70,
+          backgroundColor: '#1a1a1a',
+        }}
+      >
+        <box style={{ justifyContent: 'center' }}>
+          <text fg="#CC8844">{environmentName ? 'Edit Environment' : 'New Environment'}</text>
+        </box>
 
-      {/* Modal Content */}
-      <Box paddingX={2} flexDirection="column" flexGrow={1}>
         {/* Name Field */}
-        <Box marginBottom={1}>
-          <Fieldset
-            title="📝 Name"
-            focused={focusedField === 'name'}
-            editMode={focusedField === 'name'}
-            borderStyle="round"
+        <box style={{ marginTop: 1, flexDirection: 'column' }}>
+          <text fg={focusedField === 'name' ? '#CC8844' : '#666666'}>Name:</text>
+          <box
+            style={{
+              border: true,
+              borderColor: focusedField === 'name' ? '#CC8844' : '#555555',
+              paddingLeft: 1,
+              paddingRight: 1,
+            }}
           >
             {focusedField === 'name' ? (
               <TextInput
                 value={name}
                 onChange={setName}
+                onSubmit={() => setFocusedField('variables')}
+                onCancel={onCancel}
+                focused={true}
                 placeholder="e.g., Development, Staging, Production"
               />
             ) : (
-              <Text color={name ? 'cyan' : 'gray'} italic={!name}>
-                {name || 'Enter a name...'}
-              </Text>
+              <text fg={name ? '#999999' : '#666666'}>{name || 'Enter a name...'}</text>
             )}
-          </Fieldset>
-        </Box>
+          </box>
+        </box>
 
         {/* Variables Field */}
-        <Box marginBottom={1} flexGrow={1}>
-          <Fieldset
-            title="🔑 Variables (KEY=value, one per line)"
-            focused={focusedField === 'variables'}
-            editMode={focusedField === 'variables'}
-            borderStyle="round"
-            flexGrow={1}
+        <box style={{ marginTop: 1, flexDirection: 'column' }}>
+          <text fg={focusedField === 'variables' ? '#CC8844' : '#666666'}>
+            Variables (KEY=value, one per line):
+          </text>
+          <box
+            style={{
+              border: true,
+              borderColor: focusedField === 'variables' ? '#CC8844' : '#555555',
+              paddingLeft: 1,
+              paddingRight: 1,
+              height: 8,
+            }}
           >
             {focusedField === 'variables' ? (
-              <Box flexDirection="column">
-                {variablesLines.map((line, i) => (
-                  <Box key={i}>
-                    <Text color={i === currentLineIndex ? 'yellow' : 'gray'}>
-                      {i === currentLineIndex ? '▶ ' : '  '}
-                    </Text>
-                    {i === currentLineIndex ? (
-                      <TextInput value={line} onChange={handleLineChange} placeholder="KEY=value" />
-                    ) : (
-                      <Text dimColor={!line.trim()}>{line || ' '}</Text>
-                    )}
-                  </Box>
-                ))}
-              </Box>
+              <TextInput
+                value={variablesText}
+                onChange={setVariablesText}
+                onSubmit={handleSave}
+                onCancel={onCancel}
+                focused={true}
+                placeholder="KEY=value"
+              />
             ) : (
-              <Box flexDirection="column">
-                {variablesLines.slice(0, 10).map((line, i) => (
-                  <Text key={i} dimColor={!line.trim()}>
-                    {line || ' '}
-                  </Text>
-                ))}
-                {variablesLines.length > 10 && (
-                  <Text dimColor>... and {variablesLines.length - 10} more lines</Text>
-                )}
-              </Box>
+              <text fg={variablesText ? '#999999' : '#666666'}>
+                {variablesText || 'Enter variables...'}
+              </text>
             )}
-          </Fieldset>
-        </Box>
+          </box>
+        </box>
 
-        {/* Instructions */}
-        <Box borderStyle="round" borderColor="gray" paddingX={1}>
-          <Text dimColor>
-            {focusedField === 'variables'
-              ? '↑↓: Navigate Lines | Enter: New Line | Ctrl+D: Delete Line | Tab/↑: Switch | Ctrl+S: Save | ESC: Cancel'
-              : 'Tab/↓: Switch Fields | Ctrl+S: Save | ESC: Cancel'}
-          </Text>
-        </Box>
-      </Box>
-    </Box>
+        <box
+          style={{
+            marginTop: 1,
+            justifyContent: 'center',
+            border: true,
+            borderColor: '#44332/↑↓2',
+            paddingLeft: 1,
+            paddingRight: 1,
+          }}
+        >
+          <text fg="#666666">Tab: Switch Fields | Ctrl+S: Save | ESC: Cancel</text>
+        </box>
+      </box>
+    </box>
   );
-};
+}

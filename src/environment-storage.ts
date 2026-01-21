@@ -132,21 +132,11 @@ export const setActiveEnvironment = (
  */
 export const addEnvironment = (
   config: EnvironmentsConfig,
-  name: string,
-  variables: Record<string, string>,
+  environment: Environment,
 ): EnvironmentsConfig => {
-  const maxId =
-    config.environments.length > 0 ? Math.max(...config.environments.map((e) => e.id)) : 0;
-
-  const newEnvironment: Environment = {
-    id: maxId + 1,
-    name,
-    variables,
-  };
-
   return {
     ...config,
-    environments: [...config.environments, newEnvironment],
+    environments: [...config.environments, environment],
   };
 };
 

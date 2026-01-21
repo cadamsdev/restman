@@ -1,34 +1,39 @@
-import { Text } from 'ink';
-import { Fieldset } from './Fieldset';
-import type { Environment } from '../environment-storage';
+interface Environment {
+  id: number;
+  name: string;
+  variables: Record<string, string>;
+}
 
 interface EnvironmentSelectorProps {
   environments: Environment[];
   activeEnvironmentId: number | null;
   focused: boolean;
   editMode: boolean;
-  onSelect: (id: number) => void;
 }
 
-export const EnvironmentSelector: React.FC<EnvironmentSelectorProps> = ({
+export function EnvironmentSelector({
   environments,
   activeEnvironmentId,
   focused,
   editMode,
-}) => {
-  const activeEnv = environments.find((env: Environment) => env.id === activeEnvironmentId);
+}: EnvironmentSelectorProps) {
+  const borderColor = focused ? '#CC8844' : editMode ? '#BB7733' : '#555555';
+  const activeEnv = environments.find((e) => e.id === activeEnvironmentId);
 
   return (
-    <Fieldset title="🌍 Environment" focused={focused} editMode={editMode} width={28}>
-      {activeEnv ? (
-        <Text color={focused ? 'cyan' : 'gray'} bold={focused}>
-          ▸ {activeEnv.name}
-        </Text>
-      ) : (
-        <Text dimColor italic>
-          ∅ None selected
-        </Text>
-      )}
-    </Fieldset>
+    <box
+      title="Environment"
+      style={{
+        width: '100%',
+        border: true,
+        borderColor,
+        paddingLeft: 1,
+        paddingRight: 1,
+      }}
+    >
+      <text fg={activeEnv ? '#BB7733' : '#666666'}>
+        {activeEnv ? `▸ ${activeEnv.name}` : '(no environment selected)'}
+      </text>
+    </box>
   );
-};
+}

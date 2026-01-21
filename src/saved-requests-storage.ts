@@ -14,19 +14,12 @@ export interface SavedRequest {
   request: RequestOptions;
 }
 
-/**
- * Ensures the .restman directory exists
- */
 const ensureDirectoryExists = (): void => {
   if (!existsSync(RESTMAN_DIR)) {
     mkdirSync(RESTMAN_DIR, { recursive: true });
   }
 };
 
-/**
- * Load saved requests from disk
- * Returns an empty array if the file doesn't exist or if there's an error
- */
 export const loadSavedRequests = async (): Promise<SavedRequest[]> => {
   try {
     ensureDirectoryExists();
@@ -38,7 +31,6 @@ export const loadSavedRequests = async (): Promise<SavedRequest[]> => {
     const data = await readFile(SAVED_REQUESTS_FILE, 'utf-8');
     const parsed = JSON.parse(data);
 
-    // Validate and convert timestamp strings back to Date objects
     const validEntries = parsed.filter((entry: any) => {
       return (
         entry &&
@@ -62,29 +54,12 @@ export const loadSavedRequests = async (): Promise<SavedRequest[]> => {
   }
 };
 
-/**
- * Save requests to disk
- */
 export const saveSavedRequests = async (savedRequests: SavedRequest[]): Promise<void> => {
   try {
     ensureDirectoryExists();
-
     const data = JSON.stringify(savedRequests, null, 2);
     await writeFile(SAVED_REQUESTS_FILE, data, 'utf-8');
   } catch (error) {
     console.error('Failed to save saved requests:', error);
-  }
-};
-
-/**
- * Delete a saved request by ID
- */
-export const deleteSavedRequest = async (id: number): Promise<void> => {
-  try {
-    const savedRequests = await loadSavedRequests();
-    const filtered = savedRequests.filter((req) => req.id !== id);
-    await saveSavedRequests(filtered);
-  } catch (error) {
-    console.error('Failed to delete saved request:', error);
   }
 };

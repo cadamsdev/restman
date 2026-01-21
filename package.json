@@ -5,10 +5,14 @@
   "description": "A powerful REST API client TUI built with Bun",
   "license": "MIT",
   "author": "cadamsdev",
+  "module": "index.tsx",
   "type": "module",
+  "bin": {
+    "restman-v2": "./index.tsx"
+  },
   "scripts": {
-    "start": "bun run src/cli.ts",
-    "dev": "bun run src/cli.ts",
+    "dev": "bun run ./index.tsx",
+    "start": "bun run ./index.tsx",
     "changeset": "changeset",
     "build:linux-x64": "bun run scripts/build-target.ts linux-x64",
     "build:linux-arm64": "bun run scripts/build-target.ts linux-arm64",
@@ -22,8 +26,8 @@
     "lint:fix": "oxlint --fix"
   },
   "dependencies": {
-    "ink": "^6.6.0",
-    "ink-text-input": "^6.0.0",
+    "@opentui/core": "^0.1.72",
+    "@opentui/react": "^0.1.72",
     "react": "^19.2.3"
   },
   "devDependencies": {

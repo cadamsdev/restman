@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
-import { Box, Text, useInput } from 'ink';
-import type { Environment } from '../environment-storage';
+import { useState, useCallback } from 'react';
+import { useKeyboard } from '@opentui/react';
+
+interface Environment {
+  id: number;
+  name: string;
+  variables: Record<string, string>;
+}
 
 interface EnvironmentSelectorModalProps {
   environments: Environment[];
@@ -9,161 +14,160 @@ interface EnvironmentSelectorModalProps {
   onCancel: () => void;
 }
 
-export const EnvironmentSelectorModal: React.FC<EnvironmentSelectorModalProps> = ({
+export function EnvironmentSelectorModal({
   environments,
   currentEnvironmentId,
   onSelect,
   onCancel,
-}) => {
+}: EnvironmentSelectorModalProps) {
   const currentIndex = environments.findIndex((env) => env.id === currentEnvironmentId);
   const [selectedIndex, setSelectedIndex] = useState(currentIndex >= 0 ? currentIndex : 0);
 
-  useInput((input, key) => {
-    if (key.escape) {
-      onCancel();
-      return;
-    }
-
-    if (key.return) {
-      const selectedEnv = environments[selectedIndex];
-      if (selectedEnv) {
-        onSelect(selectedEnv.id);
+  const handleKeyboard = useCallback(
+    (key: { name: string }) => {
+      if (key.name === 'escape') {
+        onCancel();
+        return;
       }
-      return;
-    }
 
-    if (key.upArrow) {
-      setSelectedIndex((prev) => (prev > 0 ? prev - 1 : environments.length - 1));
-      return;
-    }
+      if (key.name === 'return') {
+        const selectedEnv = environments[selectedIndex];
+        if (selectedEnv) {
+          onSelect(selectedEnv.id);
+        }
+        return;
+      }
 
-    if (key.downArrow) {
-      setSelectedIndex((prev) => (prev < environments.length - 1 ? prev + 1 : 0));
-      return;
-    }
-  });
+      if (key.name === 'up') {
+        setSelectedIndex((prev) => (prev > 0 ? prev - 1 : environments.length - 1));
+        return;
+      }
+
+      if (key.name === 'down') {
+        setSelectedIndex((prev) => (prev < environments.length - 1 ? prev + 1 : 0));
+        return;
+      }
+    },
+    [environments, selectedIndex, onSelect, onCancel],
+  );
+
+  useKeyboard(handleKeyboard);
 
   if (environments.length === 0) {
     return (
-      <Box
-        position="absolute"
-        width="100%"
-        height="100%"
-        justifyContent="center"
-        alignItems="center"
-        flexDirection="column"
+      <box
+        style={{
+          position: 'absolute',
+          width: '100%',
+          height: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'column',
+        }}
       >
-        <Box position="absolute" width="100%" height="100%" />
-
-        <Box
-          borderStyle="double"
-          borderColor="yellow"
-          paddingX={3}
-          paddingY={1}
-          flexDirection="column"
-          width={50}
-          backgroundColor="black"
+        <box
+          style={{
+            border: 'double',
+            borderColor: '#665544',
+            paddingLeft: 3,
+            paddingRight: 3,
+            paddingTop: 1,
+            paddingBottom: 1,
+            flexDirection: 'column',
+            width: 50,
+            backgroundColor: '#1a1a1a',
+          }}
         >
-          <Box justifyContent="center">
-            <Text bold color="yellow">
-              🌍 No Environments Available
-            </Text>
-          </Box>
+          <box style={{ justifyContent: 'center' }}>
+            <text fg="#CC8844">No Environments Available</text>
+          </box>
 
-          <Box marginTop={1} paddingX={2}>
-            <Text dimColor>
-              No environments found. Press{' '}
-              <Text color="cyan" bold>
-                v
-              </Text>{' '}
-              to manage environments.
-            </Text>
-          </Box>
+          <box style={{ marginTop: 1, paddingLeft: 2, paddingRight: 2, flexDirection: 'row', gap: 1 }}>
+            <text fg="#666666">No environments found. Press</text>
+            <text fg="#BB7733">v</text>
+            <text fg="#666666">to manage environments.</text>
+          </box>
 
-          <Box
-            marginTop={1}
-            justifyContent="center"
-            borderStyle="single"
-            borderColor="gray"
-            paddingX={1}
+          <box
+            style={{
+              marginTop: 1,
+              justifyContent: 'center',
+              border: true,
+              borderColor: '#443322',
+              paddingLeft: 1,
+              paddingRight: 1,
+              flexDirection: 'row',
+              gap: 1,
+            }}
           >
-            <Text dimColor>
-              <Text color="yellow" bold>
-                ESC
-              </Text>{' '}
-              Close
-            </Text>
-          </Box>
-        </Box>
-      </Box>
+            <text fg="#CC8844">ESC</text>
+            <text fg="#666666">Close</text>
+          </box>
+        </box>
+      </box>
     );
   }
 
   return (
-    <Box
-      position="absolute"
-      width="100%"
-      height="100%"
-      justifyContent="center"
-      alignItems="center"
-      flexDirection="column"
+    <box
+      style={{
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+        zIndex: 1000,
+      }}
     >
-      {/* Backdrop overlay */}
-      <Box position="absolute" width="100%" height="100%" />
-
       {/* Modal content */}
-      <Box
-        borderStyle="double"
-        borderColor="cyan"
-        paddingX={3}
-        paddingY={1}
-        flexDirection="column"
-        width={50}
-        backgroundColor="black"
+      <box
+        style={{
+          border: 'double',
+          borderColor: '#665544',
+          paddingLeft: 3,
+          paddingRight: 3,
+          paddingTop: 1,
+          paddingBottom: 1,
+          flexDirection: 'column',
+          width: 50,
+          backgroundColor: '#1a1a1a',
+        }}
       >
-        <Box justifyContent="center">
-          <Text bold color="cyan">
-            🌍 Select Environment
-          </Text>
-        </Box>
+        <box style={{ justifyContent: 'center' }}>
+          <text fg="#CC8844">Select Environment</text>
+        </box>
 
-        <Box marginTop={1} flexDirection="column" paddingX={2}>
+        <box style={{ marginTop: 1, flexDirection: 'column', paddingLeft: 2, paddingRight: 2 }}>
           {environments.map((env, index) => (
-            <Box key={env.id}>
-              <Text
-                color={index === selectedIndex ? 'cyan' : 'gray'}
-                bold={index === selectedIndex}
-                dimColor={index !== selectedIndex}
-              >
+            <box key={env.id}>
+              <text fg={index === selectedIndex ? '#BB7733' : '#666666'}>
                 {index === selectedIndex ? `▸ ${env.name}` : `  ${env.name}`}
-              </Text>
-            </Box>
+              </text>
+            </box>
           ))}
-        </Box>
+        </box>
 
-        <Box
-          marginTop={1}
-          justifyContent="center"
-          borderStyle="single"
-          borderColor="gray"
-          paddingX={1}
+        <box
+          style={{
+            marginTop: 1,
+            justifyContent: 'center',
+            border: true,
+            borderColor: '#443322',
+            paddingLeft: 1,
+            paddingRight: 1,
+            flexDirection: 'row',
+            gap: 1,
+          }}
         >
-          <Text dimColor>
-            <Text color="cyan" bold>
-              ↕
-            </Text>{' '}
-            Navigate │{' '}
-            <Text color="green" bold>
-              Enter
-            </Text>{' '}
-            Select │{' '}
-            <Text color="yellow" bold>
-              ESC
-            </Text>{' '}
-            Cancel
-          </Text>
-        </Box>
-      </Box>
-    </Box>
+          <text fg="#BB7733">↕</text>
+          <text fg="#666666">Navigate │</text>
+          <text fg="#99AA77">Enter</text>
+          <text fg="#666666">Select │</text>
+          <text fg="#CC8844">ESC</text>
+          <text fg="#666666">Cancel</text>
+        </box>
+      </box>
+    </box>
   );
-};
+}

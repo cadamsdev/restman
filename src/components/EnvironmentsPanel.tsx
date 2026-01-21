@@ -1,138 +1,213 @@
-import { useState } from 'react';
-import { Box, Text, useInput } from 'ink';
-import type { Environment, EnvironmentsConfig } from '../environment-storage';
-import { Fieldset } from './Fieldset';
+import { useState, useCallback } from 'react';
+import { useKeyboard } from '@opentui/react';
+
+interface Environment {
+  id: number;
+  name: string;
+  variables: Record<string, string>;
+}
 
 interface EnvironmentsPanelProps {
-  config: EnvironmentsConfig;
-  focused: boolean;
+  environments: Environment[];
+  activeEnvironmentId: number | null;
   onSelectEnvironment: (id: number) => void;
   onAddEnvironment: () => void;
   onEditEnvironment: (id: number) => void;
   onDeleteEnvironment: (id: number) => void;
+  onClose: () => void;
 }
 
-export const EnvironmentsPanel: React.FC<EnvironmentsPanelProps> = ({
-  config,
-  focused,
+export function EnvironmentsPanel({
+  environments,
+  activeEnvironmentId,
   onSelectEnvironment,
   onAddEnvironment,
   onEditEnvironment,
   onDeleteEnvironment,
-}) => {
+  onClose,
+}: EnvironmentsPanelProps) {
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
-  useInput((input, key) => {
-    if (!focused) return;
+  const handleKeyboard = useCallback(
+    (key: { name: string; shift?: boolean; sequence?: string }) => {
+      if (key.name === 'escape') {
+        onClose();
+        return;
+      }
 
-    if (key.upArrow && selectedIndex > 0) {
-      setSelectedIndex(selectedIndex - 1);
-    } else if (key.downArrow && selectedIndex < config.environments.length - 1) {
-      setSelectedIndex(selectedIndex + 1);
-    } else if (key.return) {
-      // Select the environment
-      const selectedEnv = config.environments[selectedIndex];
-      if (selectedEnv) {
-        onSelectEnvironment(selectedEnv.id);
+      if (key.name === 'up' && selectedIndex > 0) {
+        setSelectedIndex(selectedIndex - 1);
+        return;
       }
-    } else if (input === 'n') {
-      // Add new environment
-      onAddEnvironment();
-    } else if (input === 'e') {
-      // Edit selected environment
-      const selectedEnv = config.environments[selectedIndex];
-      if (selectedEnv) {
-        onEditEnvironment(selectedEnv.id);
+
+      if (key.name === 'down' && selectedIndex < environments.length - 1) {
+        setSelectedIndex(selectedIndex + 1);
+        return;
       }
-    } else if (input === 'd' && key.shift) {
-      // Delete selected environment (Shift+D for safety)
-      const selectedEnv = config.environments[selectedIndex];
-      if (selectedEnv && config.environments.length > 1) {
-        onDeleteEnvironment(selectedEnv.id);
-        // Adjust selected index if needed
-        if (selectedIndex >= config.environments.length - 1) {
-          setSelectedIndex(Math.max(0, selectedIndex - 1));
+
+      if (key.name === 'return') {
+        const selectedEnv = environments[selectedIndex];
+        if (selectedEnv) {
+          onSelectEnvironment(selectedEnv.id);
         }
+        return;
       }
-    }
-  });
 
-  if (config.environments.length === 0) {
+      if (key.sequence === 'n') {
+        onAddEnvironment();
+        return;
+      }
+
+      if (key.sequence === 'e') {
+        const selectedEnv = environments[selectedIndex];
+        if (selectedEnv) {
+          onEditEnvironment(selectedEnv.id);
+        }
+        return;
+      }
+
+      if (key.sequence === 'D' && key.shift) {
+        const selectedEnv = environments[selectedIndex];
+        if (selectedEnv && environments.length > 1) {
+          onDeleteEnvironment(selectedEnv.id);
+          if (selectedIndex >= environments.length - 1) {
+            setSelectedIndex(Math.max(0, selectedIndex - 1));
+          }
+        }
+        return;
+      }
+    },
+    [selectedIndex, environments, onSelectEnvironment, onAddEnvironment, onEditEnvironment, onDeleteEnvironment, onClose],
+  );
+
+  useKeyboard(handleKeyboard);
+
+  if (environments.length === 0) {
     return (
-      <Box flexDirection="column" padding={1}>
-        <Text>No environments configured.</Text>
-        <Text dimColor>Press 'n' to add a new environment.</Text>
-      </Box>
+      <box
+        style={{
+          position: 'absolute',
+          width: '100%',
+          height: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'column',
+          zIndex: 1000,
+        }}
+      >
+        <box
+          style={{
+            border: 'double',
+            borderColor: '#665544',
+            paddingLeft: 3,
+            paddingRight: 3,
+            paddingTop: 1,
+            paddingBottom: 1,
+            flexDirection: 'column',
+            width: 60,
+            backgroundColor: '#1a1a1a',
+          }}
+        >
+          <box style={{ justifyContent: 'center' }}>
+            <text fg="#CC8844">Environments (0)</text>
+          </box>
+
+          <box style={{ marginTop: 1, justifyContent: 'center' }}>
+            <text fg="#666666">No environments configured</text>
+          </box>
+          <box style={{ justifyContent: 'center' }}>
+            <text fg="#666666">Press n to add a new environment</text>
+          </box>
+
+          <box
+            style={{
+              marginTop: 1,
+              justifyContent: 'center',
+              border: true,
+              borderColor: '#443322',
+              paddingLeft: 1,
+              paddingRight: 1,
+            }}
+          >
+            <text fg="#666666">n: New | ESC: Close</text>
+          </box>
+        </box>
+      </box>
     );
   }
 
   return (
-    <Box flexDirection="column" width="100%" height="100%">
-      {/* Environments List */}
-      <Fieldset
-        title={`🌍 Environments (${config.environments.length})`}
-        borderColor="cyan"
-        flexGrow={1}
+    <box
+      style={{
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+        zIndex: 1000,
+      }}
+    >
+      <box
+        style={{
+          border: 'double',
+          borderColor: '#665544',
+          paddingLeft: 3,
+          paddingRight: 3,
+          paddingTop: 1,
+          paddingBottom: 1,
+          flexDirection: 'column',
+          width: 70,
+          backgroundColor: '#1a1a1a',
+        }}
       >
-        <Box flexDirection="column">
-          {config.environments.map((env: Environment, index: number) => {
+        <box style={{ justifyContent: 'center' }}>
+          <text fg="#CC8844">Environments ({environments.length})</text>
+        </box>
+
+        <box style={{ marginTop: 1, flexDirection: 'column' }}>
+          {environments.slice(0, 8).map((env, index) => {
             const isSelected = index === selectedIndex;
-            const isActive = env.id === config.activeEnvironmentId;
+            const isActive = env.id === activeEnvironmentId;
+            const varCount = Object.keys(env.variables).length;
 
             return (
-              <Box key={env.id} marginBottom={1} flexDirection="column">
-                <Box>
-                  <Box width={3}>
-                    <Text color={isActive ? 'green' : undefined}>{isActive ? '▶' : ' '}</Text>
-                  </Box>
-                  <Box flexGrow={1}>
-                    <Text
-                      bold
-                      color={isSelected ? 'yellow' : isActive ? 'green' : 'cyan'}
-                      backgroundColor={isSelected ? 'blue' : undefined}
-                    >
-                      {env.name}
-                    </Text>
-                  </Box>
-                </Box>
-                <Box marginLeft={3} flexDirection="column">
-                  <Box>
-                    <Text dimColor>Variables: </Text>
-                    <Text color="cyan">{Object.keys(env.variables).length} defined</Text>
-                  </Box>
-                  {Object.entries(env.variables)
-                    .slice(0, 3)
-                    .map(([key, value]: [string, string]) => (
-                      <Box key={key} marginLeft={2}>
-                        <Text dimColor>
-                          {key}:{' '}
-                          <Text color="gray">
-                            {value.substring(0, 30)}
-                            {value.length > 30 ? '...' : ''}
-                          </Text>
-                        </Text>
-                      </Box>
-                    ))}
-                  {Object.keys(env.variables).length > 3 && (
-                    <Box marginLeft={2}>
-                      <Text dimColor>... and {Object.keys(env.variables).length - 3} more</Text>
-                    </Box>
-                  )}
-                </Box>
-              </Box>
+              <box key={env.id} style={{ flexDirection: 'column', marginBottom: 1 }}>
+                <box style={{ flexDirection: 'row' }}>
+                  <text fg={isActive ? '#99AA77' : '#1a1a1a'}>{isActive ? '▶ ' : '  '}</text>
+                  <text
+                    bg={isSelected ? '#2a2520' : undefined}
+                    fg={isSelected ? '#CC8844' : isActive ? '#99AA77' : '#BB7733'}
+                  >
+                    {env.name}
+                  </text>
+                </box>
+                <box style={{ marginLeft: 2 }}>
+                  <text fg="#666666">{varCount} variable{varCount !== 1 ? 's' : ''}</text>
+                </box>
+              </box>
             );
           })}
-        </Box>
-      </Fieldset>
+          {environments.length > 8 && (
+            <box>
+              <text fg="#666666">... and {environments.length - 8} more</text>
+            </box>
+          )}
+        </box>
 
-      {/* Instructions */}
-      <Box marginTop={1}>
-        <Fieldset title="⌨️  Controls" borderColor="gray">
-          <Text dimColor>
-            ↑↓: Navigate | Enter: Activate | n: New | e: Edit | Shift+D: Delete | ESC: Close
-          </Text>
-        </Fieldset>
-      </Box>
-    </Box>
+        <box
+          style={{
+            marginTop: 1,
+            justifyContent: 'center',
+            border: true,
+            borderColor: '#443322',
+            paddingLeft: 1,
+            paddingRight: 1,
+          }}
+        >
+          <text fg="#666666">↕: Navigate | Enter: Activate | n: New | e: Edit | Shift+D: Delete | ESC: Close</text>
+        </box>
+      </box>
+    </box>
   );
-};
+}

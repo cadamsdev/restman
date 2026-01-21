@@ -1,58 +1,35 @@
-import React from 'react';
-import { Box, Text } from 'ink';
-
 interface InstructionsProps {
   editMode: boolean;
 }
 
-export const Instructions: React.FC<InstructionsProps> = ({ editMode }) => {
+export function Instructions({ editMode }: InstructionsProps) {
+  if (editMode) {
+    return (
+      <box
+        style={{
+          width: '100%',
+          paddingLeft: 1,
+          paddingRight: 1,
+        }}
+      >
+        <text fg="#CC8844">
+          EDIT MODE: Type to edit | ESC: Exit edit mode | Enter: Submit
+        </text>
+      </box>
+    );
+  }
+
   return (
-    <Box
-      borderStyle="round"
-      borderColor={editMode ? 'green' : 'gray'}
-      justifyContent="center"
-      paddingX={1}
+    <box
+      style={{
+        width: '100%',
+        paddingLeft: 1,
+        paddingRight: 1,
+      }}
     >
-      {editMode ? (
-        <Text>
-          <Text backgroundColor="green" color="black" bold>
-            {' '}
-            EDIT{' '}
-          </Text>
-          <Text dimColor> │ </Text>
-          <Text color="yellow">ESC</Text>
-          <Text dimColor> Exit │ </Text>
-          <Text color="yellow">Ctrl+S</Text>
-          <Text dimColor> Send │ </Text>
-          <Text color="yellow">/</Text>
-          <Text dimColor> Help │ </Text>
-          <Text color="yellow">Ctrl+C</Text>
-          <Text dimColor> Force Quit</Text>
-        </Text>
-      ) : (
-        <Text>
-          <Text color="green">Enter</Text>
-          <Text dimColor> Send │ </Text>
-          <Text color="cyan">e</Text>
-          <Text dimColor> Edit │ </Text>
-          <Text color="cyan">Space</Text>
-          <Text dimColor> Full View │ </Text>
-          <Text color="cyan">s</Text>
-          <Text dimColor> Save │ </Text>
-          <Text color="cyan">l</Text>
-          <Text dimColor> Load │ </Text>
-          <Text color="cyan">h</Text>
-          <Text dimColor> History │ </Text>
-          <Text color="cyan">v</Text>
-          <Text dimColor> Env │ </Text>
-          <Text color="cyan">1-4</Text>
-          <Text dimColor> Jump │ </Text>
-          <Text color="cyan">/</Text>
-          <Text dimColor> Help │ </Text>
-          <Text color="cyan">q</Text>
-          <Text dimColor> Exit</Text>
-        </Text>
-      )}
-    </Box>
+      <text fg="#888888">
+        Tab/↑↓: Navigate | ←→: Switch Tabs | e: Edit | v: Environments | s: Save | h: History | Space: Expand Response | Enter: Send | 1-4: Quick Nav | q: Quit
+      </text>
+    </box>
   );
-};
+}

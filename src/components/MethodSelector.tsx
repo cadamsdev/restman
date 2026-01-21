@@ -1,7 +1,3 @@
-import React from 'react';
-import { Text } from 'ink';
-import { Fieldset } from './Fieldset';
-
 interface MethodSelectorProps {
   value: string;
   onChange: (method: string) => void;
@@ -9,29 +5,40 @@ interface MethodSelectorProps {
   editMode: boolean;
 }
 
-export const MethodSelector: React.FC<MethodSelectorProps> = ({ value, focused, editMode }) => {
+export function MethodSelector({ value, focused, editMode }: MethodSelectorProps) {
   const getMethodColor = (method: string): string => {
     switch (method) {
       case 'GET':
-        return 'blue';
+        return '#8899AA';
       case 'POST':
-        return 'green';
+        return '#99AA77';
       case 'PUT':
-        return 'yellow';
+        return '#CC9944';
       case 'PATCH':
-        return 'cyan';
+        return '#9988BB';
       case 'DELETE':
-        return 'red';
+        return '#BB6655';
       default:
-        return 'white';
+        return '#999999';
     }
   };
 
+  const borderColor = focused ? '#CC8844' : editMode ? '#BB7733' : '#555555';
+
   return (
-    <Fieldset title="⚡ Method" focused={focused} editMode={editMode} width={20}>
-      <Text color={focused ? getMethodColor(value) : 'gray'} bold={focused}>
+    <box
+      title="Method"
+      style={{
+        width: 20,
+        border: true,
+        borderColor,
+        paddingLeft: 1,
+        paddingRight: 1,
+      }}
+    >
+      <text fg={focused ? getMethodColor(value) : '#666666'}>
         ▸ {value}
-      </Text>
-    </Fieldset>
+      </text>
+    </box>
   );
-};
+}

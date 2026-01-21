@@ -1,25 +1,41 @@
-import React from 'react';
-import { Text } from 'ink';
-import TextInput from 'ink-text-input';
-import { Fieldset } from './Fieldset';
+import { TextInput } from './TextInput';
 
 interface URLInputProps {
   value: string;
   onChange: (value: string) => void;
   focused: boolean;
   editMode: boolean;
+  onSubmit?: () => void;
 }
 
-export const URLInput: React.FC<URLInputProps> = ({ value, onChange, focused, editMode }) => {
+export function URLInput({ value, onChange, focused, editMode, onSubmit }: URLInputProps) {
+  const borderColor = focused ? '#CC8844' : editMode ? '#BB7733' : '#555555';
+
   return (
-    <Fieldset title="🌐 URL" focused={focused} editMode={editMode} flexGrow={1}>
+    <box
+      title="URL"
+      style={{
+        flexGrow: 1,
+        border: true,
+        borderColor,
+        paddingLeft: 1,
+        paddingRight: 1,
+      }}
+    >
       {editMode ? (
-        <TextInput value={value} onChange={onChange} />
+        <TextInput
+          value={value}
+          onChange={onChange}
+          onSubmit={onSubmit}
+          onCancel={onSubmit}
+          focused={true}
+          placeholder="Enter URL..."
+        />
       ) : (
-        <Text color={value ? 'cyan' : 'gray'} italic={!value}>
+        <text fg={value ? '#BB7733' : '#666666'}>
           {value || 'Enter URL...'}
-        </Text>
+        </text>
       )}
-    </Fieldset>
+    </box>
   );
-};
+}
