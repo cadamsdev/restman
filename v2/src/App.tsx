@@ -1,7 +1,14 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useKeyboard, useTerminalDimensions } from '@opentui/react';
 import { HTTPClient } from './http-client';
 import type { RequestOptions, Response } from './http-client';
+import {
+  loadEnvironments,
+  saveEnvironments,
+  setActiveEnvironment,
+  getActiveEnvironment,
+  type EnvironmentsConfig,
+} from './environment-storage';
 import { URLInput } from './components/URLInput';
 import { MethodSelector } from './components/MethodSelector';
 import { RequestEditor } from './components/RequestEditor';
@@ -38,10 +45,28 @@ export function App() {
   const [responseActiveTab, setResponseActiveTab] = useState<'body' | 'headers' | 'cookies'>(
     'body',
   );
-  const [environments] = useState<Array<{ id: number; name: string; variables: Record<string, string> }>>([]);
-  const [activeEnvironmentId] = useState<number | null>(null);
+  const [environmentsConfig, setEnvironmentsConfig] = useState<EnvironmentsConfig>({
+    activeEnvironmentId: null,
+    environments: [],
+  });
 
   const fields: FocusField[] = ['environment', 'method', 'url', 'request', 'response'];
+
+  // Load environments from disk on startup
+  useEffect(() => {
+    const initEnvironments = async () => {
+      const loaded = await loadEnvironments();
+      setEnvironmentsConfig(loaded);
+    };
+    void initEnvironments();
+  }, []);
+
+  // Save environments to disk whenever they change
+  useEffect(() => {
+    if (environmentsConfig.environments.length > 0) {
+      void saveEnvironments(environmentsConfig);
+    }
+  }, [environmentsConfig]);
 
   const parseHeaders = (headersText: string): Record<string, string> => {
     const headers: Record<string, string> = {};
@@ -98,6 +123,13 @@ export function App() {
     setToastMessage('Sending request...');
 
     try {
+      // Get active environment variables
+      const activeEnv = getActiveEnvironment(environmentsConfig);
+      const variables = activeEnv?.variables || {};
+
+      // TODO: Apply variable substitution when we migrate variable-substitution.ts
+      // const substitutedUrl = substituteVariables(url, variables);
+      
       // Add query parameters to URL
       let finalUrl = url;
       if (params) {
@@ -300,8 +332,8 @@ export function App() {
 
       {/* Environment Selector */}
       <EnvironmentSelector
-        environments={environments}
-        activeEnvironmentId={activeEnvironmentId}
+        environments={environmentsConfig.environments}
+        activeEnvironmentId={environmentsConfig.activeEnvironmentId}
         focused={focusedField === 'environment'}
         editMode={editMode === 'environment'}
       />
@@ -371,10 +403,10 @@ export function App() {
       {/* Environment Selector Modal */}
       {showEnvironmentSelectorModal && (
         <EnvironmentSelectorModal
-          environments={environments}
-          currentEnvironmentId={activeEnvironmentId}
+          environments={environmentsConfig.environments}
+          currentEnvironmentId={environmentsConfig.activeEnvironmentId}
           onSelect={(id) => {
-            // Would call setActiveEnvironment here when we have full environment management
+            setEnvironmentsConfig(setActiveEnvironment(environmentsConfig, id));
             setShowEnvironmentSelectorModal(false);
           }}
           onCancel={() => setShowEnvironmentSelectorModal(false)}
