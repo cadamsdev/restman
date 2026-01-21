@@ -3,10 +3,14 @@ import { useKeyboard, useTerminalDimensions } from '@opentui/react';
 import { HTTPClient } from './http-client';
 import type { RequestOptions, Response } from './http-client';
 import { substituteVariables, substituteVariablesInHeaders } from './variable-substitution';
-import { TextInput } from './components/TextInput';
-import { TextAreaInput } from './components/TextAreaInput';
+import { URLInput } from './components/URLInput';
+import { MethodSelector } from './components/MethodSelector';
+import { RequestEditor } from './components/RequestEditor';
+import { ResponseEditor } from './components/ResponseEditor';
+import { EnvironmentSelector } from './components/EnvironmentSelector';
+import { Instructions } from './components/Instructions';
 
-type FocusField = 'method' | 'url' | 'headers' | 'response';
+type FocusField = 'method' | 'url' | 'request' | 'response' | 'environment';
 
 export function App() {
   const { width, height } = useTerminalDimensions();
@@ -18,14 +22,23 @@ export function App() {
   const [headers, setHeaders] = useState<string>(
     'Content-Type: application/json\nAccept: application/json',
   );
+  const [params, setParams] = useState<string>('');
   const [body, setBody] = useState<string>('');
   const [response, setResponse] = useState<Response | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [focusedField, setFocusedField] = useState<FocusField>('url');
   const [editMode, setEditMode] = useState<FocusField | null>(null);
   const [toastMessage, setToastMessage] = useState<string>('');
+  const [requestActiveTab, setRequestActiveTab] = useState<'headers' | 'params' | 'body'>(
+    'headers',
+  );
+  const [responseActiveTab, setResponseActiveTab] = useState<'body' | 'headers' | 'cookies'>(
+    'body',
+  );
+  const [environments] = useState<Array<{ id: number; name: string; variables: Record<string, string> }>>([]);
+  const [activeEnvironmentId] = useState<number | null>(null);
 
-  const fields: FocusField[] = ['method', 'url', 'headers', 'response'];
+  const fields: FocusField[] = ['environment', 'method', 'url', 'request', 'response'];
 
   const parseHeaders = (headersText: string): Record<string, string> => {
     const headers: Record<string, string> = {};
@@ -49,6 +62,28 @@ export function App() {
     return headers;
   };
 
+  const parseParams = (paramsText: string): URLSearchParams => {
+    const params = new URLSearchParams();
+    const lines = paramsText.split('\n');
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed) continue;
+
+      const equalIndex = trimmed.indexOf('=');
+      if (equalIndex === -1) continue;
+
+      const key = trimmed.substring(0, equalIndex).trim();
+      const value = trimmed.substring(equalIndex + 1).trim();
+
+      if (key) {
+        params.append(key, value);
+      }
+    }
+
+    return params;
+  };
+
   const sendRequest = async () => {
     if (!url) {
       setToastMessage('URL is required');
@@ -60,9 +95,19 @@ export function App() {
     setToastMessage('Sending request...');
 
     try {
+      // Add query parameters to URL
+      let finalUrl = url;
+      if (params) {
+        const urlParams = parseParams(params);
+        const paramString = urlParams.toString();
+        if (paramString) {
+          finalUrl += (finalUrl.includes('?') ? '&' : '?') + paramString;
+        }
+      }
+
       const requestOptions: RequestOptions = {
         method,
-        url,
+        url: finalUrl,
         headers: parseHeaders(headers),
         body: body || undefined,
       };
@@ -111,10 +156,71 @@ export function App() {
 
       // Navigation
       if (key.name === 'tab') {
-        const currentIndex = fields.indexOf(focusedField);
-        const nextIndex = (currentIndex + 1) % fields.length;
-        const nextField = fields[nextIndex];
-        if (nextField) setFocusedField(nextField);
+        if (key.shift) {
+          // Shift+Tab - navigate backwards with sub-tab support
+          if (focusedField === 'request') {
+            if (requestActiveTab === 'body') {
+              setRequestActiveTab('params');
+              return;
+            } else if (requestActiveTab === 'params') {
+              setRequestActiveTab('headers');
+              return;
+            }
+            // On first tab, move to previous field
+          } else if (focusedField === 'response') {
+            if (responseActiveTab === 'cookies') {
+              setResponseActiveTab('headers');
+              return;
+            } else if (responseActiveTab === 'headers') {
+              setResponseActiveTab('body');
+              return;
+            }
+            // On first tab, move to previous field
+          }
+
+          // Move to previous field
+          const currentIndex = fields.indexOf(focusedField);
+          const prevIndex = (currentIndex - 1 + fields.length) % fields.length;
+          const prevField = fields[prevIndex];
+          if (prevField) {
+            setFocusedField(prevField);
+            // Reset to first tab when entering a panel
+            if (prevField === 'request') setRequestActiveTab('headers');
+            if (prevField === 'response') setResponseActiveTab('body');
+          }
+        } else {
+          // Tab - navigate forward with sub-tab support
+          if (focusedField === 'request') {
+            if (requestActiveTab === 'headers') {
+              setRequestActiveTab('params');
+              return;
+            } else if (requestActiveTab === 'params') {
+              setRequestActiveTab('body');
+              return;
+            }
+            // On last tab, move to next field
+          } else if (focusedField === 'response') {
+            if (responseActiveTab === 'body') {
+              setResponseActiveTab('headers');
+              return;
+            } else if (responseActiveTab === 'headers') {
+              setResponseActiveTab('cookies');
+              return;
+            }
+            // On last tab, move to next field
+          }
+
+          // Move to next field
+          const currentIndex = fields.indexOf(focusedField);
+          const nextIndex = (currentIndex + 1) % fields.length;
+          const nextField = fields[nextIndex];
+          if (nextField) {
+            setFocusedField(nextField);
+            // Reset to first tab when entering a panel
+            if (nextField === 'request') setRequestActiveTab('headers');
+            if (nextField === 'response') setResponseActiveTab('body');
+          }
+        }
         return;
       }
 
@@ -135,6 +241,10 @@ export function App() {
       }
 
       // Quick navigation
+      if (key.sequence === '0') {
+        setFocusedField('environment');
+        return;
+      }
       if (key.sequence === '1') {
         setFocusedField('method');
         return;
@@ -144,7 +254,7 @@ export function App() {
         return;
       }
       if (key.sequence === '3') {
-        setFocusedField('headers');
+        setFocusedField('request');
         return;
       }
       if (key.sequence === '4') {
@@ -158,96 +268,88 @@ export function App() {
   useKeyboard(handleKeyboard);
 
   return (
-    <box width={width} height={height} flexDirection="column" gap={1} paddingX={1}>
+    <box
+      style={{
+        width,
+        height,
+        flexDirection: 'column',
+        gap: 1,
+        paddingLeft: 1,
+        paddingRight: 1,
+      }}
+    >
       {/* Header */}
-      <text fg="#FF00FF" bold>
-        🚀 RestMan v2.0.0
-      </text>
+      <text fg="#FF00FF">🚀 RestMan v2.0.0</text>
+
+      {/* Environment Selector */}
+      <EnvironmentSelector
+        environments={environments}
+        activeEnvironmentId={activeEnvironmentId}
+        focused={focusedField === 'environment'}
+        editMode={editMode === 'environment'}
+      />
 
       {/* Method and URL */}
-      <box flexDirection="row" gap={1}>
+      <box style={{ flexDirection: 'row', gap: 1 }}>
+        <MethodSelector
+          value={method}
+          onChange={setMethod}
+          focused={focusedField === 'method'}
+          editMode={editMode === 'method'}
+        />
+        <URLInput
+          value={url}
+          onChange={setUrl}
+          focused={focusedField === 'url'}
+          editMode={editMode === 'url'}
+          onSubmit={() => setEditMode(null)}
+        />
+      </box>
+
+      {/* Request Editor */}
+      <RequestEditor
+        headers={headers}
+        onHeadersChange={setHeaders}
+        params={params}
+        onParamsChange={setParams}
+        body={body}
+        onBodyChange={setBody}
+        focused={focusedField === 'request'}
+        editMode={editMode === 'request'}
+        activeTab={requestActiveTab}
+        onTabChange={setRequestActiveTab}
+      />
+
+      {/* Response Editor */}
+      <ResponseEditor
+        response={response}
+        focused={focusedField === 'response'}
+        editMode={editMode === 'response'}
+        activeTab={responseActiveTab}
+        onTabChange={setResponseActiveTab}
+      />
+
+      {/* Instructions */}
+      <Instructions editMode={editMode !== null} />
+
+      {/* Toast */}
+      {toastMessage && (
         <box
-          border="single"
-          borderColor={focusedField === 'method' ? '#00FF00' : '#666666'}
-          paddingX={1}
+          style={{
+            position: 'absolute',
+            bottom: 2,
+            left: 2,
+            right: 2,
+            border: true,
+            borderColor: '#FFFF00',
+            paddingLeft: 2,
+            paddingRight: 2,
+            backgroundColor: '#000000',
+          }}
         >
-          <text fg={focusedField === 'method' ? '#00FF00' : '#FFFFFF'}>{method}</text>
+          <text fg="#FFFF00">{toastMessage}</text>
         </box>
-        <box
-          border="single"
-          borderColor={focusedField === 'url' ? '#00FF00' : '#666666'}
-          paddingX={1}
-          flexGrow={1}
-        >
-          {editMode === 'url' ? (
-            <TextInput
-              value={url}
-              onChange={setUrl}
-              onSubmit={() => setEditMode(null)}
-              onCancel={() => setEditMode(null)}
-              focused={true}
-              placeholder="Enter URL..."
-            />
-          ) : (
-            <text fg={focusedField === 'url' ? '#00FF00' : '#FFFFFF'}>
-              {url || '(empty - press e to edit)'}
-            </text>
-          )}
-        </box>
-      </box>
-
-      {/* Headers */}
-      <box
-        border="single"
-        borderColor={focusedField === 'headers' ? '#00FF00' : '#666666'}
-        flexGrow={1}
-        flexDirection="column"
-        paddingX={1}
-      >
-        <text fg="#FFFF00" bold>
-          Headers {focusedField === 'headers' ? '(focused)' : ''} {editMode === 'headers' ? '- EDITING (ESC to exit)' : ''}
-        </text>
-        {editMode === 'headers' ? (
-          <TextAreaInput
-            value={headers}
-            onChange={setHeaders}
-            onCancel={() => setEditMode(null)}
-            focused={true}
-            rows={8}
-          />
-        ) : (
-          <text fg="#FFFFFF">{headers || '(empty)'}</text>
-        )}
-      </box>
-
-      {/* Response */}
-      <box
-        border="single"
-        borderColor={focusedField === 'response' ? '#00FF00' : '#666666'}
-        flexGrow={1}
-        flexDirection="column"
-      >
-        <text fg="#FFFF00" bold>
-          Response {focusedField === 'response' ? '(focused)' : ''}
-        </text>
-        {response ? (
-          <>
-            <text fg="#00FF00">
-              Status: {response.status} {response.statusText} ({response.time}ms)
-            </text>
-            <text fg="#FFFFFF">{response.body.substring(0, 500)}</text>
-          </>
-        ) : (
-          <text fg="#666666">(no response yet - press Enter to send request)</text>
-        )}
-      </box>
-
-      {/* Status Bar */}
-      <box borderColor="#666666" paddingX={1}>
-        <text fg="#FFFF00">
-          {toastMessage || `Tab/↑↓: Navigate | e: Edit | Enter: Send | q: Quit`}
-        </text>
-      </box>
+      )}
     </box>
   );
 }
