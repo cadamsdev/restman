@@ -54,7 +54,8 @@ export function RequestEditor({
       return editMode ? (
         <TextAreaInput
           value={headers}
-          onChange={onCancel}
+          onChange={onHeadersChange}
+          onCancel={onCancel}
           focused={true}
           rows={8}
         />
@@ -78,8 +79,7 @@ export function RequestEditor({
         <TextAreaInput
           value={body}
           onChange={onBodyChange}
-          onCancel={onCancelange}
-          onCancel={() => {}}
+          onCancel={onCancel}
           focused={true}
           rows={8}
         />
