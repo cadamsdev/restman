@@ -172,6 +172,12 @@ export function App() {
         return;
       }
 
+      // Exit edit mode with ESC
+      if (editMode && key.name === 'escape') {
+        setEditMode(null);
+        return;
+      }
+
       // Don't handle keys when in edit mode (input components handle them)
       if (editMode) return;
 
@@ -367,6 +373,7 @@ export function App() {
         editMode={editMode === 'request'}
         activeTab={requestActiveTab}
         onTabChange={setRequestActiveTab}
+        onCancel={() => setEditMode(null)}
       />
 
       {/* Response Editor */}

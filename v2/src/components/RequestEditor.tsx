@@ -11,6 +11,7 @@ interface RequestEditorProps {
   editMode: boolean;
   activeTab: 'headers' | 'params' | 'body';
   onTabChange: (tab: 'headers' | 'params' | 'body') => void;
+  onCancel?: () => void;
 }
 
 export function RequestEditor({
@@ -23,6 +24,7 @@ export function RequestEditor({
   focused,
   editMode,
   activeTab,
+  onCancel,
 }: RequestEditorProps) {
   const borderColor = focused ? '#FF00FF' : editMode ? '#00FF00' : '#888888';
 
@@ -53,8 +55,7 @@ export function RequestEditor({
       return editMode ? (
         <TextAreaInput
           value={headers}
-          onChange={onHeadersChange}
-          onCancel={() => {}}
+          onChange={onCancel}
           focused={true}
           rows={8}
         />
@@ -66,7 +67,7 @@ export function RequestEditor({
         <TextAreaInput
           value={params}
           onChange={onParamsChange}
-          onCancel={() => {}}
+          onCancel={onCancel}
           focused={true}
           rows={8}
         />
@@ -78,6 +79,7 @@ export function RequestEditor({
         <TextAreaInput
           value={body}
           onChange={onBodyChange}
+          onCancel={onCancelange}
           onCancel={() => {}}
           focused={true}
           rows={8}
