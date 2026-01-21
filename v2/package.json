@@ -1,0 +1,25 @@
+{
+  "name": "restman-v2",
+  "module": "index.tsx",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "restman-v2": "./index.tsx"
+  },
+  "scripts": {
+    "dev": "bun run index.tsx",
+    "start": "bun run index.tsx"
+  },
+  "dependencies": {
+    "@opentui/core": "^0.1.72",
+    "@opentui/react": "^0.1.72",
+    "react": "^19.2.3"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/react": "^19.2.8"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
