@@ -1,9 +1,11 @@
 import { useCallback, useState } from 'react';
 import { useKeyboard, useTerminalDimensions } from '@opentui/react';
+import { Fieldset } from './components/Fieldset';
 
 export function App() {
   const [counter, setCounter] = useState(0);
   const [message, setMessage] = useState('Press UP to increment, DOWN to decrement, Q to quit');
+  const [focusedPanel, setFocusedPanel] = useState<'counter' | 'controls'>('counter');
   const { width, height } = useTerminalDimensions();
 
   const handleKeyboard = useCallback((key: { name: string }) => {
@@ -20,6 +22,9 @@ export function App() {
       case 'down':
       case 'j':
         setCounter((prev) => prev - 1);
+        break;
+      case 'tab':
+        setFocusedPanel((prev) => (prev === 'counter' ? 'controls' : 'counter'));
         break;
     }
   }, []);
@@ -47,28 +52,46 @@ export function App() {
 
       <box height={2} />
 
-      <text fg="#FFFF00" fontSize={2}>
-        Counter: {counter}
-      </text>
+      <Fieldset
+        title="Counter ⚡"
+        focused={focusedPanel === 'counter'}
+        borderStyle="round"
+        paddingX={2}
+        paddingY={1}
+        width={50}
+      >
+        <box flexDirection="column" alignItems="center" gap={1}>
+          <text fg="#FFFF00" fontSize={2}>
+            Current Value: {counter}
+          </text>
+          <text fg="#FFFFFF">{message}</text>
+        </box>
+      </Fieldset>
 
       <box height={1} />
 
-      <text fg="#FFFFFF">{message}</text>
+      <Fieldset
+        title="Controls ⌨️"
+        focused={focusedPanel === 'controls'}
+        borderStyle="single"
+        paddingX={2}
+        paddingY={1}
+        width={50}
+      >
+        <box flexDirection="column" gap={0}>
+          <text fg="#00AAFF">Keyboard Shortcuts:</text>
+          <text fg="#CCCCCC">  ↑/k   - Increment counter</text>
+          <text fg="#CCCCCC">  ↓/j   - Decrement counter</text>
+          <text fg="#CCCCCC">  Tab   - Switch focus</text>
+          <text fg="#CCCCCC">  q     - Quit application</text>
+        </box>
+      </Fieldset>
 
       <box height={1} />
 
       <text fg="#888888" fontSize={0.8}>
         Terminal size: {width}x{height}
       </text>
-
-      <box height={1} />
-
-      <box flexDirection="column" gap={0}>
-        <text fg="#00AAFF">Controls:</text>
-        <text fg="#CCCCCC">  ↑/k - Increment</text>
-        <text fg="#CCCCCC">  ↓/j - Decrement</text>
-        <text fg="#CCCCCC">  q   - Quit</text>
-      </box>
     </box>
   );
 }
