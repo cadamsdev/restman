@@ -55,7 +55,6 @@ export function App() {
       <Fieldset
         title="Counter ⚡"
         focused={focusedPanel === 'counter'}
-        borderStyle="round"
         paddingX={2}
         paddingY={1}
         width={50}
@@ -73,7 +72,6 @@ export function App() {
       <Fieldset
         title="Controls ⌨️"
         focused={focusedPanel === 'controls'}
-        borderStyle="single"
         paddingX={2}
         paddingY={1}
         width={50}
