@@ -36,7 +36,7 @@ export function MethodSelector({ value, focused, editMode }: MethodSelectorProps
         paddingRight: 1,
       }}
     >
-      <text fg={focused ? getMethodColor(value) : '#888888'} bold={focused}>
+      <text fg={focused ? getMethodColor(value) : '#888888'}>
         ▸ {value}
       </text>
     </box>

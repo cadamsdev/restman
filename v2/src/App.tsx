@@ -2,7 +2,6 @@ import { useCallback, useState } from 'react';
 import { useKeyboard, useTerminalDimensions } from '@opentui/react';
 import { HTTPClient } from './http-client';
 import type { RequestOptions, Response } from './http-client';
-import { substituteVariables, substituteVariablesInHeaders } from './variable-substitution';
 import { URLInput } from './components/URLInput';
 import { MethodSelector } from './components/MethodSelector';
 import { RequestEditor } from './components/RequestEditor';
@@ -25,7 +24,7 @@ export function App() {
   const [params, setParams] = useState<string>('');
   const [body, setBody] = useState<string>('');
   const [response, setResponse] = useState<Response | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [_loading, setLoading] = useState<boolean>(false);
   const [focusedField, setFocusedField] = useState<FocusField>('url');
   const [editMode, setEditMode] = useState<FocusField | null>(null);
   const [toastMessage, setToastMessage] = useState<string>('');

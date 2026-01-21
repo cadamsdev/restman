@@ -34,12 +34,11 @@ export function RequestEditor({
     ];
 
     return (
-      <box flexDirection="row" gap={1}>
+      <box style={{ flexDirection: 'row', gap: 1 }}>
         {tabs.map((tab) => (
           <text
             key={tab.name}
             fg={activeTab === tab.name ? tab.color : '#666666'}
-            bold={activeTab === tab.name}
           >
             {tab.label}
             {activeTab === tab.name ? ' ◀' : ''}
@@ -103,7 +102,7 @@ export function RequestEditor({
     >
       {renderTabHeader()}
       {editMode && (
-        <text fg="#888888" dimColor>
+        <text fg="#888888">
           (Press ESC to exit edit mode)
         </text>
       )}

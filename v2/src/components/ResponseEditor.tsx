@@ -24,12 +24,11 @@ export function ResponseEditor({
     ];
 
     return (
-      <box flexDirection="row" gap={1}>
+      <box style={{ flexDirection: 'row', gap: 1 }}>
         {tabs.map((tab) => (
           <text
             key={tab.name}
             fg={activeTab === tab.name ? tab.color : '#666666'}
-            bold={activeTab === tab.name}
           >
             {tab.label}
             {activeTab === tab.name ? ' ◀' : ''}
@@ -48,7 +47,7 @@ export function ResponseEditor({
 
     if (activeTab === 'body') {
       return (
-        <box flexDirection="column">
+        <box style={{ flexDirection: 'column' }}>
           <text fg={response.status >= 200 && response.status < 300 ? '#00FF00' : '#FF0000'}>
             Status: {response.status} {response.statusText} ({response.time}ms)
           </text>

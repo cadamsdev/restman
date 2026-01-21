@@ -64,7 +64,7 @@ export function TextAreaInput({
   const cursor = focused && cursorVisible ? '█' : '';
 
   return (
-    <box flexDirection="column">
+    <box style={{ flexDirection: 'column' }}>
       {displayLines.map((line, i) => (
         <text key={i} fg={focused ? '#00FF00' : '#FFFFFF'}>
           {line}
