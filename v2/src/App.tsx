@@ -174,6 +174,11 @@ export function App() {
         return;
       }
 
+      // Method selector modal handles its own keyboard input
+      if (showMethodSelectorModal) {
+        return;
+      }
+
       // Exit edit mode with ESC
       if (editMode && key.name === 'escape') {
         setEditMode(null);
