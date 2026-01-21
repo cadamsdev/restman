@@ -79,7 +79,7 @@ export function EnvironmentSelectorModal({
           }}
         >
           <box style={{ justifyContent: 'center' }}>
-            <text fg="#FFFF00">🌍 No Environments Available</text>
+            <text fg="#FFFF00">No Environments Available</text>
           </box>
 
           <box style={{ marginTop: 1, paddingLeft: 2, paddingRight: 2, flexDirection: 'row', gap: 1 }}>
@@ -117,6 +117,7 @@ export function EnvironmentSelectorModal({
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
+        zIndex: 1000,
       }}
     >
       {/* Modal content */}
@@ -134,7 +135,7 @@ export function EnvironmentSelectorModal({
         }}
       >
         <box style={{ justifyContent: 'center' }}>
-          <text fg="#00FFFF">🌍 Select Environment</text>
+          <text fg="#00FFFF">Select Environment</text>
         </box>
 
         <box style={{ marginTop: 1, flexDirection: 'column', paddingLeft: 2, paddingRight: 2 }}>

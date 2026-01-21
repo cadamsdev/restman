@@ -18,9 +18,9 @@ export function ResponseEditor({
 
   const renderTabHeader = () => {
     const tabs = [
-      { name: 'body', label: '📄 Body', color: '#00FF00' },
-      { name: 'headers', label: '📋 Headers', color: '#FFFF00' },
-      { name: 'cookies', label: '🍪 Cookies', color: '#FF8800' },
+      { name: 'body', label: 'Body', color: '#00FF00' },
+      { name: 'headers', label: 'Headers', color: '#FFFF00' },
+      { name: 'cookies', label: 'Cookies', color: '#FF8800' },
     ];
 
     return (
@@ -31,7 +31,6 @@ export function ResponseEditor({
             fg={activeTab === tab.name ? tab.color : '#666666'}
           >
             {tab.label}
-            {activeTab === tab.name ? ' ◀' : ''}
           </text>
         ))}
       </box>
@@ -69,7 +68,7 @@ export function ResponseEditor({
 
   return (
     <box
-      title="📥 Response"
+      title="Response"
       style={{
         flexGrow: 1,
         flexDirection: 'column',

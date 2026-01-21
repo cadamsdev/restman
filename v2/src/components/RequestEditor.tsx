@@ -30,9 +30,9 @@ export function RequestEditor({
 
   const renderTabHeader = () => {
     const tabs = [
-      { name: 'headers', label: '📋 Headers', color: '#FFFF00' },
-      { name: 'params', label: '🔗 Params', color: '#00FFFF' },
-      { name: 'body', label: '📝 Body', color: '#00FF00' },
+      { name: 'headers', label: 'Headers', color: '#FFFF00' },
+      { name: 'params', label: 'Params', color: '#00FFFF' },
+      { name: 'body', label: 'Body', color: '#00FF00' },
     ];
 
     return (
@@ -43,7 +43,6 @@ export function RequestEditor({
             fg={activeTab === tab.name ? tab.color : '#666666'}
           >
             {tab.label}
-            {activeTab === tab.name ? ' ◀' : ''}
           </text>
         ))}
       </box>
@@ -92,7 +91,7 @@ export function RequestEditor({
 
   return (
     <box
-      title="📤 Request"
+      title="Request"
       style={{
         flexGrow: 1,
         flexDirection: 'column',

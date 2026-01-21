@@ -343,7 +343,7 @@ export function App() {
       }}
     >
       {/* Header */}
-      <text fg="#FF00FF">🚀 RestMan v2.0.0</text>
+      <text fg="#FF00FF">RestMan v2.0.0</text>
 
       {/* Environment Selector */}
       <EnvironmentSelector

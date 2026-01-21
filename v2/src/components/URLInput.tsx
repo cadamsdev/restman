@@ -13,7 +13,7 @@ export function URLInput({ value, onChange, focused, editMode, onSubmit }: URLIn
 
   return (
     <box
-      title="🌐 URL"
+      title="URL"
       style={{
         flexGrow: 1,
         border: true,

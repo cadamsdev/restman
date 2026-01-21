@@ -55,6 +55,7 @@ export function ExitModal({ onConfirm, onCancel }: ExitModalProps) {
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
+        zIndex: 1000,
       }}
     >
       {/* Modal content */}
@@ -72,7 +73,7 @@ export function ExitModal({ onConfirm, onCancel }: ExitModalProps) {
         }}
       >
         <box style={{ justifyContent: 'center' }}>
-          <text fg="#FF0000">🚻 Exit RestMan?</text>
+          <text fg="#FF0000">Exit RestMan?</text>
         </box>
         <box style={{ marginTop: 1, justifyContent: 'center' }}>
           <text fg="#888888">Are you sure you want to quit?</text>

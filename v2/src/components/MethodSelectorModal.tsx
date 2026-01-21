@@ -80,6 +80,7 @@ export function MethodSelectorModal({
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
+        zIndex: 1000,
       }}
     >
       {/* Modal content */}
@@ -97,7 +98,7 @@ export function MethodSelectorModal({
         }}
       >
         <box style={{ justifyContent: 'center' }}>
-          <text fg="#FF00FF">⚡ Select HTTP Method</text>
+          <text fg="#FF00FF">Select HTTP Method</text>
         </box>
 
         <box style={{ marginTop: 1, flexDirection: 'column', paddingLeft: 2, paddingRight: 2 }}>

@@ -27,7 +27,7 @@ export function MethodSelector({ value, focused, editMode }: MethodSelectorProps
 
   return (
     <box
-      title="⚡ Method"
+      title="Method"
       style={{
         width: 20,
         border: true,

@@ -22,7 +22,7 @@ export function EnvironmentSelector({
 
   return (
     <box
-      title="🌍 Environment"
+      title="Environment"
       style={{
         width: '100%',
         border: true,
