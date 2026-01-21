@@ -46,27 +46,24 @@ export function ResponseEditor({
 
     if (activeTab === 'body') {
       return (
-        <box style={{ flexDirection: 'column' }}>
+        <box style={{ flexDirection: 'column', flexGrow: 1 }}>
           <text fg={response.status >= 200 && response.status < 300 ? '#99AA77' : '#BB6655'}>
             Status: {response.status} {response.statusText} ({response.time}ms)
           </text>
-          <text fg="#999999">{response.body.substring(0, 1000)}</text>
-          {response.body.length > 1000 && (
-            <text fg="#666666">... (truncated, press Space for full view)</text>
-          )}
+          <scrollbox style={{ flexGrow: 1 }}>
+            <text fg="#999999">{response.body}</text>
+          </scrollbox>
         </box>
       );
     } else if (activeTab === 'headers') {
       const headerLines = Object.entries(response.headers)
         .map(([key, value]) => `${key}: ${value}`)
         .join('\n');
-      const truncatedHeaders = headerLines.substring(0, 1000);
       return (
-        <box style={{ flexDirection: 'column' }}>
-          <text fg="#999999">{truncatedHeaders || '(no headers)'}</text>
-          {headerLines.length > 1000 && (
-            <text fg="#666666">... (truncated, press Space for full view)</text>
-          )}
+        <box style={{ flexDirection: 'column', flexGrow: 1 }}>
+          <scrollbox style={{ flexGrow: 1 }}>
+            <text fg="#999999">{headerLines || '(no headers)'}</text>
+          </scrollbox>
         </box>
       );
     } else {
