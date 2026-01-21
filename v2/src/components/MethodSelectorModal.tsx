@@ -56,15 +56,6 @@ export function MethodSelectorModal({
         setSelectedIndex((prev) => (prev < methods.length - 1 ? prev + 1 : 0));
         return;
       }
-
-      // Quick selection by first letter
-      if (key.sequence) {
-        const upperInput = key.sequence.toUpperCase();
-        const methodIndex = methods.findIndex((m) => m.startsWith(upperInput));
-        if (methodIndex !== -1) {
-          setSelectedIndex(methodIndex);
-        }
-      }
     },
     [methods, selectedIndex, onSelect, onCancel],
   );
@@ -120,16 +111,9 @@ export function MethodSelectorModal({
             borderColor: '#443322',
             paddingLeft: 1,
             paddingRight: 1,
-            flexDirection: 'row',
-            gap: 1,
           }}
         >
-          <text fg="#BB7733">↕</text>
-          <text fg="#666666">Navigate │</text>
-          <text fg="#99AA77">Enter</text>
-          <text fg="#666666">Select │</text>
-          <text fg="#CC8844">ESC</text>
-          <text fg="#666666">Cancel</text>
+          <text fg="#666666">↕: Navigate | Enter: Select | ESC: Cancel</text>
         </box>
       </box>
     </box>
