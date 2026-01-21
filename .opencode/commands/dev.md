@@ -3,4 +3,4 @@ description: TUI Development
 agent: build
 ---
 
-Use the opentui skill.
+Use the opentui-react skill.
