@@ -60,7 +60,15 @@ export function ResponseEditor({
       const headerLines = Object.entries(response.headers)
         .map(([key, value]) => `${key}: ${value}`)
         .join('\n');
-      return <text fg="#999999">{headerLines || '(no headers)'}</text>;
+      const truncatedHeaders = headerLines.substring(0, 1000);
+      return (
+        <box style={{ flexDirection: 'column' }}>
+          <text fg="#999999">{truncatedHeaders || '(no headers)'}</text>
+          {headerLines.length > 1000 && (
+            <text fg="#666666">... (truncated, press Space for full view)</text>
+          )}
+        </box>
+      );
     } else {
       return <text fg="#666666">(cookies not yet implemented)</text>;
     }

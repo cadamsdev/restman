@@ -11,6 +11,7 @@
 - **Enter** - Send request (in readonly mode)
 - **Ctrl+S** - Send request (works in both modes)
 - **e** - Enter edit mode for focused field
+- **Space** - Expand response panel (when focused on response)
 - **ESC** - Exit edit mode / close panels / quit
 
 ## Features

@@ -27,6 +27,7 @@ import { EnvironmentEditorModal } from './components/EnvironmentEditorModal';
 import { SaveModal } from './components/SaveModal';
 import { HistoryPanel } from './components/HistoryPanel';
 import { MethodSelectorModal } from './components/MethodSelectorModal';
+import { ResponseViewerModal } from './components/ResponseViewerModal';
 
 type FocusField = 'method' | 'url' | 'request' | 'response' | 'environment';
 
@@ -55,6 +56,7 @@ export function App() {
   const [showMethodSelectorModal, setShowMethodSelectorModal] = useState<boolean>(false);
   const [showSaveModal, setShowSaveModal] = useState<boolean>(false);
   const [showHistoryPanel, setShowHistoryPanel] = useState<boolean>(false);
+  const [showResponseViewerModal, setShowResponseViewerModal] = useState<boolean>(false);
   const [savedRequests, setSavedRequests] = useState<SavedRequest[]>([]);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [requestActiveTab, setRequestActiveTab] = useState<'headers' | 'params' | 'body'>(
@@ -246,6 +248,11 @@ export function App() {
         return;
       }
 
+      // Response viewer modal handles its own keyboard input
+      if (showResponseViewerModal) {
+        return;
+      }
+
       // Exit edit mode with ESC
       if (editMode && key.name === 'escape') {
         setEditMode(null);
@@ -254,6 +261,12 @@ export function App() {
 
       // Don't handle keys when in edit mode (input components handle them)
       if (editMode) return;
+
+      // Open response viewer modal with spacebar when focused on response
+      if (key.name === 'space' && focusedField === 'response' && response) {
+        setShowResponseViewerModal(true);
+        return;
+      }
 
       // Show exit modal
       if (key.name === 'q' || key.name === 'escape') {
@@ -623,6 +636,15 @@ export function App() {
             setTimeout(() => setToastMessage(''), 3000);
           }}
           onClose={() => setShowHistoryPanel(false)}
+        />
+      )}
+
+      {/* Response Viewer Modal */}
+      {showResponseViewerModal && response && (
+        <ResponseViewerModal
+          response={response}
+          activeTab={responseActiveTab}
+          onClose={() => setShowResponseViewerModal(false)}
         />
       )}
 
