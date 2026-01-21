@@ -27,7 +27,7 @@ export function Instructions({ editMode }: InstructionsProps) {
         paddingRight: 1,
       }}
     >
-      <text fg="#00FFFF">
+      <text fg="#888888">
         Tab/↑↓: Navigate | e: Edit | v: Environments | s: Save | h: History | Enter: Send | 1-4: Quick Nav | q: Quit
       </text>
     </box>
