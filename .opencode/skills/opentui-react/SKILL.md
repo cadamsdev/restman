@@ -15,7 +15,7 @@ metadata:
 - Help with styling, layout, and input handling in terminal UIs
 - Assist with React DevTools integration for debugging
 
-## When to use me
+## When to use
 
 Use this skill when building terminal user interfaces with React in OpenTUI applications. I understand components, hooks, styling, and common TUI patterns.
 
