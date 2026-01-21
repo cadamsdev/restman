@@ -13,7 +13,7 @@ import {
   type EnvironmentsConfig,
 } from './environment-storage';
 import { loadSavedRequests, saveSavedRequests, type SavedRequest } from './saved-requests-storage';
-import { substituteVariables, substituteVariablesInHeaders } from './variable-substitution';
+import { loadHistory, saveHistory, type HistoryEntry } from './history-storage';
 import { URLInput } from './components/URLInput';
 import { MethodSelector } from './components/MethodSelector';
 import { RequestEditor } from './components/RequestEditor';
@@ -25,6 +25,7 @@ import { EnvironmentSelectorModal } from './components/EnvironmentSelectorModal'
 import { EnvironmentsPanel } from './components/EnvironmentsPanel';
 import { EnvironmentEditorModal } from './components/EnvironmentEditorModal';
 import { SaveModal } from './components/SaveModal';
+import { HistoryPanel } from './components/HistoryPanel';
 import { MethodSelectorModal } from './components/MethodSelectorModal';
 
 type FocusField = 'method' | 'url' | 'request' | 'response' | 'environment';
@@ -53,7 +54,9 @@ export function App() {
   const [editingEnvironmentId, setEditingEnvironmentId] = useState<number | null>(null);
   const [showMethodSelectorModal, setShowMethodSelectorModal] = useState<boolean>(false);
   const [showSaveModal, setShowSaveModal] = useState<boolean>(false);
+  const [showHistoryPanel, setShowHistoryPanel] = useState<boolean>(false);
   const [savedRequests, setSavedRequests] = useState<SavedRequest[]>([]);
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [requestActiveTab, setRequestActiveTab] = useState<'headers' | 'params' | 'body'>(
     'headers',
   );
@@ -83,6 +86,15 @@ export function App() {
       setSavedRequests(loaded);
     };
     void initSavedRequests();
+  }, []);
+
+  // Load history from disk on startup
+  useEffect(() => {
+    const initHistory = async () => {
+      const loaded = await loadHistory();
+      setHistory(loaded);
+    };
+    void initHistory();
   }, []);
 
   // Save environments to disk whenever they change
@@ -175,6 +187,19 @@ export function App() {
       setResponse(result);
       setToastMessage(`${result.status} ${result.statusText} (${result.time}ms)`);
       setTimeout(() => setToastMessage(''), 3000);
+
+      // Add to history
+      const historyEntry: HistoryEntry = {
+        id: Date.now(),
+        timestamp: new Date(),
+        request: requestOptions,
+        status: result.status,
+        statusText: result.statusText,
+        time: result.time,
+      };
+      const updatedHistory = [...history, historyEntry];
+      setHistory(updatedHistory);
+      void saveHistory(updatedHistory);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       setToastMessage(errorMessage);
@@ -208,6 +233,11 @@ export function App() {
 
       // Save modal handles its own keyboard input
       if (showSaveModal) {
+        return;
+      }
+
+      // History panel handles its own keyboard input
+      if (showHistoryPanel) {
         return;
       }
 
@@ -252,6 +282,12 @@ export function App() {
       // Open save modal
       if (key.sequence === 's') {
         setShowSaveModal(true);
+        return;
+      }
+
+      // Open history panel
+      if (key.sequence === 'h') {
+        setShowHistoryPanel(true);
         return;
       }
 
@@ -566,6 +602,27 @@ export function App() {
             setTimeout(() => setToastMessage(''), 3000);
           }}
           onCancel={() => setShowSaveModal(false)}
+        />
+      )}
+
+      {/* History Panel */}
+      {showHistoryPanel && (
+        <HistoryPanel
+          history={history}
+          onSelectRequest={(request) => {
+            setMethod(request.method);
+            setUrl(request.url);
+            setHeaders(
+              Object.entries(request.headers)
+                .map(([key, value]) => `${key}: ${value}`)
+                .join('\n'),
+            );
+            setBody(request.body || '');
+            setShowHistoryPanel(false);
+            setToastMessage('Loaded from history');
+            setTimeout(() => setToastMessage(''), 3000);
+          }}
+          onClose={() => setShowHistoryPanel(false)}
         />
       )}
 
