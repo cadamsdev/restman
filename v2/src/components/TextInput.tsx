@@ -65,7 +65,7 @@ export function TextInput({
   const cursor = focused && cursorVisible ? '█' : '';
 
   return (
-    <text fg={focused ? '#00FF00' : '#FFFFFF'}>
+    <text fg={focused ? '#CC8844' : '#FFFFFF'}>
       {displayValue}
       {cursor}
     </text>
