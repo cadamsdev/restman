@@ -8,6 +8,7 @@ import { RequestEditor } from './components/RequestEditor';
 import { ResponseEditor } from './components/ResponseEditor';
 import { EnvironmentSelector } from './components/EnvironmentSelector';
 import { Instructions } from './components/Instructions';
+import { ExitModal } from './components/ExitModal';
 
 type FocusField = 'method' | 'url' | 'request' | 'response' | 'environment';
 
@@ -28,6 +29,7 @@ export function App() {
   const [focusedField, setFocusedField] = useState<FocusField>('url');
   const [editMode, setEditMode] = useState<FocusField | null>(null);
   const [toastMessage, setToastMessage] = useState<string>('');
+  const [showExitModal, setShowExitModal] = useState<boolean>(false);
   const [requestActiveTab, setRequestActiveTab] = useState<'headers' | 'params' | 'body'>(
     'headers',
   );
@@ -125,13 +127,18 @@ export function App() {
   };
 
   const handleKeyboard = useCallback(
-    (key: { name: string; ctrl?: boolean; shift?: boolean; sequence?: string }) => {
+    (key: { name: string; ctrl?: boolean; shift?: boolean; sequence?: string }) => {      
+      // Exit modal handles its own keyboard input
+      if (showExitModal) {
+        return;
+      }
+
       // Don't handle keys when in edit mode (input components handle them)
       if (editMode) return;
 
-      // Quit
+      // Show exit modal
       if (key.name === 'q' || key.name === 'escape') {
-        process.exit(0);
+        setShowExitModal(true);
         return;
       }
 
@@ -261,7 +268,7 @@ export function App() {
         return;
       }
     },
-    [editMode, focusedField, fields],
+    [editMode, focusedField, fields, showExitModal],
   );
 
   useKeyboard(handleKeyboard);
@@ -348,6 +355,14 @@ export function App() {
         >
           <text fg="#FFFF00">{toastMessage}</text>
         </box>
+      )}
+
+      {/* Exit Modal */}
+      {showExitModal && (
+        <ExitModal
+          onConfirm={() => process.exit(0)}
+          onCancel={() => setShowExitModal(false)}
+        />
       )}
     </box>
   );
