@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useKeyboard } from '@opentui/react';
+import { colors } from '../tokens';
 
 interface TextInputProps {
   value: string;
@@ -65,7 +66,7 @@ export function TextInput({
   const cursor = focused && cursorVisible ? '█' : '';
 
   return (
-    <text fg={focused ? '#CC8844' : '#FFFFFF'}>
+    <text fg={colors.textActive}>
       {displayValue}
       {cursor}
     </text>
