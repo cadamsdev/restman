@@ -402,6 +402,51 @@ export function App() {
         return;
       }
 
+      // Left/Right arrow keys for tab navigation within request and response panels
+      if (key.name === 'left') {
+        if (focusedField === 'request') {
+          if (requestActiveTab === 'body') {
+            setRequestActiveTab('params');
+          } else if (requestActiveTab === 'params') {
+            setRequestActiveTab('headers');
+          } else {
+            setRequestActiveTab('body');
+          }
+          return;
+        } else if (focusedField === 'response') {
+          if (responseActiveTab === 'cookies') {
+            setResponseActiveTab('headers');
+          } else if (responseActiveTab === 'headers') {
+            setResponseActiveTab('body');
+          } else {
+            setResponseActiveTab('cookies');
+          }
+          return;
+        }
+      }
+
+      if (key.name === 'right') {
+        if (focusedField === 'request') {
+          if (requestActiveTab === 'headers') {
+            setRequestActiveTab('params');
+          } else if (requestActiveTab === 'params') {
+            setRequestActiveTab('body');
+          } else {
+            setRequestActiveTab('headers');
+          }
+          return;
+        } else if (focusedField === 'response') {
+          if (responseActiveTab === 'body') {
+            setResponseActiveTab('headers');
+          } else if (responseActiveTab === 'headers') {
+            setResponseActiveTab('cookies');
+          } else {
+            setResponseActiveTab('body');
+          }
+          return;
+        }
+      }
+
       // Quick navigation
       if (key.sequence === '0') {
         setFocusedField('environment');
