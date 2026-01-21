@@ -6,6 +6,9 @@ import {
   loadEnvironments,
   saveEnvironments,
   setActiveEnvironment,
+  addEnvironment,
+  updateEnvironment,
+  deleteEnvironment,
   getActiveEnvironment,
   type EnvironmentsConfig,
 } from './environment-storage';
@@ -17,6 +20,7 @@ import { EnvironmentSelector } from './components/EnvironmentSelector';
 import { Instructions } from './components/Instructions';
 import { ExitModal } from './components/ExitModal';
 import { EnvironmentSelectorModal } from './components/EnvironmentSelectorModal';
+import { EnvironmentsPanel } from './components/EnvironmentsPanel';
 import { MethodSelectorModal } from './components/MethodSelectorModal';
 
 type FocusField = 'method' | 'url' | 'request' | 'response' | 'environment';
@@ -40,6 +44,7 @@ export function App() {
   const [toastMessage, setToastMessage] = useState<string>('');
   const [showExitModal, setShowExitModal] = useState<boolean>(false);
   const [showEnvironmentSelectorModal, setShowEnvironmentSelectorModal] = useState<boolean>(false);
+  const [showEnvironmentsPanel, setShowEnvironmentsPanel] = useState<boolean>(false);
   const [showMethodSelectorModal, setShowMethodSelectorModal] = useState<boolean>(false);
   const [requestActiveTab, setRequestActiveTab] = useState<'headers' | 'params' | 'body'>(
     'headers',
@@ -174,6 +179,11 @@ export function App() {
         return;
       }
 
+      // Environments panel handles its own keyboard input
+      if (showEnvironmentsPanel) {
+        return;
+      }
+
       // Method selector modal handles its own keyboard input
       if (showMethodSelectorModal) {
         return;
@@ -203,6 +213,12 @@ export function App() {
       // Send request
       if (key.name === 'return') {
         void sendRequest();
+        return;
+      }
+
+      // Open environments panel
+      if (key.sequence === 'v') {
+        setShowEnvironmentsPanel(true);
         return;
       }
 
@@ -438,6 +454,32 @@ export function App() {
             setShowEnvironmentSelectorModal(false);
           }}
           onCancel={() => setShowEnvironmentSelectorModal(false)}
+        />
+      )}
+
+      {/* Environments Panel */}
+      {showEnvironmentsPanel && (
+        <EnvironmentsPanel
+          environments={environmentsConfig.environments}
+          activeEnvironmentId={environmentsConfig.activeEnvironmentId}
+          onSelectEnvironment={(id) => {
+            setEnvironmentsConfig(setActiveEnvironment(environmentsConfig, id));
+            setShowEnvironmentsPanel(false);
+          }}
+          onAddEnvironment={() => {
+            const newId = Date.now();
+            const newEnv = { id: newId, name: 'New Environment', variables: {} };
+            setEnvironmentsConfig(addEnvironment(environmentsConfig, newEnv));
+            // TODO: Open environment editor modal
+          }}
+          onEditEnvironment={(id) => {
+            // TODO: Open environment editor modal with env id
+            console.log('Edit environment:', id);
+          }}
+          onDeleteEnvironment={(id) => {
+            setEnvironmentsConfig(deleteEnvironment(environmentsConfig, id));
+          }}
+          onClose={() => setShowEnvironmentsPanel(false)}
         />
       )}
 
