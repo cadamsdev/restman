@@ -24,18 +24,24 @@ export function ResponseViewerModal({ response, activeTab, onClose }: ResponseVi
   const renderContent = () => {
     if (activeTab === 'body') {
       return (
-        <box style={{ flexDirection: 'column', gap: 1 }}>
+        <box style={{ flexDirection: 'column', flexGrow: 1 }}>
           <text fg={response.status >= 200 && response.status < 300 ? '#99AA77' : '#BB6655'}>
             Status: {response.status} {response.statusText} ({response.time}ms)
           </text>
-          <text fg="#999999">{response.body}</text>
+          <scrollbox style={{ flexGrow: 1 }}>
+            <text fg="#999999">{response.body}</text>
+          </scrollbox>
         </box>
       );
     } else if (activeTab === 'headers') {
       const headerLines = Object.entries(response.headers)
         .map(([key, value]) => `${key}: ${value}`)
         .join('\n');
-      return <text fg="#999999">{headerLines || '(no headers)'}</text>;
+      return (
+        <scrollbox style={{ flexGrow: 1 }}>
+          <text fg="#999999">{headerLines || '(no headers)'}</text>
+        </scrollbox>
+      );
     } else {
       return <text fg="#666666">(cookies not yet implemented)</text>;
     }
