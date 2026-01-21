@@ -236,9 +236,3 @@ class CustomButton extends BoxRenderable {
 extend({ customButton: CustomButton })
 // Then use: <customButton label="Click me!" />
 ```
-
-## When to use me
-
-Use this when building terminal user interfaces with React in OpenTUI applications. I understand components, hooks, styling, and common TUI patterns.
-
-Ask clarifying questions if the UI layout or interaction requirements are unclear.
