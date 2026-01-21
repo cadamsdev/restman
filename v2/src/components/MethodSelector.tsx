@@ -9,21 +9,21 @@ export function MethodSelector({ value, focused, editMode }: MethodSelectorProps
   const getMethodColor = (method: string): string => {
     switch (method) {
       case 'GET':
-        return '#0088FF';
+        return '#8899AA';
       case 'POST':
-        return '#00FF00';
+        return '#99AA77';
       case 'PUT':
-        return '#FFFF00';
+        return '#CC9944';
       case 'PATCH':
-        return '#00FFFF';
+        return '#9988BB';
       case 'DELETE':
-        return '#FF0000';
+        return '#BB6655';
       default:
-        return '#FFFFFF';
+        return '#999999';
     }
   };
 
-  const borderColor = focused ? '#FF00FF' : editMode ? '#00FF00' : '#888888';
+  const borderColor = focused ? '#CC8844' : editMode ? '#BB7733' : '#555555';
 
   return (
     <box
@@ -36,7 +36,7 @@ export function MethodSelector({ value, focused, editMode }: MethodSelectorProps
         paddingRight: 1,
       }}
     >
-      <text fg={focused ? getMethodColor(value) : '#888888'}>
+      <text fg={focused ? getMethodColor(value) : '#666666'}>
         ▸ {value}
       </text>
     </box>

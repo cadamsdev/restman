@@ -68,24 +68,24 @@ export function EnvironmentSelectorModal({
         <box
           style={{
             border: 'double',
-            borderColor: '#FFFF00',
+            borderColor: '#665544',
             paddingLeft: 3,
             paddingRight: 3,
             paddingTop: 1,
             paddingBottom: 1,
             flexDirection: 'column',
             width: 50,
-            backgroundColor: '#000000',
+            backgroundColor: '#1a1a1a',
           }}
         >
           <box style={{ justifyContent: 'center' }}>
-            <text fg="#FFFF00">No Environments Available</text>
+            <text fg="#CC8844">No Environments Available</text>
           </box>
 
           <box style={{ marginTop: 1, paddingLeft: 2, paddingRight: 2, flexDirection: 'row', gap: 1 }}>
-            <text fg="#888888">No environments found. Press</text>
-            <text fg="#00FFFF">v</text>
-            <text fg="#888888">to manage environments.</text>
+            <text fg="#666666">No environments found. Press</text>
+            <text fg="#BB7733">v</text>
+            <text fg="#666666">to manage environments.</text>
           </box>
 
           <box
@@ -93,15 +93,15 @@ export function EnvironmentSelectorModal({
               marginTop: 1,
               justifyContent: 'center',
               border: true,
-              borderColor: '#888888',
+              borderColor: '#443322',
               paddingLeft: 1,
               paddingRight: 1,
               flexDirection: 'row',
               gap: 1,
             }}
           >
-            <text fg="#FFFF00">ESC</text>
-            <text fg="#888888">Close</text>
+            <text fg="#CC8844">ESC</text>
+            <text fg="#666666">Close</text>
           </box>
         </box>
       </box>
@@ -124,24 +124,24 @@ export function EnvironmentSelectorModal({
       <box
         style={{
           border: 'double',
-          borderColor: '#00FFFF',
+          borderColor: '#665544',
           paddingLeft: 3,
           paddingRight: 3,
           paddingTop: 1,
           paddingBottom: 1,
           flexDirection: 'column',
           width: 50,
-          backgroundColor: '#000000',
+          backgroundColor: '#1a1a1a',
         }}
       >
         <box style={{ justifyContent: 'center' }}>
-          <text fg="#00FFFF">Select Environment</text>
+          <text fg="#CC8844">Select Environment</text>
         </box>
 
         <box style={{ marginTop: 1, flexDirection: 'column', paddingLeft: 2, paddingRight: 2 }}>
           {environments.map((env, index) => (
             <box key={env.id}>
-              <text fg={index === selectedIndex ? '#00FFFF' : '#888888'}>
+              <text fg={index === selectedIndex ? '#BB7733' : '#666666'}>
                 {index === selectedIndex ? `▸ ${env.name}` : `  ${env.name}`}
               </text>
             </box>
@@ -153,19 +153,19 @@ export function EnvironmentSelectorModal({
             marginTop: 1,
             justifyContent: 'center',
             border: true,
-            borderColor: '#888888',
+            borderColor: '#443322',
             paddingLeft: 1,
             paddingRight: 1,
             flexDirection: 'row',
             gap: 1,
           }}
         >
-          <text fg="#00FFFF">↕</text>
-          <text fg="#888888">Navigate │</text>
-          <text fg="#00FF00">Enter</text>
-          <text fg="#888888">Select │</text>
-          <text fg="#FFFF00">ESC</text>
-          <text fg="#888888">Cancel</text>
+          <text fg="#BB7733">↕</text>
+          <text fg="#666666">Navigate │</text>
+          <text fg="#99AA77">Enter</text>
+          <text fg="#666666">Select │</text>
+          <text fg="#CC8844">ESC</text>
+          <text fg="#666666">Cancel</text>
         </box>
       </box>
     </box>

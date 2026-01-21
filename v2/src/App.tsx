@@ -343,7 +343,7 @@ export function App() {
       }}
     >
       {/* Header */}
-      <text fg="#FF00FF">RestMan v2.0.0</text>
+      <text fg="#CC8844">RestMan v2.0.0</text>
 
       {/* Environment Selector */}
       <EnvironmentSelector
@@ -406,13 +406,13 @@ export function App() {
             left: 2,
             right: 2,
             border: true,
-            borderColor: '#FFFF00',
+            borderColor: '#BB7733',
             paddingLeft: 2,
             paddingRight: 2,
-            backgroundColor: '#000000',
+            backgroundColor: '#1a1a1a',
           }}
         >
-          <text fg="#FFFF00">{toastMessage}</text>
+          <text fg="#CC8844">{toastMessage}</text>
         </box>
       )}
 

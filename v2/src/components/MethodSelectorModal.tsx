@@ -18,17 +18,17 @@ export function MethodSelectorModal({
   const getMethodColor = (method: string): string => {
     switch (method) {
       case 'GET':
-        return '#0088FF';
+        return '#8899AA';
       case 'POST':
-        return '#00FF00';
+        return '#99AA77';
       case 'PUT':
-        return '#FFFF00';
+        return '#CC9944';
       case 'PATCH':
-        return '#00FFFF';
+        return '#9988BB';
       case 'DELETE':
-        return '#FF0000';
+        return '#BB6655';
       default:
-        return '#FFFFFF';
+        return '#999999';
     }
   };
 
@@ -87,25 +87,25 @@ export function MethodSelectorModal({
       <box
         style={{
           border: 'double',
-          borderColor: '#FF00FF',
+          borderColor: '#665544',
           paddingLeft: 3,
           paddingRight: 3,
           paddingTop: 1,
           paddingBottom: 1,
           flexDirection: 'column',
           width: 40,
-          backgroundColor: '#000000',
+          backgroundColor: '#1a1a1a',
         }}
       >
         <box style={{ justifyContent: 'center' }}>
-          <text fg="#FF00FF">Select HTTP Method</text>
+          <text fg="#CC8844">Select HTTP Method</text>
         </box>
 
         <box style={{ marginTop: 1, flexDirection: 'column', paddingLeft: 2, paddingRight: 2 }}>
           {methods.map((method, index) => (
             <text
               key={method}
-              fg={index === selectedIndex ? getMethodColor(method) : '#888888'}
+              fg={index === selectedIndex ? getMethodColor(method) : '#666666'}
             >
               {index === selectedIndex ? `▸ ${method}` : `  ${method}`}
             </text>
@@ -117,19 +117,19 @@ export function MethodSelectorModal({
             marginTop: 1,
             justifyContent: 'center',
             border: true,
-            borderColor: '#888888',
+            borderColor: '#443322',
             paddingLeft: 1,
             paddingRight: 1,
             flexDirection: 'row',
             gap: 1,
           }}
         >
-          <text fg="#00FFFF">↕</text>
-          <text fg="#888888">Navigate │</text>
-          <text fg="#00FF00">Enter</text>
-          <text fg="#888888">Select │</text>
-          <text fg="#FFFF00">ESC</text>
-          <text fg="#888888">Cancel</text>
+          <text fg="#BB7733">↕</text>
+          <text fg="#666666">Navigate │</text>
+          <text fg="#99AA77">Enter</text>
+          <text fg="#666666">Select │</text>
+          <text fg="#CC8844">ESC</text>
+          <text fg="#666666">Cancel</text>
         </box>
       </box>
     </box>

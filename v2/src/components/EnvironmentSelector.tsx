@@ -17,7 +17,7 @@ export function EnvironmentSelector({
   focused,
   editMode,
 }: EnvironmentSelectorProps) {
-  const borderColor = focused ? '#FF00FF' : editMode ? '#00FF00' : '#888888';
+  const borderColor = focused ? '#CC8844' : editMode ? '#BB7733' : '#555555';
   const activeEnv = environments.find((e) => e.id === activeEnvironmentId);
 
   return (
@@ -31,7 +31,7 @@ export function EnvironmentSelector({
         paddingRight: 1,
       }}
     >
-      <text fg={activeEnv ? '#00FFFF' : '#888888'}>
+      <text fg={activeEnv ? '#BB7733' : '#666666'}>
         {activeEnv ? `▸ ${activeEnv.name}` : '(no environment selected)'}
       </text>
     </box>

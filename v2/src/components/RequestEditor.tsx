@@ -26,13 +26,13 @@ export function RequestEditor({
   activeTab,
   onCancel,
 }: RequestEditorProps) {
-  const borderColor = focused ? '#FF00FF' : editMode ? '#00FF00' : '#888888';
+  const borderColor = focused ? '#CC8844' : editMode ? '#BB7733' : '#555555';
 
   const renderTabHeader = () => {
     const tabs = [
-      { name: 'headers', label: 'Headers', color: '#FFFF00' },
-      { name: 'params', label: 'Params', color: '#00FFFF' },
-      { name: 'body', label: 'Body', color: '#00FF00' },
+      { name: 'headers', label: 'Headers', color: '#CC8844' },
+      { name: 'params', label: 'Params', color: '#9988BB' },
+      { name: 'body', label: 'Body', color: '#99AA77' },
     ];
 
     return (
@@ -59,7 +59,7 @@ export function RequestEditor({
           rows={8}
         />
       ) : (
-        <text fg="#FFFFFF">{headers || '(empty)'}</text>
+        <text fg="#999999">{headers || '(empty)'}</text>
       );
     } else if (activeTab === 'params') {
       return editMode ? (
@@ -71,7 +71,7 @@ export function RequestEditor({
           rows={8}
         />
       ) : (
-        <text fg="#FFFFFF">{params || '(empty)'}</text>
+        <text fg="#999999">{params || '(empty)'}</text>
       );
     } else {
       return editMode ? (
@@ -84,7 +84,7 @@ export function RequestEditor({
           rows={8}
         />
       ) : (
-        <text fg="#FFFFFF">{body || '(empty)'}</text>
+        <text fg="#999999">{body || '(empty)'}</text>
       );
     }
   };

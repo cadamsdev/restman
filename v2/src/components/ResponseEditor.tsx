@@ -14,13 +14,13 @@ export function ResponseEditor({
   editMode,
   activeTab,
 }: ResponseEditorProps) {
-  const borderColor = focused ? '#FF00FF' : editMode ? '#00FF00' : '#888888';
+  const borderColor = focused ? '#CC8844' : editMode ? '#BB7733' : '#555555';
 
   const renderTabHeader = () => {
     const tabs = [
-      { name: 'body', label: 'Body', color: '#00FF00' },
-      { name: 'headers', label: 'Headers', color: '#FFFF00' },
-      { name: 'cookies', label: 'Cookies', color: '#FF8800' },
+      { name: 'body', label: 'Body', color: '#99AA77' },
+      { name: 'headers', label: 'Headers', color: '#CC8844' },
+      { name: 'cookies', label: 'Cookies', color: '#BB7733' },
     ];
 
     return (
@@ -47,12 +47,12 @@ export function ResponseEditor({
     if (activeTab === 'body') {
       return (
         <box style={{ flexDirection: 'column' }}>
-          <text fg={response.status >= 200 && response.status < 300 ? '#00FF00' : '#FF0000'}>
+          <text fg={response.status >= 200 && response.status < 300 ? '#99AA77' : '#BB6655'}>
             Status: {response.status} {response.statusText} ({response.time}ms)
           </text>
-          <text fg="#FFFFFF">{response.body.substring(0, 1000)}</text>
+          <text fg="#999999">{response.body.substring(0, 1000)}</text>
           {response.body.length > 1000 && (
-            <text fg="#888888">... (truncated, press Space for full view)</text>
+            <text fg="#666666">... (truncated, press Space for full view)</text>
           )}
         </box>
       );
@@ -60,9 +60,9 @@ export function ResponseEditor({
       const headerLines = Object.entries(response.headers)
         .map(([key, value]) => `${key}: ${value}`)
         .join('\n');
-      return <text fg="#FFFFFF">{headerLines || '(no headers)'}</text>;
+      return <text fg="#999999">{headerLines || '(no headers)'}</text>;
     } else {
-      return <text fg="#888888">(cookies not yet implemented)</text>;
+      return <text fg="#666666">(cookies not yet implemented)</text>;
     }
   };
 

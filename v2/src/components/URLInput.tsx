@@ -9,7 +9,7 @@ interface URLInputProps {
 }
 
 export function URLInput({ value, onChange, focused, editMode, onSubmit }: URLInputProps) {
-  const borderColor = focused ? '#FF00FF' : editMode ? '#00FF00' : '#888888';
+  const borderColor = focused ? '#CC8844' : editMode ? '#BB7733' : '#555555';
 
   return (
     <box
@@ -32,7 +32,7 @@ export function URLInput({ value, onChange, focused, editMode, onSubmit }: URLIn
           placeholder="Enter URL..."
         />
       ) : (
-        <text fg={value ? '#00FFFF' : '#888888'}>
+        <text fg={value ? '#BB7733' : '#666666'}>
           {value || 'Enter URL...'}
         </text>
       )}
