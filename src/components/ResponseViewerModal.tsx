@@ -100,10 +100,6 @@ export function ResponseViewerModal({ response, activeTab, onClose }: ResponseVi
           style={{
             marginTop: 1,
             justifyContent: 'center',
-            border: true,
-            borderColor: '#443322',
-            paddingLeft: 1,
-            paddingRight: 1,
           }}
         >
           <text fg="#666666">Space/ESC: Close</text>
