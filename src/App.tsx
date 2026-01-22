@@ -23,7 +23,7 @@ import { EnvironmentInput } from './components/EnvironmentInput';
 import { Instructions } from './components/Instructions';
 import { ExitModal } from './components/ExitModal';
 import { EnvironmentSelectorModal } from './components/EnvironmentSelectorModal';
-import { EnvironmentsPanel } from './components/EnvironmentsPanel';
+import { EnvironmentsViewerModal } from './components/EnvironmentsViewerModal';
 import { EnvironmentEditorModal } from './components/EnvironmentEditorModal';
 import { SaveModal } from './components/SaveModal';
 import { HistoryPanel } from './components/HistoryPanel';
@@ -642,7 +642,7 @@ export function App() {
 
       {/* Environments Panel */}
       {showEnvironmentsPanel && (
-        <EnvironmentsPanel
+        <EnvironmentsViewerModal
           environments={environmentsConfig.environments}
           activeEnvironmentId={environmentsConfig.activeEnvironmentId}
           onSelectEnvironment={(id) => {

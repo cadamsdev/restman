@@ -7,7 +7,7 @@ interface Environment {
   variables: Record<string, string>;
 }
 
-interface EnvironmentsPanelProps {
+interface EnvironmentsViewerModalProps {
   environments: Environment[];
   activeEnvironmentId: number | null;
   onSelectEnvironment: (id: number) => void;
@@ -17,7 +17,7 @@ interface EnvironmentsPanelProps {
   onClose: () => void;
 }
 
-export function EnvironmentsPanel({
+export function EnvironmentsViewerModal({
   environments,
   activeEnvironmentId,
   onSelectEnvironment,
@@ -25,7 +25,7 @@ export function EnvironmentsPanel({
   onEditEnvironment,
   onDeleteEnvironment,
   onClose,
-}: EnvironmentsPanelProps) {
+}: EnvironmentsViewerModalProps) {
   const activeIndex = environments.findIndex((env) => env.id === activeEnvironmentId);
   const [selectedIndex, setSelectedIndex] = useState<number>(activeIndex >= 0 ? activeIndex : 0);
 
