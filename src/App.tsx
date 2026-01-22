@@ -26,6 +26,7 @@ import { EnvironmentsPanel } from './components/EnvironmentsPanel';
 import { EnvironmentEditorModal } from './components/EnvironmentEditorModal';
 import { SaveModal } from './components/SaveModal';
 import { HistoryPanel } from './components/HistoryPanel';
+import { SavedRequestsPanel } from './components/SavedRequestsPanel';
 import { MethodSelectorModal } from './components/MethodSelectorModal';
 import { ResponseViewerModal } from './components/ResponseViewerModal';
 import { HelpModal } from './components/HelpModal';
@@ -57,6 +58,7 @@ export function App() {
   const [showMethodSelectorModal, setShowMethodSelectorModal] = useState<boolean>(false);
   const [showSaveModal, setShowSaveModal] = useState<boolean>(false);
   const [showHistoryPanel, setShowHistoryPanel] = useState<boolean>(false);
+  const [showSavedRequestsPanel, setShowSavedRequestsPanel] = useState<boolean>(false);
   const [showResponseViewerModal, setShowResponseViewerModal] = useState<boolean>(false);
   const [showHelpModal, setShowHelpModal] = useState<boolean>(false);
   const [savedRequests, setSavedRequests] = useState<SavedRequest[]>([]);
@@ -245,6 +247,11 @@ export function App() {
         return;
       }
 
+      // Saved requests panel handles its own keyboard input
+      if (showSavedRequestsPanel) {
+        return;
+      }
+
       // Method selector modal handles its own keyboard input
       if (showMethodSelectorModal) {
         return;
@@ -314,6 +321,12 @@ export function App() {
       // Open history panel
       if (key.sequence === 'h') {
         setShowHistoryPanel(true);
+        return;
+      }
+
+      // Open saved requests panel
+      if (key.sequence === 'l') {
+        setShowSavedRequestsPanel(true);
         return;
       }
 
@@ -482,7 +495,7 @@ export function App() {
         return;
       }
     },
-    [editMode, focusedField, fields, showExitModal, showEnvironmentSelectorModal, showMethodSelectorModal, showHelpModal],
+    [editMode, focusedField, fields, showExitModal, showEnvironmentSelectorModal, showMethodSelectorModal, showHelpModal, showHistoryPanel, showSavedRequestsPanel],
   );
 
   useKeyboard(handleKeyboard);
@@ -697,6 +710,28 @@ export function App() {
             setTimeout(() => setToastMessage(''), 3000);
           }}
           onClose={() => setShowHistoryPanel(false)}
+        />
+      )}
+
+      {/* Saved Requests Panel */}
+      {showSavedRequestsPanel && (
+        <SavedRequestsPanel
+          savedRequests={savedRequests}
+          onSelectRequest={(request) => {
+            setMethod(request.method);
+            setUrl(request.url);
+            setHeaders(
+              Object.entries(request.headers)
+                .map(([key, value]) => `${key}: ${value}`)
+                .join('\n'),
+            );
+            setBody(request.body || '');
+            setParams('');
+            setShowSavedRequestsPanel(false);
+            setToastMessage('Loaded saved request');
+            setTimeout(() => setToastMessage(''), 3000);
+          }}
+          onClose={() => setShowSavedRequestsPanel(false)}
         />
       )}
 
