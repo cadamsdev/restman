@@ -3,13 +3,13 @@ import { useKeyboard } from '@opentui/react';
 import type { RequestOptions } from '../http-client';
 import type { SavedRequest } from '../saved-requests-storage';
 
-interface SavedRequestsPanelProps {
+interface SavedRequestsModalProps {
   savedRequests: SavedRequest[];
   onSelectRequest: (request: RequestOptions) => void;
   onClose: () => void;
 }
 
-export function SavedRequestsPanel({ savedRequests, onSelectRequest, onClose }: SavedRequestsPanelProps) {
+export function SavedRequestsModal({ savedRequests, onSelectRequest, onClose }: SavedRequestsModalProps) {
   const [selectedIndex, setSelectedIndex] = useState(savedRequests.length > 0 ? 0 : 0);
 
   const handleKeyboard = useCallback(
