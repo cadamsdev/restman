@@ -4,19 +4,19 @@ interface Environment {
   variables: Record<string, string>;
 }
 
-interface EnvironmentSelectorProps {
+interface EnvironmentInputProps {
   environments: Environment[];
   activeEnvironmentId: number | null;
   focused: boolean;
   editMode: boolean;
 }
 
-export function EnvironmentSelector({
+export function EnvironmentInput({
   environments,
   activeEnvironmentId,
   focused,
   editMode,
-}: EnvironmentSelectorProps) {
+}: EnvironmentInputProps) {
   const borderColor = focused ? '#CC8844' : editMode ? '#BB7733' : '#555555';
   const activeEnv = environments.find((e) => e.id === activeEnvironmentId);
 

@@ -19,7 +19,7 @@ import { URLInput } from './components/URLInput';
 import { MethodSelector } from './components/MethodSelector';
 import { RequestEditor } from './components/RequestEditor';
 import { ResponseEditor } from './components/ResponseEditor';
-import { EnvironmentSelector } from './components/EnvironmentSelector';
+import { EnvironmentInput } from './components/EnvironmentInput';
 import { Instructions } from './components/Instructions';
 import { ExitModal } from './components/ExitModal';
 import { EnvironmentSelectorModal } from './components/EnvironmentSelectorModal';
@@ -545,7 +545,7 @@ export function App() {
       <text fg="#CC8844">RestMan v{packageJson.version}</text>
 
       {/* Environment Selector */}
-      <EnvironmentSelector
+      <EnvironmentInput
         environments={environmentsConfig.environments}
         activeEnvironmentId={environmentsConfig.activeEnvironmentId}
         focused={focusedField === 'environment'}
