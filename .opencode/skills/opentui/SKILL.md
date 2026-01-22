@@ -3,9 +3,24 @@ name: opentui
 description: A skill for building terminal user interfaces with opentui and react.
 ---
 
+## Instructions
+
+When working with OpenTUI applications, follow these guidelines:
+
+1. **Choose the right approach**: Prefer React for complex, stateful UIs. Use Core for simple utilities or low-level control.
+2. **Always ensure focus**: Interactive components (input, select, tab-select) MUST be focused to receive keyboard input.
+3. **Follow RestMan patterns**: Use the established color scheme (#CC8844 for primary, #BB7733 for secondary, #555555 for borders).
+4. **Keyboard navigation**: Implement proper keyboard handlers with useKeyboard hook or renderer.keyInput events.
+5. **Style consistently**: Use the project's styling patterns (kebab-case for style objects, direct props when possible).
+
 ## When to use
 
-Use this skill when building UIs with opentui and react.
+Use this skill when:
+- Building or modifying OpenTUI applications (both core and React)
+- Implementing terminal UI components
+- Adding keyboard navigation or input handling
+- Styling terminal interfaces
+- Debugging rendering or layout issues
 
 ## What I do
 - Guide development of OpenTUI applications (both core and React)
