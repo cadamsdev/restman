@@ -24,14 +24,9 @@ export function ResponseViewerModal({ response, activeTab, onClose }: ResponseVi
   const renderContent = () => {
     if (activeTab === 'body') {
       return (
-        <box style={{ flexDirection: 'column', flexGrow: 1 }}>
-          <text fg={response.status >= 200 && response.status < 300 ? '#99AA77' : '#BB6655'}>
-            Status: {response.status} {response.statusText} ({response.time}ms)
-          </text>
-          <scrollbox style={{ flexGrow: 1 }}>
-            <text fg="#999999">{response.body}</text>
-          </scrollbox>
-        </box>
+        <scrollbox style={{ flexGrow: 1 }}>
+          <text fg="#999999">{response.body}</text>
+        </scrollbox>
       );
     } else if (activeTab === 'headers') {
       const headerLines = Object.entries(response.headers)
@@ -78,6 +73,14 @@ export function ResponseViewerModal({ response, activeTab, onClose }: ResponseVi
             Response {activeTab === 'body' ? 'Body' : activeTab === 'headers' ? 'Headers' : 'Cookies'}
           </text>
         </box>
+
+        {activeTab === 'body' && (
+          <box style={{ marginTop: 1 }}>
+            <text fg={response.status >= 200 && response.status < 300 ? '#99AA77' : '#BB6655'}>
+              Status: {response.status} {response.statusText} ({response.time}ms)
+            </text>
+          </box>
+        )}
 
         <box
           style={{
