@@ -26,7 +26,8 @@ export function EnvironmentsPanel({
   onDeleteEnvironment,
   onClose,
 }: EnvironmentsPanelProps) {
-  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const activeIndex = environments.findIndex((env) => env.id === activeEnvironmentId);
+  const [selectedIndex, setSelectedIndex] = useState<number>(activeIndex >= 0 ? activeIndex : 0);
 
   const handleKeyboard = useCallback(
     (key: { name: string; shift?: boolean; sequence?: string }) => {
@@ -171,29 +172,25 @@ export function EnvironmentsPanel({
           <text fg="#CC8844">Environments ({environments.length})</text>
         </box>
 
-        <box style={{ marginTop: 1, flexDirection: 'column' }}>
-          {environments.slice(0, 8).map((env, index) => {
-            const isSelected = index === selectedIndex;
-            const isActive = env.id === activeEnvironmentId;
-            const varCount = Object.keys(env.variables).length;
+         <box style={{ marginTop: 1, flexDirection: 'column', paddingLeft: 2, paddingRight: 2 }}>
+           {environments.slice(0, 8).map((env, index) => {
+             const isSelected = index === selectedIndex;
+             const isActive = env.id === activeEnvironmentId;
+             const varCount = Object.keys(env.variables).length;
 
-            return (
-              <box key={env.id} style={{ flexDirection: 'column', marginBottom: 1 }}>
-                <box style={{ flexDirection: 'row' }}>
-                  <text fg={isActive ? '#99AA77' : '#1a1a1a'}>{isActive ? '▶ ' : '  '}</text>
-                  <text
-                    bg={isSelected ? '#2a2520' : undefined}
-                    fg={isSelected ? '#CC8844' : isActive ? '#99AA77' : '#BB7733'}
-                  >
-                    {env.name}
-                  </text>
-                </box>
-                <box style={{ marginLeft: 2 }}>
-                  <text fg="#666666">{varCount} variable{varCount !== 1 ? 's' : ''}</text>
-                </box>
-              </box>
-            );
-          })}
+             return (
+               <box key={env.id} style={{ flexDirection: 'column', marginBottom: 1 }}>
+                 <box style={{ flexDirection: 'row' }}>
+                   <text fg={isSelected ? '#CC8844' : '#999999'}>
+                     {isSelected ? '▸ ' : '  '}{env.name}{isActive ? ' (active)' : ''}
+                   </text>
+                 </box>
+                 <box style={{ marginLeft: 2 }}>
+                   <text fg="#666666">{varCount} variable{varCount !== 1 ? 's' : ''}</text>
+                 </box>
+               </box>
+             );
+           })}
           {environments.length > 8 && (
             <box>
               <text fg="#666666">... and {environments.length - 8} more</text>
