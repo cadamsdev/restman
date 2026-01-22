@@ -102,11 +102,6 @@ export function RequestEditor({
       }}
     >
       {renderTabHeader()}
-      {editMode && (
-        <text fg="#888888">
-          (Press ESC to exit edit mode)
-        </text>
-      )}
       {renderContent()}
     </box>
   );
