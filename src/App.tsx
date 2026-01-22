@@ -16,7 +16,7 @@ import {
 import { loadSavedRequests, saveSavedRequests, type SavedRequest } from './saved-requests-storage';
 import { loadHistory, saveHistory, type HistoryEntry } from './history-storage';
 import { URLInput } from './components/URLInput';
-import { MethodSelector } from './components/MethodSelector';
+import { MethodInput } from './components/MethodInput';
 import { RequestEditor } from './components/RequestEditor';
 import { ResponseEditor } from './components/ResponseEditor';
 import { EnvironmentInput } from './components/EnvironmentInput';
@@ -554,7 +554,7 @@ export function App() {
 
       {/* Method and URL */}
       <box style={{ flexDirection: 'row', gap: 1 }}>
-        <MethodSelector
+        <MethodInput
           value={method}
           onChange={setMethod}
           focused={focusedField === 'method'}

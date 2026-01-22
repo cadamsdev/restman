@@ -1,11 +1,11 @@
-interface MethodSelectorProps {
+interface MethodInputProps {
   value: string;
   onChange: (method: string) => void;
   focused: boolean;
   editMode: boolean;
 }
 
-export function MethodSelector({ value, focused, editMode }: MethodSelectorProps) {
+export function MethodInput({ value, focused, editMode }: MethodInputProps) {
   const getMethodColor = (method: string): string => {
     switch (method) {
       case 'GET':
