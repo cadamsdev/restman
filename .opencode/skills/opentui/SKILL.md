@@ -1,111 +1,56 @@
 ---
 name: opentui
-description: A skill for building terminal user interfaces with opentui and react.
+description: Build and modify terminal user interfaces using OpenTUI with React or Core API. Use when implementing terminal UIs, TUIs, CLI applications, interactive terminal components, keyboard navigation, terminal styling, or when the user mentions OpenTUI, terminal rendering, or RestMan UI components.
+metadata:
+  author: restman
+  version: "2.0"
+compatibility: Requires @opentui/core and optionally @opentui/react for React integration
 ---
 
-## Instructions
-
-When working with OpenTUI applications, follow these guidelines:
-
-1. **Choose the right approach**: Prefer React for complex, stateful UIs. Use Core for simple utilities or low-level control.
-2. **Always ensure focus**: Interactive components (input, select, tab-select) MUST be focused to receive keyboard input.
-3. **Follow RestMan patterns**: Use the established color scheme (#CC8844 for primary, #BB7733 for secondary, #555555 for borders).
-4. **Keyboard navigation**: Implement proper keyboard handlers with useKeyboard hook or renderer.keyInput events.
-5. **Style consistently**: Use the project's styling patterns (kebab-case for style objects, direct props when possible).
-
-## When to use
+## When to use this skill
 
 Use this skill when:
-- Building or modifying OpenTUI applications (both core and React)
-- Implementing terminal UI components
+- Building or modifying OpenTUI applications (React or Core API)
+- Implementing terminal UI components (boxes, inputs, selects, tabs)
 - Adding keyboard navigation or input handling
-- Styling terminal interfaces
+- Styling terminal interfaces with colors and borders
 - Debugging rendering or layout issues
+- Working on RestMan UI features
+- User mentions TUI, terminal UI, or CLI interfaces
 
-## What I do
-- Guide development of OpenTUI applications (both core and React)
-- Explain and implement OpenTUI renderables, components, and hooks
-- Help with styling, layout, keyboard/mouse input, and rendering
-- Assist with console integration and debugging
+## What this skill does
 
-## Installation
+This skill guides development of terminal user interfaces using OpenTUI. It provides:
+- Instructions for both React (declarative) and Core (imperative) approaches
+- Component usage patterns and keyboard handling
+- Styling guidelines and RestMan color scheme standards
+- Layout system (Yoga/Flexbox) guidance
+- Focus management and interactive component best practices
+
+## Quick Start
+
+### Installation
 
 ```bash
 # Core only
 bun install @opentui/core
 
-# With React
+# With React (recommended for RestMan)
 bun install @opentui/react @opentui/core react
 ```
 
-## Core Concepts
+### TypeScript Config
 
-### Renderer
-
-The `CliRenderer` manages terminal output, input events, and the rendering loop. It can run in "live" mode with `renderer.start()` for a capped FPS loop, or without starting for render-on-demand.
-
-```typescript
-import { createCliRenderer } from '@opentui/core'
-
-const renderer = await createCliRenderer({
-  exitOnCtrlC: false,
-  targetFps: 30,
-})
-
-// Optional: Start FPS-capped rendering loop
-renderer.start()
+```json
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "@opentui/react"
+  }
+}
 ```
 
-### Renderables (Core)
-
-Building blocks of your UI - hierarchical objects that can be positioned, styled, and nested. Uses Yoga layout engine for flexbox-like positioning.
-
-```typescript
-import { TextRenderable, BoxRenderable } from '@opentui/core'
-
-const box = new BoxRenderable(renderer, {
-  id: 'container',
-  width: 30,
-  height: 10,
-  backgroundColor: '#333366',
-  borderStyle: 'double',
-  borderColor: '#FFFFFF',
-  position: 'absolute',
-  left: 10,
-  top: 5,
-})
-
-const text = new TextRenderable(renderer, {
-  id: 'greeting',
-  content: 'Hello, OpenTUI!',
-  fg: '#00FF00',
-})
-
-box.add(text)
-renderer.root.add(box)
-```
-
-### Constructs (Core Components)
-
-Declarative way to compose renderables without React. Look like components but are constructors that return VNodes.
-
-```typescript
-import { Box, Text } from '@opentui/core'
-
-const greeting = Text({
-  content: 'Hello, OpenTUI!',
-  fg: '#00FF00',
-  position: 'absolute',
-  left: 10,
-  top: 5,
-})
-
-renderer.root.add(greeting)
-```
-
-### React Integration
-
-Use React for declarative, reactive UIs with familiar hooks and patterns.
+### Basic React App
 
 ```tsx
 import { createCliRenderer } from '@opentui/core'
@@ -120,170 +65,140 @@ const root = createRoot(renderer)
 root.render(<App />)
 ```
 
-## Available Renderables/Components
+### Basic Core App
+
+```typescript
+import { createCliRenderer, Text } from '@opentui/core'
+
+const renderer = await createCliRenderer({ exitOnCtrlC: false })
+const greeting = Text({ content: 'Hello, world!' })
+renderer.root.add(greeting)
+```
+
+## Key Concepts
+
+### Rendering Approaches
+
+**React (Recommended for RestMan):**
+- Declarative, component-based
+- Use hooks: `useState`, `useEffect`, `useKeyboard`
+- Familiar React patterns
+
+**Core (For utilities and low-level control):**
+- Imperative API with Renderables
+- Direct control over rendering
+- VNodes/Constructs for composition
+
+### Interactive Components MUST Be Focused
+
+Components like `<input>`, `<select>`, and `<tab-select>` **MUST be focused** to receive keyboard input:
+
+```tsx
+// React
+<input focused={isFocused} />
+
+// Core
+input.focus()
+```
+
+### RestMan Color Scheme
+
+Always use these colors for consistency:
+- **Primary (focus):** `#CC8844`
+- **Secondary (edit mode):** `#BB7733`
+- **Borders:** `#555555`
+- **Muted text:** `#999999`
+- **Background:** `#1a1a1a`
+
+## Common Components
 
 ### Text
 
-Display styled text with colors, attributes, and text selection.
-
-**Core:**
-```typescript
-import { TextRenderable, TextAttributes, t, bold, underline, fg } from '@opentui/core'
-
-const text = new TextRenderable(renderer, {
-  id: 'styled-text',
-  content: t`${bold('Important')} ${fg('#FF0000')(underline('Message'))}`,
-  fg: '#FFFF00',
-  attributes: TextAttributes.BOLD | TextAttributes.UNDERLINE,
-})
-```
-
-**React:**
 ```tsx
+// React
 <text fg="#FFFF00" bold underline>
   Important Message
 </text>
-```
 
-### Box
-
-Container with borders, background colors, and flexbox layout capabilities.
-
-**Core:**
-```typescript
-import { BoxRenderable } from '@opentui/core'
-
-const panel = new BoxRenderable(renderer, {
-  id: 'panel',
-  width: 30,
-  height: 10,
-  backgroundColor: '#333366',
-  borderStyle: 'double',
-  borderColor: '#FFFFFF',
-  title: 'Settings',
-  titleAlignment: 'center',
-  flexDirection: 'column',
-  padding: 2,
+// Core
+import { TextRenderable, t, bold, fg } from '@opentui/core'
+const text = new TextRenderable(renderer, {
+  content: t`${bold('Important')} ${fg('#FF0000')('Message')}`,
 })
 ```
 
-**React:**
+### Box (Container)
+
 ```tsx
+// React
 <box
   width={30}
   height={10}
   backgroundColor="#333366"
   borderStyle="double"
   borderColor="#FFFFFF"
-  flexDirection="column"
   padding={2}
 >
-  {/* children */}
+  {children}
 </box>
+
+// Core
+import { BoxRenderable } from '@opentui/core'
+const box = new BoxRenderable(renderer, {
+  width: 30,
+  height: 10,
+  backgroundColor: '#333366',
+  borderStyle: 'double',
+  padding: 2,
+})
 ```
 
-### Input
+### Input (Text Field)
 
-Single-line text input with cursor, placeholder, and focus states. **Must be focused to receive input.**
+```tsx
+// React
+<input
+  width={25}
+  placeholder="Enter name..."
+  onInput={(value) => setValue(value)}
+  onSubmit={(value) => handleSubmit(value)}
+  focused={isFocused}
+/>
 
-**Core:**
-```typescript
+// Core
 import { InputRenderable, InputRenderableEvents } from '@opentui/core'
-
 const input = new InputRenderable(renderer, {
-  id: 'name-input',
   width: 25,
-  placeholder: 'Enter your name...',
-  textColor: '#FFFFFF',
-  cursorColor: '#FFFF00',
-  maxLength: 50,
+  placeholder: 'Enter name...',
 })
-
-input.on(InputRenderableEvents.CHANGE, (value) => {
-  console.log('Input:', value)
-})
-
+input.on(InputRenderableEvents.CHANGE, (value) => console.log(value))
 input.focus()
 ```
 
-**React:**
+### Select (List)
+
 ```tsx
-<input
-  width={25}
-  placeholder="Enter your name..."
-  onInput={(value) => console.log(value)}
-  onSubmit={(value) => console.log(value)}
-  focused={isFocused}
-/>
-```
-
-### Select
-
-List selection with keyboard navigation. **Must be focused.** Keys: `up/k`, `down/j`, `enter` to select.
-
-**Core:**
-```typescript
-import { SelectRenderable, SelectRenderableEvents } from '@opentui/core'
-
-const select = new SelectRenderable(renderer, {
-  id: 'menu',
-  width: 30,
-  height: 8,
-  options: [
-    { name: 'New File', description: 'Create a new file' },
-    { name: 'Open File', description: 'Open existing file' },
-  ],
-})
-
-select.on(SelectRenderableEvents.ITEM_SELECTED, (index, option) => {
-  console.log('Selected:', option.name)
-})
-
-select.focus()
-```
-
-**React:**
-```tsx
+// React - Keys: up/k, down/j, enter to select
 <select
   width={30}
   height={8}
-  options={options}
-  onChange={(index, option) => console.log(option.name)}
+  options={[
+    { name: 'Option 1', description: 'First option' },
+    { name: 'Option 2', description: 'Second option' },
+  ]}
+  onChange={(index, option) => handleSelect(option)}
   focused={isFocused}
 />
 ```
 
-### TabSelect
+### TabSelect (Horizontal Tabs)
 
-Horizontal tab selection. **Must be focused.** Keys: `left/[`, `right/]`, `enter` to select.
-
-**Core:**
-```typescript
-import { TabSelectRenderable, TabSelectRenderableEvents } from '@opentui/core'
-
-const tabs = new TabSelectRenderable(renderer, {
-  id: 'tabs',
-  width: 60,
-  options: [
-    { name: 'Home', description: 'Dashboard' },
-    { name: 'Settings', description: 'App settings' },
-  ],
-  tabWidth: 20,
-})
-
-tabs.on(TabSelectRenderableEvents.ITEM_SELECTED, (index, option) => {
-  console.log('Tab:', option.name)
-})
-
-tabs.focus()
-```
-
-**React:**
 ```tsx
+// React - Keys: left/[, right/], enter to select
 <tab-select
   width={60}
-  options={options}
-  onChange={(index, option) => console.log(option.name)}
+  options={tabOptions}
+  onChange={(index, option) => setActiveTab(index)}
   focused={isFocused}
 />
 ```
@@ -291,162 +206,42 @@ tabs.focus()
 ### Other Components
 
 **React-specific:**
-- `<scrollbox>` - Scrollable container with customizable scrollbar
-- `<textarea>` - Multi-line text input with ref access
-- `<code>` - Syntax-highlighted code (`content`, `filetype`, `syntaxStyle`)
-- `<line-number>` - Code with line numbers and diff highlights
-- `<diff>` - Unified or split diff viewer
-- `<ascii-font>` - ASCII art text with font styles (`block`, `shade`, `slick`, `tiny`)
-
-**Core-specific:**
-- `ASCIIFontRenderable` - ASCII art text with multiple font styles
-- `FrameBufferRenderable` - Low-level rendering surface for custom graphics
-
-### Text Modifiers (React only, must be inside `<text>`)
-
-`<span>`, `<strong>`, `<em>`, `<u>`, `<b>`, `<i>`, `<br>`
+- `<scrollbox>` - Scrollable container
+- `<textarea>` - Multi-line input
+- `<code>` - Syntax-highlighted code
+- `<line-number>` - Code with line numbers
+- `<diff>` - Diff viewer
+- `<ascii-font>` - ASCII art text
 
 ## Keyboard Input
 
-### Core
-
-```typescript
-import type { KeyEvent } from '@opentui/core'
-
-renderer.keyInput.on('keypress', (key: KeyEvent) => {
-  console.log('Key:', key.name)      // 'escape', 'return', 'tab', etc.
-  console.log('Sequence:', key.sequence)  // Raw character
-  console.log('Ctrl:', key.ctrl)
-  console.log('Shift:', key.shift)
-  console.log('Alt:', key.meta)
-  
-  if (key.name === 'escape') process.exit(0)
-  if (key.ctrl && key.name === 'c') console.log('Ctrl+C')
-})
-```
-
-### React Hook
+### React Hook (Recommended)
 
 ```tsx
 import { useKeyboard } from '@opentui/react'
 
 useKeyboard((key) => {
-  if (key.name === 'escape') process.exit(0)
+  if (key.name === 'escape') setShowModal(false)
   if (key.name === 'return') handleSubmit()
-  if (key.sequence === 's') toggleMode()
-}, { release: false }) // Set release: true for key release events
-```
-
-## React Hooks
-
-**useTerminalDimensions()**
-```tsx
-const { width, height } = useTerminalDimensions()
-```
-
-**useRenderer()**
-```tsx
-const renderer = useRenderer()
-useEffect(() => {
-  renderer.console.show()
-  console.log('Debug message')
-}, [renderer])
-```
-
-**useOnResize(callback)**
-```tsx
-useOnResize((width, height) => {
-  console.log(`Resized: ${width}x${height}`)
+  if (key.name === 'tab') moveFocus()
+  if (key.ctrl && key.name === 'c') console.log('Ctrl+C')
 })
 ```
 
-**useTimeline(options?)**
-```tsx
-const timeline = useTimeline({ duration: 2000, loop: false })
-```
-
-## Styling
-
-### Colors
-
-OpenTUI uses the `RGBA` class for color representation.
+### Core Events
 
 ```typescript
-import { RGBA } from '@opentui/core'
-
-const red = RGBA.fromInts(255, 0, 0, 255)       // RGB integers (0-255)
-const blue = RGBA.fromValues(0.0, 0.0, 1.0, 1.0) // Float values (0.0-1.0)
-const green = RGBA.fromHex('#00FF00')           // Hex strings
-const transparent = RGBA.fromValues(1.0, 1.0, 1.0, 0.5) // Semi-transparent
+renderer.keyInput.on('keypress', (key) => {
+  console.log('Key name:', key.name)      // 'escape', 'return', 'tab'
+  console.log('Sequence:', key.sequence)  // Raw character
+  console.log('Modifiers:', key.ctrl, key.shift, key.meta)
+})
 ```
-
-The `parseColor()` utility accepts RGBA objects, hex strings, CSS color names, or `"transparent"`.
-
-### React Style Props
-
-**Direct props:**
-```tsx
-<box backgroundColor="blue" padding={2} border borderStyle="double">
-```
-
-**Style object:**
-```tsx
-<box style={{
-  backgroundColor: '#1a1a1a',
-  border: true,
-  borderColor: '#CC8844',
-  padding: 1,
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  position: 'absolute',
-  zIndex: 1000,
-}}>
-```
-
-### Color Scheme (RestMan standard)
-- Primary: `#CC8844`
-- Secondary: `#BB7733`
-- Borders: `#555555`
-- Muted: `#999999`
-- Background: `#1a1a1a`
 
 ## Layout System
 
-OpenTUI uses the Yoga layout engine for CSS Flexbox-like layouts.
+OpenTUI uses Yoga (CSS Flexbox) for layouts:
 
-**Core:**
-```typescript
-import { GroupRenderable, BoxRenderable } from '@opentui/core'
-
-const container = new GroupRenderable(renderer, {
-  id: 'container',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  width: '100%',
-  height: 10,
-})
-
-const leftPanel = new BoxRenderable(renderer, {
-  id: 'left',
-  flexGrow: 1,
-  height: 10,
-  backgroundColor: '#444',
-})
-
-const rightPanel = new BoxRenderable(renderer, {
-  id: 'right',
-  width: 20,
-  height: 10,
-  backgroundColor: '#666',
-})
-
-container.add(leftPanel)
-container.add(rightPanel)
-```
-
-**React:**
 ```tsx
 <box flexDirection="row" justifyContent="space-between" alignItems="center">
   <box flexGrow={1} backgroundColor="#444" />
@@ -454,96 +249,23 @@ container.add(rightPanel)
 </box>
 ```
 
-## Console Overlay
-
-Built-in console overlay that captures `console.log`, `console.info`, `console.warn`, `console.error`, and `console.debug`.
-
-```typescript
-const renderer = await createCliRenderer({
-  consoleOptions: {
-    position: ConsolePosition.BOTTOM,
-    sizePercent: 30,
-    colorInfo: '#00FFFF',
-    colorWarn: '#FFFF00',
-    colorError: '#FF0000',
-    startInDebugMode: false,
-  },
-})
-
-console.log('This appears in the overlay')
-renderer.console.toggle() // Show/hide console
-// When focused: arrow keys scroll, +/- adjust size
-```
-
-## FrameBuffer (Custom Rendering)
-
-Low-level rendering surface for custom graphics and effects.
-
-```typescript
-import { FrameBufferRenderable, RGBA } from '@opentui/core'
-
-const canvas = new FrameBufferRenderable(renderer, {
-  id: 'canvas',
-  width: 50,
-  height: 20,
-})
-
-// Custom rendering
-canvas.frameBuffer.fillRect(10, 5, 20, 8, RGBA.fromHex('#FF0000'))
-canvas.frameBuffer.drawText('Custom Graphics', 12, 7, RGBA.fromHex('#FFFFFF'))
-canvas.frameBuffer.setCell(15, 10, '█', RGBA.fromHex('#00FF00'), RGBA.fromHex('#000000'))
-```
+**Common layout props:**
+- `flexDirection`: `'row'` | `'column'`
+- `justifyContent`: `'flex-start'` | `'center'` | `'space-between'` | etc.
+- `alignItems`: `'flex-start'` | `'center'` | `'stretch'` | etc.
+- `flexGrow`, `flexShrink`, `flexBasis`
+- `width`, `height`, `padding`, `margin`
 
 ## Common Patterns
 
-### Focus Management (React)
+### Focus Management
 
 ```tsx
-const [focused, setFocused] = useState('field1')
-const isFocused = focused === 'field1'
+const [focusedField, setFocusedField] = useState('field1')
 
-<box borderColor={isFocused ? '#CC8844' : '#555555'}>
-  <input focused={isFocused} />
+<box borderColor={focusedField === 'field1' ? '#CC8844' : '#555555'}>
+  <input focused={focusedField === 'field1'} />
 </box>
-```
-
-### Keyboard Navigation (React)
-
-```tsx
-useKeyboard((key) => {
-  if (key.name === 'tab') {
-    setFocused(prev => fields[(fields.indexOf(prev) + 1) % fields.length])
-  }
-  if (key.name === 'up') {
-    setSelectedIndex(Math.max(0, selectedIndex - 1))
-  }
-  if (key.sequence === 'g') setSelectedIndex(0) // vim-style
-  if (key.sequence === 'G') setSelectedIndex(items.length - 1)
-})
-```
-
-### Modal Overlays (React)
-
-```tsx
-{showModal && (
-  <box style={{
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1000,
-  }}>
-    <box style={{
-      border: 'double',
-      borderColor: '#665544',
-      padding: 2,
-      backgroundColor: '#1a1a1a',
-    }}>
-      <text>Modal Content</text>
-    </box>
-  </box>
-)}
 ```
 
 ### Dynamic Border Colors
@@ -556,52 +278,133 @@ const getBorderColor = (focused: boolean, editMode: boolean): string => {
 }
 ```
 
-### VNode Composition (Core)
+### Modal Overlays
 
-```typescript
-import { Box, Text, delegate } from '@opentui/core'
+```tsx
+{showModal && (
+  <box style={{
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+  }}>
+    <box borderStyle="double" borderColor="#665544" padding={2}>
+      <text>Modal Content</text>
+    </box>
+  </box>
+)}
+```
 
-function Button(props: { title: string; onClick: () => void }) {
-  return Box(
-    {
-      border: true,
-      onMouseDown: props.onClick,
-    },
-    Text({ content: props.title }),
-  )
-}
+### Keyboard Navigation
 
-// Delegate add/remove operations to specific child
-function Container(props: { id: string }, children: VNode[] = []) {
-  return delegate(
-    { add: `${props.id}_inner`, remove: `${props.id}_inner` },
-    Box({ id: `${props.id}_outer`, border: true }, [
-      Box({ id: `${props.id}_inner`, padding: 1 }, children),
-    ]),
-  )
-}
+```tsx
+useKeyboard((key) => {
+  if (key.name === 'tab') {
+    // Cycle through fields
+    setFocused(fields[(fields.indexOf(focused) + 1) % fields.length])
+  }
+  if (key.name === 'up') setSelectedIndex(Math.max(0, selectedIndex - 1))
+  if (key.name === 'down') setSelectedIndex(Math.min(max, selectedIndex + 1))
+  if (key.sequence === 'g') setSelectedIndex(0) // vim-style
+  if (key.sequence === 'G') setSelectedIndex(items.length - 1)
+})
+```
 
-const container = Container({ id: 'my-container' })
-renderer.root.add(container)
+## React Hooks
 
-// This will be added to the inner box, not the outer one
-container.add(Button({ title: 'Click me', onClick: () => console.log('clicked') }))
+**useKeyboard(callback, options?)** - Handle keyboard input
+```tsx
+useKeyboard((key) => {}, { release: false })
+```
+
+**useTerminalDimensions()** - Get terminal size
+```tsx
+const { width, height } = useTerminalDimensions()
+```
+
+**useRenderer()** - Access renderer instance
+```tsx
+const renderer = useRenderer()
+```
+
+**useOnResize(callback)** - Handle terminal resize
+```tsx
+useOnResize((width, height) => console.log('Resized'))
 ```
 
 ## Best Practices
 
-1. Use `useCallback` for keyboard handlers (React) to prevent re-renders
-2. Fire-and-forget async with `void` to avoid linter warnings
-3. Use `Date.now()` for unique IDs
-4. Handle modal key events separately to prevent conflicts
-5. Exit edit mode with ESC key
-6. Use `fg` and `bg` props for inline color styling (React)
-7. Test keyboard navigation flow in the terminal
-8. Focus components before expecting keyboard input
-9. Use `renderer.start()` only when you need FPS-capped live rendering
-10. Prefer Constructs/VNodes over Renderables for cleaner composition (Core)
+1. **Choose the right approach:** Use React for RestMan UI (stateful, complex). Use Core for simple utilities.
+2. **Always ensure focus:** Interactive components MUST be focused to work.
+3. **Use RestMan colors:** Stick to the standard color scheme for consistency.
+4. **Implement proper keyboard navigation:** Use `useKeyboard` hook in React.
+5. **Style consistently:** Use kebab-case in style objects, direct props when possible.
+6. **Use useCallback for handlers:** Prevents unnecessary re-renders in React.
+7. **Fire-and-forget async:** Use `void asyncFunction()` to avoid lint warnings.
+8. **Test in terminal:** Always test keyboard navigation flow.
+9. **Handle modal keys separately:** Prevent conflicts with underlying UI.
+10. **Exit edit mode with ESC:** Standard pattern for RestMan.
 
-## React DevTools Integration
+## Styling
+
+### Direct Props (Recommended)
+
+```tsx
+<box backgroundColor="blue" padding={2} border borderStyle="double">
+```
+
+### Style Object
+
+```tsx
+<box style={{
+  backgroundColor: '#1a1a1a',
+  borderColor: '#CC8844',
+  padding: 1,
+  flexDirection: 'column',
+  position: 'absolute',
+  zIndex: 1000,
+}}>
+```
+
+### Colors
+
+OpenTUI uses the `RGBA` class for colors:
+
+```typescript
+import { RGBA } from '@opentui/core'
+
+RGBA.fromHex('#00FF00')           // Hex string
+RGBA.fromInts(255, 0, 0, 255)     // RGB integers (0-255)
+RGBA.fromValues(0.0, 0.0, 1.0, 1.0) // Float values (0.0-1.0)
+```
+
+## Detailed Reference
+
+For comprehensive documentation on all components, events, and advanced features, see:
+
+- [Complete API Reference](references/REFERENCE.md) - All renderables, props, events, and methods
+- RestMan codebase examples in `src/` directory
+
+## Debugging
+
+### Console Overlay
+
+```typescript
+const renderer = await createCliRenderer({
+  consoleOptions: {
+    position: ConsolePosition.BOTTOM,
+    sizePercent: 30,
+  },
+})
+
+console.log('Debug message')
+renderer.console.toggle() // Show/hide
+// When focused: arrows scroll, +/- adjust size
+```
+
+### React DevTools
 
 ```bash
 bun add --dev react-devtools-core@7
@@ -609,35 +412,12 @@ npx react-devtools@7
 DEV=true bun run your-app.ts
 ```
 
-## Component Extension (React)
+## RestMan Integration Notes
 
-Create custom components by extending base renderables:
-
-```tsx
-import { BoxRenderable, RenderContext, type BoxOptions } from '@opentui/core'
-import { extend } from '@opentui/react'
-
-class CustomButton extends BoxRenderable {
-  constructor(ctx: RenderContext, options: BoxOptions & { label?: string }) {
-    super(ctx, { border: true, borderStyle: 'single', ...options })
-  }
-}
-
-extend({ customButton: CustomButton })
-// Use: <customButton label="Click me!" />
-```
-
-## TypeScript Config
-
-```json
-{
-  "compilerOptions": {
-    "lib": ["ESNext", "DOM"],
-    "target": "ESNext",
-    "module": "ESNext",
-    "jsx": "react-jsx",
-    "jsxImportSource": "@opentui/react",
-    "strict": true
-  }
-}
-```
+When working on RestMan:
+1. Follow the component structure in `src/components/`
+2. Use established patterns from `RequestEditor.tsx`, `HistoryView.tsx`, etc.
+3. Maintain consistent focus management across views
+4. Use the standard color scheme defined in AGENTS.md
+5. Test all keyboard shortcuts thoroughly
+6. Ensure proper state management with React hooks
