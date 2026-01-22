@@ -10,7 +10,8 @@ interface HistoryPanelProps {
 }
 
 export function HistoryPanel({ history, onSelectRequest, onClose }: HistoryPanelProps) {
-  const [selectedIndex, setSelectedIndex] = useState(history.length > 0 ? history.length - 1 : 0);
+  // Start at the most recent (index 0 in reversed list = last item in original)
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const handleKeyboard = useCallback(
     (key: { name: string; sequence?: string }) => {
@@ -22,27 +23,33 @@ export function HistoryPanel({ history, onSelectRequest, onClose }: HistoryPanel
       if (history.length === 0) return;
 
       if (key.name === 'up') {
-        setSelectedIndex((prev) => Math.min(history.length - 1, prev + 1));
-        return;
-      }
-
-      if (key.name === 'down') {
+        // Moving up the list = to newer items = lower index
         setSelectedIndex((prev) => Math.max(0, prev - 1));
         return;
       }
 
+      if (key.name === 'down') {
+        // Moving down the list = to older items = higher index
+        setSelectedIndex((prev) => Math.min(history.length - 1, prev + 1));
+        return;
+      }
+
       if (key.sequence === 'g') {
+        // g = go to newest (top of display = index 0)
         setSelectedIndex(0);
         return;
       }
 
       if (key.sequence === 'G') {
+        // G = go to oldest (bottom of display = last index)
         setSelectedIndex(history.length - 1);
         return;
       }
 
       if (key.name === 'return') {
-        const selectedEntry = history[selectedIndex];
+        // Map display index to actual history array index (reversed)
+        const actualIndex = history.length - 1 - selectedIndex;
+        const selectedEntry = history[actualIndex];
         if (selectedEntry) {
           onSelectRequest(selectedEntry.request);
           onClose();
@@ -139,14 +146,13 @@ export function HistoryPanel({ history, onSelectRequest, onClose }: HistoryPanel
   
   // Calculate viewport for scrolling
   const maxVisibleItems = 10;
-  const actualSelectedIndex = history.length - 1 - selectedIndex;
   
   // Calculate scroll offset to keep selected item visible
   let scrollOffset = 0;
   if (history.length > maxVisibleItems) {
     // Center the selected item when possible
     const centerOffset = Math.floor(maxVisibleItems / 2);
-    scrollOffset = Math.max(0, actualSelectedIndex - centerOffset);
+    scrollOffset = Math.max(0, selectedIndex - centerOffset);
     scrollOffset = Math.min(scrollOffset, history.length - maxVisibleItems);
   }
   
@@ -190,8 +196,8 @@ export function HistoryPanel({ history, onSelectRequest, onClose }: HistoryPanel
             </box>
           )}
           {visibleHistory.map((entry, index) => {
-            const reverseIndex = scrollOffset + index;
-            const isSelected = reverseIndex === actualSelectedIndex;
+            const displayIndex = scrollOffset + index;
+            const isSelected = displayIndex === selectedIndex;
 
             if (!entry || !entry.request || !entry.request.method || !entry.request.url) {
               return null;
