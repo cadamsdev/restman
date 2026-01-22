@@ -1,25 +1,17 @@
 ---
 name: opentui
-description: Build terminal user interfaces (TUIs) with OpenTUI (core and React)
-license: MIT
-compatibility: opencode
-metadata:
-  library: opentui
-  target: terminal-ui
-  frameworks: core, react
+description: A skill for building terminal user interfaces with opentui and react.
 ---
+
+## When to use
+
+Use this skill when building UIs with opentui and react.
 
 ## What I do
 - Guide development of OpenTUI applications (both core and React)
 - Explain and implement OpenTUI renderables, components, and hooks
 - Help with styling, layout, keyboard/mouse input, and rendering
 - Assist with console integration and debugging
-
-## When to use
-
-Use this skill when building terminal user interfaces with OpenTUI. I understand both the core rendering system and React integration.
-
-Ask clarifying questions if UI layout or interaction requirements are unclear.
 
 ## Installation
 
