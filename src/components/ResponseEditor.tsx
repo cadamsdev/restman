@@ -24,7 +24,7 @@ export function ResponseEditor({
     ];
 
     return (
-      <box style={{ flexDirection: 'row', gap: 1 }}>
+      <box style={{ flexDirection: 'row', gap: 1, flexShrink: 0 }}>
         {tabs.map((tab) => (
           <text
             key={tab.name}
