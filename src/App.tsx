@@ -336,6 +336,11 @@ export function App() {
 
       // Open save modal
       if (key.sequence === 's') {
+        if (!url) {
+          setToastMessage('URL is required to save request');
+          setTimeout(() => setToastMessage(''), 3000);
+          return;
+        }
         setShowSaveModal(true);
         return;
       }
