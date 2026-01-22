@@ -1,5 +1,5 @@
 import { useCallback, useState, useEffect } from 'react';
-import { useKeyboard, useTerminalDimensions } from '@opentui/react';
+import { useKeyboard, useTerminalDimensions, useRenderer } from '@opentui/react';
 import { HTTPClient } from './http-client';
 import type { RequestOptions, Response } from './http-client';
 import packageJson from '../package.json';
@@ -37,6 +37,7 @@ type FocusField = 'method' | 'url' | 'request' | 'response' | 'environment';
 
 export function App() {
   const { width, height } = useTerminalDimensions();
+  const renderer = useRenderer();
   const httpClient = new HTTPClient();
 
   // State
@@ -111,6 +112,18 @@ export function App() {
       void saveEnvironments(environmentsConfig);
     }
   }, [environmentsConfig]);
+
+  // Clean exit handler
+  const handleExit = useCallback(() => {
+    const cleanExit = (globalThis as any).__restmanCleanExit;
+    if (cleanExit) {
+      cleanExit();
+    } else {
+      // Fallback if global not available
+      renderer.destroy();
+      process.exit(0);
+    }
+  }, [renderer]);
 
   const parseHeaders = (headersText: string): Record<string, string> => {
     const headers: Record<string, string> = {};
@@ -305,7 +318,7 @@ export function App() {
 
       // Force quit
       if (key.ctrl && key.name === 'c') {
-        process.exit(0);
+        handleExit();
         return;
       }
 
@@ -761,7 +774,7 @@ export function App() {
       {/* Exit Modal */}
       {showExitModal && (
         <ExitModal
-          onConfirm={() => process.exit(0)}
+          onConfirm={handleExit}
           onCancel={() => setShowExitModal(false)}
         />
       )}
