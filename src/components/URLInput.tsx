@@ -17,10 +17,12 @@ export function URLInput({ value, onChange, focused, editMode, onSubmit }: URLIn
       title="URL"
       style={{
         flexGrow: 1,
+        minHeight: 3,
         border: true,
         borderColor,
         paddingLeft: 1,
         paddingRight: 1,
+        overflow: 'hidden',
       }}
     >
       {editMode ? (

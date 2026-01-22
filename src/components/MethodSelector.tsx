@@ -30,10 +30,12 @@ export function MethodSelector({ value, focused, editMode }: MethodSelectorProps
       title="Method"
       style={{
         width: 20,
+        minHeight: 3,
         border: true,
         borderColor,
         paddingLeft: 1,
         paddingRight: 1,
+        overflow: 'hidden',
       }}
     >
       <text fg={focused ? getMethodColor(value) : '#666666'}>

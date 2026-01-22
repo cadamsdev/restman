@@ -25,10 +25,12 @@ export function EnvironmentSelector({
       title="Environment"
       style={{
         width: '100%',
+        minHeight: 3,
         border: true,
         borderColor,
         paddingLeft: 1,
         paddingRight: 1,
+        overflow: 'hidden',
       }}
     >
       <text fg={activeEnv ? '#BB7733' : '#666666'}>
