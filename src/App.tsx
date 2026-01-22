@@ -18,7 +18,7 @@ import { loadHistory, saveHistory, type HistoryEntry } from './history-storage';
 import { URLInput } from './components/URLInput';
 import { MethodInput } from './components/MethodInput';
 import { RequestEditor } from './components/RequestEditor';
-import { ResponseEditor } from './components/ResponseEditor';
+import { ResponseViewer } from './components/ResponseViewer';
 import { EnvironmentInput } from './components/EnvironmentInput';
 import { Instructions } from './components/Instructions';
 import { ExitModal } from './components/ExitModal';
@@ -584,8 +584,8 @@ export function App() {
         onCancel={() => setEditMode(null)}
       />
 
-      {/* Response Editor */}
-      <ResponseEditor
+      {/* Response Viewer */}
+      <ResponseViewer
         response={response}
         focused={focusedField === 'response'}
         editMode={editMode === 'response'}

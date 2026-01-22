@@ -1,6 +1,6 @@
 import type { Response } from '../http-client';
 
-interface ResponseEditorProps {
+interface ResponseViewerProps {
   response: Response | null;
   focused: boolean;
   editMode: boolean;
@@ -8,12 +8,12 @@ interface ResponseEditorProps {
   onTabChange: (tab: 'body' | 'headers' | 'cookies') => void;
 }
 
-export function ResponseEditor({
+export function ResponseViewer({
   response,
   focused,
   editMode,
   activeTab,
-}: ResponseEditorProps) {
+}: ResponseViewerProps) {
   const borderColor = focused ? '#CC8844' : editMode ? '#BB7733' : '#555555';
 
   const renderTabHeader = () => {
