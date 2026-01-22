@@ -106,7 +106,8 @@ export function EnvironmentsViewerModal({
       >
         <box
           style={{
-            border: 'double',
+            border: true,
+            borderStyle: 'double',
             borderColor: '#665544',
             paddingLeft: 3,
             paddingRight: 3,
@@ -171,7 +172,8 @@ export function EnvironmentsViewerModal({
     >
       <box
         style={{
-          border: 'double',
+          border: true,
+          borderStyle: 'double',
           borderColor: '#665544',
           paddingLeft: 3,
           paddingRight: 3,

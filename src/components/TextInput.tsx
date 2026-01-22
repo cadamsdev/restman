@@ -118,7 +118,6 @@ export function TextInput({
 
   useKeyboard(handleKeyboard);
 
-  const displayValue = value || placeholder;
   const cursor = focused && cursorVisible ? '█' : '';
 
   // Render cursor by replacing the character at cursor position

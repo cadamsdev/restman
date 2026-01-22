@@ -44,7 +44,8 @@ export function SaveModal({ defaultName, onSave, onCancel }: SaveModalProps) {
     >
       <box
         style={{
-          border: 'double',
+          border: true,
+          borderStyle: 'double',
           borderColor: '#665544',
           paddingLeft: 3,
           paddingRight: 3,

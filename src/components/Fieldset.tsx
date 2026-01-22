@@ -16,7 +16,7 @@ export function Fieldset({
   title,
   children,
   borderColor = '#888888',
-  titleColor,
+  titleColor: _titleColor,
   focused = false,
   editMode = false,
   flexGrow,
@@ -33,8 +33,8 @@ export function Fieldset({
       title={title}
       style={{
         flexGrow,
-        height,
-        width,
+        height: height as number | 'auto' | `${number}%` | undefined,
+        width: width as number | 'auto' | `${number}%` | undefined,
         flexDirection: 'column',
         border: true,
         borderColor: actualBorderColor,
