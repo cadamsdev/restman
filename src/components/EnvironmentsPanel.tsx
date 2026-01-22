@@ -118,6 +118,12 @@ export function EnvironmentsPanel({
           <box style={{ justifyContent: 'center' }}>
             <text fg="#666666">Press n to add a new environment</text>
           </box>
+          
+          <box style={{ marginTop: 1, flexDirection: 'column', paddingLeft: 1, paddingRight: 1 }}>
+            <text fg="#888888">Use variables in your requests:</text>
+            <text fg="#666666">  URL: {'{{'} BASE_URL {'}}'}/api/users</text>
+            <text fg="#666666">  Headers: Authorization: Bearer {'{{'} API_KEY {'}}'}</text>
+          </box>
 
           <box
             style={{
@@ -193,6 +199,10 @@ export function EnvironmentsPanel({
               <text fg="#666666">... and {environments.length - 8} more</text>
             </box>
           )}
+        </box>
+
+        <box style={{ marginTop: 1, flexDirection: 'column', paddingLeft: 1, paddingRight: 1 }}>
+          <text fg="#888888">Use variables: {'{{'} VARIABLE_NAME {'}}'}</text>
         </box>
 
         <box

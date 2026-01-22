@@ -31,6 +31,7 @@ import { SavedRequestsPanel } from './components/SavedRequestsPanel';
 import { MethodSelectorModal } from './components/MethodSelectorModal';
 import { ResponseViewerModal } from './components/ResponseViewerModal';
 import { HelpModal } from './components/HelpModal';
+import { substituteVariables, substituteVariablesInHeaders } from './variable-substitution';
 
 type FocusField = 'method' | 'url' | 'request' | 'response' | 'environment';
 
@@ -170,11 +171,11 @@ export function App() {
       const activeEnv = getActiveEnvironment(environmentsConfig);
       const variables = activeEnv?.variables || {};
 
-      // TODO: Apply variable substitution when we migrate variable-substitution.ts
-      // const substitutedUrl = substituteVariables(url, variables);
+      // Apply variable substitution to URL
+      const substitutedUrl = substituteVariables(url, variables);
       
       // Add query parameters to URL
-      let finalUrl = url;
+      let finalUrl = substitutedUrl;
       if (params) {
         const urlParams = parseParams(params);
         const paramString = urlParams.toString();
@@ -183,11 +184,18 @@ export function App() {
         }
       }
 
+      // Apply variable substitution to headers
+      const parsedHeaders = parseHeaders(headers);
+      const substitutedHeaders = substituteVariablesInHeaders(parsedHeaders, variables);
+
+      // Apply variable substitution to body
+      const substitutedBody = body ? substituteVariables(body, variables) : undefined;
+
       const requestOptions: RequestOptions = {
         method,
         url: finalUrl,
-        headers: parseHeaders(headers),
-        body: body || undefined,
+        headers: substitutedHeaders,
+        body: substitutedBody,
       };
 
       const result = await httpClient.sendRequest(requestOptions);
