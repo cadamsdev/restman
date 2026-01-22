@@ -28,6 +28,7 @@ import { SaveModal } from './components/SaveModal';
 import { HistoryPanel } from './components/HistoryPanel';
 import { MethodSelectorModal } from './components/MethodSelectorModal';
 import { ResponseViewerModal } from './components/ResponseViewerModal';
+import { HelpModal } from './components/HelpModal';
 
 type FocusField = 'method' | 'url' | 'request' | 'response' | 'environment';
 
@@ -57,6 +58,7 @@ export function App() {
   const [showSaveModal, setShowSaveModal] = useState<boolean>(false);
   const [showHistoryPanel, setShowHistoryPanel] = useState<boolean>(false);
   const [showResponseViewerModal, setShowResponseViewerModal] = useState<boolean>(false);
+  const [showHelpModal, setShowHelpModal] = useState<boolean>(false);
   const [savedRequests, setSavedRequests] = useState<SavedRequest[]>([]);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [requestActiveTab, setRequestActiveTab] = useState<'headers' | 'params' | 'body'>(
@@ -253,6 +255,11 @@ export function App() {
         return;
       }
 
+      // Help modal handles its own keyboard input
+      if (showHelpModal) {
+        return;
+      }
+
       // Exit edit mode with ESC
       if (editMode && key.name === 'escape') {
         setEditMode(null);
@@ -261,6 +268,12 @@ export function App() {
 
       // Don't handle keys when in edit mode (input components handle them)
       if (editMode) return;
+
+      // Open help modal
+      if (key.sequence === '/') {
+        setShowHelpModal(true);
+        return;
+      }
 
       // Open response viewer modal with spacebar when focused on response
       if (key.name === 'space' && focusedField === 'response' && response) {
@@ -469,7 +482,7 @@ export function App() {
         return;
       }
     },
-    [editMode, focusedField, fields, showExitModal, showEnvironmentSelectorModal, showMethodSelectorModal],
+    [editMode, focusedField, fields, showExitModal, showEnvironmentSelectorModal, showMethodSelectorModal, showHelpModal],
   );
 
   useKeyboard(handleKeyboard);
@@ -694,6 +707,11 @@ export function App() {
           activeTab={responseActiveTab}
           onClose={() => setShowResponseViewerModal(false)}
         />
+      )}
+
+      {/* Help Modal */}
+      {showHelpModal && (
+        <HelpModal onClose={() => setShowHelpModal(false)} />
       )}
 
       {/* Exit Modal */}
