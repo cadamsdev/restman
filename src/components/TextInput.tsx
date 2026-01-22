@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useKeyboard } from '@opentui/react';
+import { useKeyboard, useRenderer } from '@opentui/react';
 import { colors } from '../tokens';
 
 interface TextInputProps {
@@ -20,6 +20,7 @@ export function TextInput({
   placeholder = '',
 }: TextInputProps) {
   const [cursorVisible, setCursorVisible] = useState(true);
+  const renderer = useRenderer();
 
   // Blink cursor
   useEffect(() => {
@@ -29,6 +30,20 @@ export function TextInput({
     }, 500);
     return () => clearInterval(interval);
   }, [focused]);
+
+  // Handle paste events
+  useEffect(() => {
+    if (!focused) return;
+
+    const handlePaste = (event: { text: string }) => {
+      onChange(value + event.text);
+    };
+
+    renderer.keyInput.on('paste', handlePaste);
+    return () => {
+      renderer.keyInput.off('paste', handlePaste);
+    };
+  }, [focused, onChange, value, renderer]);
 
   const handleKeyboard = useCallback((key: {
     name: string;
@@ -54,8 +69,8 @@ export function TextInput({
 
     if (key.ctrl) return; // Ignore ctrl combinations
 
-    // Add character
-    if (key.sequence && key.sequence.length === 1) {
+    // Handle pasted text (multi-character sequences) or single character input
+    if (key.sequence) {
       onChange(value + key.sequence);
     }
   }, [focused, onSubmit, onCancel, onChange, value]);
