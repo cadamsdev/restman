@@ -3,13 +3,13 @@ import { useKeyboard } from '@opentui/react';
 import type { RequestOptions } from '../http-client';
 import type { HistoryEntry } from '../history-storage';
 
-interface HistoryPanelProps {
+interface HistoryViewerProps {
   history: HistoryEntry[];
   onSelectRequest: (request: RequestOptions) => void;
   onClose: () => void;
 }
 
-export function HistoryPanel({ history, onSelectRequest, onClose }: HistoryPanelProps) {
+export function HistoryViewer({ history, onSelectRequest, onClose }: HistoryViewerProps) {
   // Start at the most recent (index 0 in reversed list = last item in original)
   const [selectedIndex, setSelectedIndex] = useState(0);
 

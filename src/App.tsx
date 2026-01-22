@@ -26,7 +26,7 @@ import { EnvironmentSelectorModal } from './components/EnvironmentSelectorModal'
 import { EnvironmentsViewerModal } from './components/EnvironmentsViewerModal';
 import { EnvironmentEditorModal } from './components/EnvironmentEditorModal';
 import { SaveModal } from './components/SaveModal';
-import { HistoryPanel } from './components/HistoryPanel';
+import { HistoryViewer } from './components/HistoryViewer';
 import { SavedRequestsPanel } from './components/SavedRequestsPanel';
 import { MethodSelectorModal } from './components/MethodSelectorModal';
 import { ResponseViewerModal } from './components/ResponseViewerModal';
@@ -721,7 +721,7 @@ export function App() {
 
       {/* History Panel */}
       {showHistoryPanel && (
-        <HistoryPanel
+        <HistoryViewer
           history={history}
           onSelectRequest={(request) => {
             setMethod(request.method);
