@@ -46,34 +46,31 @@ export function ResponseEditor({
 
     if (activeTab === 'body') {
       return (
-        <box style={{ flexDirection: 'column', flexGrow: 1 }}>
-          <text fg={response.status >= 200 && response.status < 300 ? '#99AA77' : '#BB6655'}>
-            Status: {response.status} {response.statusText} ({response.time}ms)
-          </text>
-          <scrollbox style={{ flexGrow: 1 }}>
-            <text fg="#999999">{response.body}</text>
-          </scrollbox>
-        </box>
+        <scrollbox style={{ flexGrow: 1 }}>
+          <text fg="#999999">{response.body}</text>
+        </scrollbox>
       );
     } else if (activeTab === 'headers') {
       const headerLines = Object.entries(response.headers)
         .map(([key, value]) => `${key}: ${value}`)
         .join('\n');
       return (
-        <box style={{ flexDirection: 'column', flexGrow: 1 }}>
-          <scrollbox style={{ flexGrow: 1 }}>
-            <text fg="#999999">{headerLines || '(no headers)'}</text>
-          </scrollbox>
-        </box>
+        <scrollbox style={{ flexGrow: 1 }}>
+          <text fg="#999999">{headerLines || '(no headers)'}</text>
+        </scrollbox>
       );
     } else {
       return <text fg="#666666">(cookies not yet implemented)</text>;
     }
   };
 
+  const title = response
+    ? `Response - ${response.status} ${response.statusText} (${response.time}ms)`
+    : 'Response';
+
   return (
     <box
-      title="Response"
+      title={title}
       style={{
         height: 15,
         flexShrink: 0,
