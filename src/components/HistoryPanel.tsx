@@ -96,7 +96,7 @@ export function HistoryPanel({ history, onSelectRequest, onClose }: HistoryPanel
       >
         <box
           style={{
-            border: 'double',
+            borderStyle: 'double',
             borderColor: '#665544',
             paddingLeft: 3,
             paddingRight: 3,
@@ -136,8 +136,23 @@ export function HistoryPanel({ history, onSelectRequest, onClose }: HistoryPanel
   }
 
   const reversedHistory = [...history].reverse();
-  const visibleHistory = reversedHistory.slice(0, 10);
+  
+  // Calculate viewport for scrolling
+  const maxVisibleItems = 10;
   const actualSelectedIndex = history.length - 1 - selectedIndex;
+  
+  // Calculate scroll offset to keep selected item visible
+  let scrollOffset = 0;
+  if (history.length > maxVisibleItems) {
+    // Center the selected item when possible
+    const centerOffset = Math.floor(maxVisibleItems / 2);
+    scrollOffset = Math.max(0, actualSelectedIndex - centerOffset);
+    scrollOffset = Math.min(scrollOffset, history.length - maxVisibleItems);
+  }
+  
+  const visibleHistory = reversedHistory.slice(scrollOffset, scrollOffset + maxVisibleItems);
+  const hasMoreAbove = scrollOffset > 0;
+  const hasMoreBelow = scrollOffset + maxVisibleItems < history.length;
 
   return (
     <box
@@ -153,7 +168,7 @@ export function HistoryPanel({ history, onSelectRequest, onClose }: HistoryPanel
     >
       <box
         style={{
-          border: 'double',
+          borderStyle: 'double',
           borderColor: '#665544',
           paddingLeft: 3,
           paddingRight: 3,
@@ -169,9 +184,14 @@ export function HistoryPanel({ history, onSelectRequest, onClose }: HistoryPanel
         </box>
 
         <box style={{ marginTop: 1, flexDirection: 'column' }}>
+          {hasMoreAbove && (
+            <box style={{ justifyContent: 'center' }}>
+              <text fg="#666666">↑ {scrollOffset} more above</text>
+            </box>
+          )}
           {visibleHistory.map((entry, index) => {
-            const reverseIndex = history.length - 1 - index;
-            const isSelected = reverseIndex === selectedIndex;
+            const reverseIndex = scrollOffset + index;
+            const isSelected = reverseIndex === actualSelectedIndex;
 
             if (!entry || !entry.request || !entry.request.method || !entry.request.url) {
               return null;
@@ -203,9 +223,9 @@ export function HistoryPanel({ history, onSelectRequest, onClose }: HistoryPanel
               </box>
             );
           })}
-          {history.length > 10 && (
-            <box style={{ marginTop: 1 }}>
-              <text fg="#666666">... and {history.length - 10} more</text>
+          {hasMoreBelow && (
+            <box style={{ justifyContent: 'center' }}>
+              <text fg="#666666">↓ {history.length - (scrollOffset + maxVisibleItems)} more below</text>
             </box>
           )}
         </box>
