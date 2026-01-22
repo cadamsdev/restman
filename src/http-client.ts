@@ -46,7 +46,25 @@ export class HTTPClient {
       const contentType = response.headers.get('content-type') || '';
       let body: string;
 
-      if (contentType.includes('application/json')) {
+      // Check if content is binary (images, videos, audio, etc.)
+      const binaryContentTypes = [
+        'image/',
+        'video/',
+        'audio/',
+        'application/octet-stream',
+        'application/pdf',
+        'application/zip',
+        'application/x-',
+        'font/',
+      ];
+
+      const isBinary = binaryContentTypes.some((type) => contentType.toLowerCase().includes(type));
+
+      if (isBinary) {
+        const arrayBuffer = await response.arrayBuffer();
+        const sizeKB = (arrayBuffer.byteLength / 1024).toFixed(1);
+        body = `(binary content - ${contentType} - ${sizeKB} KB)`;
+      } else if (contentType.includes('application/json')) {
         try {
           const json = await response.json();
           body = JSON.stringify(json, null, 2);

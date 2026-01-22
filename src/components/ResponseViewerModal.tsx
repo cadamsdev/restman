@@ -23,9 +23,10 @@ export function ResponseViewerModal({ response, activeTab, onClose }: ResponseVi
 
   const renderContent = () => {
     if (activeTab === 'body') {
+      const isBinaryContent = response.body.startsWith('(binary content -');
       return (
         <scrollbox style={{ flexGrow: 1 }}>
-          <text fg="#999999">{response.body}</text>
+          <text fg={isBinaryContent ? '#CC8844' : '#999999'}>{response.body}</text>
         </scrollbox>
       );
     } else if (activeTab === 'headers') {
