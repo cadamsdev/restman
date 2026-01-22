@@ -2,6 +2,7 @@ import { useCallback, useState, useEffect } from 'react';
 import { useKeyboard, useTerminalDimensions } from '@opentui/react';
 import { HTTPClient } from './http-client';
 import type { RequestOptions, Response } from './http-client';
+import packageJson from '../package.json';
 import {
   loadEnvironments,
   saveEnvironments,
@@ -515,7 +516,7 @@ export function App() {
       }}
     >
       {/* Header */}
-      <text fg="#CC8844">RestMan v2.0.0</text>
+      <text fg="#CC8844">RestMan v{packageJson.version}</text>
 
       {/* Environment Selector */}
       <EnvironmentSelector
