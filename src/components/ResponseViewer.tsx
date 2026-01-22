@@ -8,12 +8,7 @@ interface ResponseViewerProps {
   onTabChange: (tab: 'body' | 'headers' | 'cookies') => void;
 }
 
-export function ResponseViewer({
-  response,
-  focused,
-  editMode,
-  activeTab,
-}: ResponseViewerProps) {
+export function ResponseViewer({ response, focused, editMode, activeTab }: ResponseViewerProps) {
   const borderColor = focused ? '#CC8844' : editMode ? '#BB7733' : '#555555';
 
   const renderTabHeader = () => {
@@ -26,10 +21,7 @@ export function ResponseViewer({
     return (
       <box style={{ flexDirection: 'row', gap: 1, flexShrink: 0 }}>
         {tabs.map((tab) => (
-          <text
-            key={tab.name}
-            fg={activeTab === tab.name ? tab.color : '#666666'}
-          >
+          <text key={tab.name} fg={activeTab === tab.name ? tab.color : '#666666'}>
             {tab.label}
           </text>
         ))}
@@ -39,9 +31,7 @@ export function ResponseViewer({
 
   const renderContent = () => {
     if (!response) {
-      return (
-        <text fg="#666666">(no response yet - press Enter to send request)</text>
-      );
+      return <text fg="#666666">(no response yet - press Enter to send request)</text>;
     }
 
     if (activeTab === 'body') {

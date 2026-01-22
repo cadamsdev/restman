@@ -9,7 +9,11 @@ interface SavedRequestsModalProps {
   onClose: () => void;
 }
 
-export function SavedRequestsModal({ savedRequests, onSelectRequest, onClose }: SavedRequestsModalProps) {
+export function SavedRequestsModal({
+  savedRequests,
+  onSelectRequest,
+  onClose,
+}: SavedRequestsModalProps) {
   const [selectedIndex, setSelectedIndex] = useState(savedRequests.length > 0 ? 0 : 0);
 
   const handleKeyboard = useCallback(
@@ -156,7 +160,9 @@ export function SavedRequestsModal({ savedRequests, onSelectRequest, onClose }: 
         }}
       >
         <box style={{ justifyContent: 'center' }}>
-          <text fg="#CC8844">Saved Requests ({savedRequests.length}) - {selectedIndex + 1}/{savedRequests.length}</text>
+          <text fg="#CC8844">
+            Saved Requests ({savedRequests.length}) - {selectedIndex + 1}/{savedRequests.length}
+          </text>
         </box>
 
         <box style={{ marginTop: 1, flexDirection: 'column' }}>
@@ -189,13 +195,12 @@ export function SavedRequestsModal({ savedRequests, onSelectRequest, onClose }: 
                     bg={isSelected ? '#2a2520' : undefined}
                     fg={isSelected ? '#BB7733' : '#999999'}
                   >
-                    {' '}{truncateUrl(request.request.url, 55)}
+                    {' '}
+                    {truncateUrl(request.request.url, 55)}
                   </text>
                 </box>
                 <box style={{ marginLeft: 2 }}>
-                  <text fg="#666666">
-                    Saved {formatTimestamp(request.timestamp)}
-                  </text>
+                  <text fg="#666666">Saved {formatTimestamp(request.timestamp)}</text>
                 </box>
               </box>
             );

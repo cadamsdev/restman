@@ -27,7 +27,7 @@ export function TextAreaInput({
         return;
       }
     },
-    [focused, onCancel]
+    [focused, onCancel],
   );
 
   useKeyboard(handleKeyboard);

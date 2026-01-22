@@ -53,10 +53,10 @@ export function HelpModal({ onClose }: HelpModalProps) {
           <box style={{ flexDirection: 'column' }}>
             <text fg="#999999">Navigation:</text>
             <box style={{ flexDirection: 'column', paddingLeft: 2 }}>
-              <text fg="#666666">Tab / Shift+Tab  Navigate between fields</text>
-              <text fg="#666666">↑ / ↓            Navigate up/down</text>
-              <text fg="#666666">← / →            Switch tabs in Request/Response panels</text>
-              <text fg="#666666">0-4              Quick navigation (0:Env, 1:Method, 2:URL, 3:Req, 4:Res)</text>
+              <text fg="#666666">Tab / Shift+Tab Navigate between fields</text>
+              <text fg="#666666">↑ / ↓ Navigate up/down</text>
+              <text fg="#666666">← / → Switch tabs in Request/Response panels</text>
+              <text fg="#666666">0-4 Quick navigation (0:Env, 1:Method, 2:URL, 3:Req, 4:Res)</text>
             </box>
           </box>
 
@@ -64,12 +64,12 @@ export function HelpModal({ onClose }: HelpModalProps) {
           <box style={{ flexDirection: 'column' }}>
             <text fg="#999999">Actions:</text>
             <box style={{ flexDirection: 'column', paddingLeft: 2 }}>
-              <text fg="#666666">Enter            Send HTTP request</text>
-              <text fg="#666666">e                Edit focused field</text>
-              <text fg="#666666">Space            Expand response viewer (when on response)</text>
-              <text fg="#666666">s                Save current request</text>
-              <text fg="#666666">h                View history</text>
-              <text fg="#666666">v                Manage environments</text>
+              <text fg="#666666">Enter Send HTTP request</text>
+              <text fg="#666666">e Edit focused field</text>
+              <text fg="#666666">Space Expand response viewer (when on response)</text>
+              <text fg="#666666">s Save current request</text>
+              <text fg="#666666">h View history</text>
+              <text fg="#666666">v Manage environments</text>
             </box>
           </box>
 
@@ -77,8 +77,8 @@ export function HelpModal({ onClose }: HelpModalProps) {
           <box style={{ flexDirection: 'column' }}>
             <text fg="#999999">Edit Mode:</text>
             <box style={{ flexDirection: 'column', paddingLeft: 2 }}>
-              <text fg="#666666">ESC              Exit edit mode</text>
-              <text fg="#666666">Enter            Submit changes</text>
+              <text fg="#666666">ESC Exit edit mode</text>
+              <text fg="#666666">Enter Submit changes</text>
             </box>
           </box>
 
@@ -86,9 +86,9 @@ export function HelpModal({ onClose }: HelpModalProps) {
           <box style={{ flexDirection: 'column' }}>
             <text fg="#999999">Application:</text>
             <box style={{ flexDirection: 'column', paddingLeft: 2 }}>
-              <text fg="#666666">/                Show this help menu</text>
-              <text fg="#666666">q / ESC          Quit application</text>
-              <text fg="#666666">Ctrl+C           Force quit</text>
+              <text fg="#666666">/ Show this help menu</text>
+              <text fg="#666666">q / ESC Quit application</text>
+              <text fg="#666666">Ctrl+C Force quit</text>
             </box>
           </box>
         </box>

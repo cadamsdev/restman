@@ -35,9 +35,7 @@ export function URLInput({ value, onChange, focused, editMode, onSubmit }: URLIn
           placeholder="Enter URL..."
         />
       ) : (
-        <text fg={getTextColor(editMode, !!value)}>
-          {value || 'Enter URL...'}
-        </text>
+        <text fg={getTextColor(editMode, !!value)}>{value || 'Enter URL...'}</text>
       )}
     </box>
   );

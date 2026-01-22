@@ -12,9 +12,7 @@ export function Instructions({ editMode }: InstructionsProps) {
           paddingRight: 1,
         }}
       >
-        <text fg="#CC8844">
-          EDIT MODE: Type to edit | ESC: Exit edit mode | Enter: Submit
-        </text>
+        <text fg="#CC8844">EDIT MODE: Type to edit | ESC: Exit edit mode | Enter: Submit</text>
       </box>
     );
   }
@@ -28,7 +26,8 @@ export function Instructions({ editMode }: InstructionsProps) {
       }}
     >
       <text fg="#888888">
-        Tab/↑↓: Navigate | ←→: Switch Tabs | e: Edit | v: Environments | s: Save | h: History | Space: Expand Response | Enter: Send | 1-4: Quick Nav | /: Help | q: Quit
+        Tab/↑↓: Navigate | ←→: Switch Tabs | e: Edit | v: Environments | s: Save | h: History |
+        Space: Expand Response | Enter: Send | 1-4: Quick Nav | /: Help | q: Quit
       </text>
     </box>
   );

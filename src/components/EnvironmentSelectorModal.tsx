@@ -82,7 +82,9 @@ export function EnvironmentSelectorModal({
             <text fg="#CC8844">No Environments Available</text>
           </box>
 
-          <box style={{ marginTop: 1, paddingLeft: 2, paddingRight: 2, flexDirection: 'row', gap: 1 }}>
+          <box
+            style={{ marginTop: 1, paddingLeft: 2, paddingRight: 2, flexDirection: 'row', gap: 1 }}
+          >
             <text fg="#666666">No environments found. Press</text>
             <text fg="#BB7733">v</text>
             <text fg="#666666">to manage environments.</text>

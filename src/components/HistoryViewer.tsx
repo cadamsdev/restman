@@ -143,10 +143,10 @@ export function HistoryViewer({ history, onSelectRequest, onClose }: HistoryView
   }
 
   const reversedHistory = [...history].reverse();
-  
+
   // Calculate viewport for scrolling
   const maxVisibleItems = 10;
-  
+
   // Calculate scroll offset to keep selected item visible
   let scrollOffset = 0;
   if (history.length > maxVisibleItems) {
@@ -155,7 +155,7 @@ export function HistoryViewer({ history, onSelectRequest, onClose }: HistoryView
     scrollOffset = Math.max(0, selectedIndex - centerOffset);
     scrollOffset = Math.min(scrollOffset, history.length - maxVisibleItems);
   }
-  
+
   const visibleHistory = reversedHistory.slice(scrollOffset, scrollOffset + maxVisibleItems);
   const hasMoreAbove = scrollOffset > 0;
   const hasMoreBelow = scrollOffset + maxVisibleItems < history.length;
@@ -186,7 +186,9 @@ export function HistoryViewer({ history, onSelectRequest, onClose }: HistoryView
         }}
       >
         <box style={{ justifyContent: 'center' }}>
-          <text fg="#CC8844">Request History ({history.length}) - {selectedIndex + 1}/{history.length}</text>
+          <text fg="#CC8844">
+            Request History ({history.length}) - {selectedIndex + 1}/{history.length}
+          </text>
         </box>
 
         <box style={{ marginTop: 1, flexDirection: 'column' }}>
@@ -217,7 +219,8 @@ export function HistoryViewer({ history, onSelectRequest, onClose }: HistoryView
                     bg={isSelected ? '#2a2520' : undefined}
                     fg={isSelected ? '#BB7733' : '#999999'}
                   >
-                    {' '}{truncateUrl(entry.request.url, 45)}
+                    {' '}
+                    {truncateUrl(entry.request.url, 45)}
                   </text>
                 </box>
                 <box style={{ marginLeft: 2 }}>
@@ -231,7 +234,9 @@ export function HistoryViewer({ history, onSelectRequest, onClose }: HistoryView
           })}
           {hasMoreBelow && (
             <box style={{ justifyContent: 'center' }}>
-              <text fg="#666666">↓ {history.length - (scrollOffset + maxVisibleItems)} more below</text>
+              <text fg="#666666">
+                ↓ {history.length - (scrollOffset + maxVisibleItems)} more below
+              </text>
             </box>
           )}
         </box>

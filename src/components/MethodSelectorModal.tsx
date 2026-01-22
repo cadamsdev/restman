@@ -94,10 +94,7 @@ export function MethodSelectorModal({
 
         <box style={{ marginTop: 1, flexDirection: 'column', paddingLeft: 2, paddingRight: 2 }}>
           {methods.map((method, index) => (
-            <text
-              key={method}
-              fg={index === selectedIndex ? getMethodColor(method) : '#666666'}
-            >
+            <text key={method} fg={index === selectedIndex ? getMethodColor(method) : '#666666'}>
               {index === selectedIndex ? `▸ ${method}` : `  ${method}`}
             </text>
           ))}

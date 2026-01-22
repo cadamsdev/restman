@@ -27,5 +27,3 @@ process.on('SIGTERM', cleanExit);
 
 // Export cleanExit for use in App component
 (globalThis as any).__restmanCleanExit = cleanExit;
-
-

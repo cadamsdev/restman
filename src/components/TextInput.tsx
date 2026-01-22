@@ -53,68 +53,68 @@ export function TextInput({
     };
   }, [focused, onChange, value, cursorPosition, renderer]);
 
-  const handleKeyboard = useCallback((key: {
-    name: string;
-    ctrl?: boolean;
-    sequence?: string;
-  }) => {
-    if (!focused) return;
+  const handleKeyboard = useCallback(
+    (key: { name: string; ctrl?: boolean; sequence?: string }) => {
+      if (!focused) return;
 
-    if (key.name === 'return') {
-      onSubmit?.();
-      return;
-    }
-
-    if (key.name === 'escape') {
-      onCancel?.();
-      return;
-    }
-
-    if (key.name === 'backspace') {
-      if (cursorPosition > 0) {
-        const newValue = value.slice(0, cursorPosition - 1) + value.slice(cursorPosition);
-        onChange(newValue);
-        setCursorPosition(cursorPosition - 1);
+      if (key.name === 'return') {
+        onSubmit?.();
+        return;
       }
-      return;
-    }
 
-    // Handle arrow key navigation
-    if (key.name === 'left') {
-      setCursorPosition(Math.max(0, cursorPosition - 1));
-      return;
-    }
+      if (key.name === 'escape') {
+        onCancel?.();
+        return;
+      }
 
-    if (key.name === 'right') {
-      setCursorPosition(Math.min(value.length, cursorPosition + 1));
-      return;
-    }
+      if (key.name === 'backspace') {
+        if (cursorPosition > 0) {
+          const newValue = value.slice(0, cursorPosition - 1) + value.slice(cursorPosition);
+          onChange(newValue);
+          setCursorPosition(cursorPosition - 1);
+        }
+        return;
+      }
 
-    if (key.name === 'home') {
-      setCursorPosition(0);
-      return;
-    }
+      // Handle arrow key navigation
+      if (key.name === 'left') {
+        setCursorPosition(Math.max(0, cursorPosition - 1));
+        return;
+      }
 
-    if (key.name === 'end') {
-      setCursorPosition(value.length);
-      return;
-    }
+      if (key.name === 'right') {
+        setCursorPosition(Math.min(value.length, cursorPosition + 1));
+        return;
+      }
 
-    // Ignore other navigation keys
-    const ignoredKeys = ['up', 'down', 'pageup', 'pagedown', 'tab'];
-    if (ignoredKeys.includes(key.name)) {
-      return;
-    }
+      if (key.name === 'home') {
+        setCursorPosition(0);
+        return;
+      }
 
-    if (key.ctrl) return; // Ignore ctrl combinations
+      if (key.name === 'end') {
+        setCursorPosition(value.length);
+        return;
+      }
 
-    // Handle pasted text (multi-character sequences) or single character input
-    if (key.sequence) {
-      const newValue = value.slice(0, cursorPosition) + key.sequence + value.slice(cursorPosition);
-      onChange(newValue);
-      setCursorPosition(cursorPosition + key.sequence.length);
-    }
-  }, [focused, onSubmit, onCancel, onChange, value, cursorPosition]);
+      // Ignore other navigation keys
+      const ignoredKeys = ['up', 'down', 'pageup', 'pagedown', 'tab'];
+      if (ignoredKeys.includes(key.name)) {
+        return;
+      }
+
+      if (key.ctrl) return; // Ignore ctrl combinations
+
+      // Handle pasted text (multi-character sequences) or single character input
+      if (key.sequence) {
+        const newValue =
+          value.slice(0, cursorPosition) + key.sequence + value.slice(cursorPosition);
+        onChange(newValue);
+        setCursorPosition(cursorPosition + key.sequence.length);
+      }
+    },
+    [focused, onSubmit, onCancel, onChange, value, cursorPosition],
+  );
 
   useKeyboard(handleKeyboard);
 
@@ -137,9 +137,5 @@ export function TextInput({
     displayText = `${beforeCursor}${cursorChar}${afterCursor}`;
   }
 
-  return (
-    <text fg={colors.textActive}>
-      {displayText}
-    </text>
-  );
+  return <text fg={colors.textActive}>{displayText}</text>;
 }

@@ -186,7 +186,7 @@ export function App() {
 
       // Apply variable substitution to URL
       const substitutedUrl = substituteVariables(url, variables);
-      
+
       // Add query parameters to URL
       let finalUrl = substitutedUrl;
       if (params) {
@@ -238,7 +238,7 @@ export function App() {
   };
 
   const handleKeyboard = useCallback(
-    (key: { name: string; ctrl?: boolean; shift?: boolean; sequence?: string }) => {      
+    (key: { name: string; ctrl?: boolean; shift?: boolean; sequence?: string }) => {
       // Exit modal handles its own keyboard input
       if (showExitModal) {
         return;
@@ -522,7 +522,17 @@ export function App() {
         return;
       }
     },
-    [editMode, focusedField, fields, showExitModal, showEnvironmentSelectorModal, showMethodSelectorModal, showHelpModal, showHistoryPanel, showSavedRequestsModal],
+    [
+      editMode,
+      focusedField,
+      fields,
+      showExitModal,
+      showEnvironmentSelectorModal,
+      showMethodSelectorModal,
+      showHelpModal,
+      showHistoryPanel,
+      showSavedRequestsModal,
+    ],
   );
 
   useKeyboard(handleKeyboard);
@@ -665,32 +675,37 @@ export function App() {
       )}
 
       {/* Environment Editor Modal */}
-      {showEnvironmentEditorModal && (() => {
-        const editingEnv = editingEnvironmentId
-          ? environmentsConfig.environments.find(e => e.id === editingEnvironmentId)
-          : null;
-        
-        return (
-          <EnvironmentEditorModal
-            environmentName={editingEnv?.name}
-            variables={editingEnv?.variables}
-            onSave={(name, variables) => {
-              if (editingEnvironmentId) {
-                setEnvironmentsConfig(updateEnvironment(environmentsConfig, editingEnvironmentId, name, variables));
-              } else {
-                const newId = Date.now();
-                setEnvironmentsConfig(addEnvironment(environmentsConfig, { id: newId, name, variables }));
-              }
-              setShowEnvironmentEditorModal(false);
-              setEditingEnvironmentId(null);
-            }}
-            onCancel={() => {
-              setShowEnvironmentEditorModal(false);
-              setEditingEnvironmentId(null);
-            }}
-          />
-        );
-      })()}
+      {showEnvironmentEditorModal &&
+        (() => {
+          const editingEnv = editingEnvironmentId
+            ? environmentsConfig.environments.find((e) => e.id === editingEnvironmentId)
+            : null;
+
+          return (
+            <EnvironmentEditorModal
+              environmentName={editingEnv?.name}
+              variables={editingEnv?.variables}
+              onSave={(name, variables) => {
+                if (editingEnvironmentId) {
+                  setEnvironmentsConfig(
+                    updateEnvironment(environmentsConfig, editingEnvironmentId, name, variables),
+                  );
+                } else {
+                  const newId = Date.now();
+                  setEnvironmentsConfig(
+                    addEnvironment(environmentsConfig, { id: newId, name, variables }),
+                  );
+                }
+                setShowEnvironmentEditorModal(false);
+                setEditingEnvironmentId(null);
+              }}
+              onCancel={() => {
+                setShowEnvironmentEditorModal(false);
+                setEditingEnvironmentId(null);
+              }}
+            />
+          );
+        })()}
 
       {/* Save Modal */}
       {showSaveModal && (
@@ -772,16 +787,11 @@ export function App() {
       )}
 
       {/* Help Modal */}
-      {showHelpModal && (
-        <HelpModal onClose={() => setShowHelpModal(false)} />
-      )}
+      {showHelpModal && <HelpModal onClose={() => setShowHelpModal(false)} />}
 
       {/* Exit Modal */}
       {showExitModal && (
-        <ExitModal
-          onConfirm={handleExit}
-          onCancel={() => setShowExitModal(false)}
-        />
+        <ExitModal onConfirm={handleExit} onCancel={() => setShowExitModal(false)} />
       )}
     </box>
   );

@@ -71,7 +71,8 @@ export function ResponseViewerModal({ response, activeTab, onClose }: ResponseVi
       >
         <box style={{ justifyContent: 'center' }}>
           <text fg="#CC8844">
-            Response {activeTab === 'body' ? 'Body' : activeTab === 'headers' ? 'Headers' : 'Cookies'}
+            Response{' '}
+            {activeTab === 'body' ? 'Body' : activeTab === 'headers' ? 'Headers' : 'Cookies'}
           </text>
         </box>
 

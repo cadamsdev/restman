@@ -38,9 +38,7 @@ export function MethodInput({ value, focused, editMode }: MethodInputProps) {
         overflow: 'hidden',
       }}
     >
-      <text fg={focused ? getMethodColor(value) : '#666666'}>
-        ▸ {value}
-      </text>
+      <text fg={focused ? getMethodColor(value) : '#666666'}>▸ {value}</text>
     </box>
   );
 }

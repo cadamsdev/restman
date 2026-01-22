@@ -38,10 +38,7 @@ export function RequestEditor({
     return (
       <box style={{ flexDirection: 'row', gap: 1 }}>
         {tabs.map((tab) => (
-          <text
-            key={tab.name}
-            fg={activeTab === tab.name ? tab.color : '#666666'}
-          >
+          <text key={tab.name} fg={activeTab === tab.name ? tab.color : '#666666'}>
             {tab.label}
           </text>
         ))}

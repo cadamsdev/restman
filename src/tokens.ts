@@ -6,17 +6,17 @@ export const colors = {
   // Primary colors
   primary: '#CC8844',
   secondary: '#BB7733',
-  
+
   // Text colors
   textActive: '#FFFFFF',
   textMuted: '#999999',
   textPlaceholder: '#666666',
-  
+
   // Border colors
   borderDefault: '#555555',
   borderFocused: '#CC8844',
   borderEdit: '#BB7733',
-  
+
   // Background colors
   backgroundDefault: '#1a1a1a',
 } as const;

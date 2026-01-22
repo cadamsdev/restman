@@ -164,8 +164,12 @@ export function EnvironmentEditorModal({
 
         {/* Usage hint */}
         <box style={{ marginTop: 1, flexDirection: 'column', paddingLeft: 1 }}>
-          <text fg="#888888">Use variables in requests with {'{{'} VARIABLE_NAME {'}}'}</text>
-          <text fg="#666666">Example: {'{{'} BASE_URL {'}}'}/api/users</text>
+          <text fg="#888888">
+            Use variables in requests with {'{{'} VARIABLE_NAME {'}}'}
+          </text>
+          <text fg="#666666">
+            Example: {'{{'} BASE_URL {'}}'}/api/users
+          </text>
         </box>
 
         <box
