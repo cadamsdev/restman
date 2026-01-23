@@ -72,7 +72,7 @@
           <span class="gradient-text">Get Started in Seconds</span>
         </h2>
         <p class="section-subtitle">One command to install RestMan on your system</p>
-        
+
         <!-- Installation Tabs -->
         <div class="install-tabs">
           <div class="tabs-header">
@@ -98,7 +98,14 @@
                   <p class="command-label">Quick Install</p>
                   <div class="code-block">
                     <pre><code>curl -fsSL https://raw.githubusercontent.com/cadamsdev/restman/main/install.sh | bash</code></pre>
-                    <button class="copy-btn" @click="copyToClipboard('curl -fsSL https://raw.githubusercontent.com/cadamsdev/restman/main/install.sh | bash')">
+                    <button
+                      class="copy-btn"
+                      @click="
+                        copyToClipboard(
+                          'curl -fsSL https://raw.githubusercontent.com/cadamsdev/restman/main/install.sh | bash',
+                        )
+                      "
+                    >
                       <Icon name="mdi:content-copy" size="18" />
                     </button>
                   </div>
@@ -120,7 +127,14 @@
                   <p class="command-label">Quick Install (PowerShell)</p>
                   <div class="code-block">
                     <pre><code>irm https://raw.githubusercontent.com/cadamsdev/restman/main/install.ps1 | iex</code></pre>
-                    <button class="copy-btn" @click="copyToClipboard('irm https://raw.githubusercontent.com/cadamsdev/restman/main/install.ps1 | iex')">
+                    <button
+                      class="copy-btn"
+                      @click="
+                        copyToClipboard(
+                          'irm https://raw.githubusercontent.com/cadamsdev/restman/main/install.ps1 | iex',
+                        )
+                      "
+                    >
                       <Icon name="mdi:content-copy" size="18" />
                     </button>
                   </div>
@@ -141,8 +155,10 @@
 
         <div class="install-note">
           <p>
-            For manual installation or other options, visit the 
-            <a href="https://github.com/cadamsdev/restman#installation" target="_blank">GitHub repository</a>.
+            For manual installation or other options, visit the
+            <a href="https://github.com/cadamsdev/restman#installation" target="_blank"
+              >GitHub repository</a
+            >.
           </p>
         </div>
       </div>
@@ -449,7 +465,7 @@ Authorization: Bearer {{TOKEN}}</code></pre>
 </template>
 
 <script setup lang="ts">
-const activeTab = ref('unix')
+const activeTab = ref('unix');
 
 const copyToClipboard = (text: string) => {
   if (navigator.clipboard) {
