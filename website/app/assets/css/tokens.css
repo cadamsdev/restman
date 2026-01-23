@@ -1,0 +1,106 @@
+/**
+ * Design tokens for the RestMan website
+ * Matches the TUI theme defined in src/tokens.ts
+ */
+
+:root {
+  /* Primary colors */
+  --color-primary: #cc8844;
+  --color-secondary: #bb7733;
+
+  /* Text colors */
+  --color-text-active: #ffffff;
+  --color-text-default: #e0e0e0;
+  --color-text-muted: #b0b0b0;
+  --color-text-placeholder: #808080;
+  --color-text-dim: #666666;
+
+  /* Border colors */
+  --color-border-default: #555555;
+  --color-border-light: rgba(255, 255, 255, 0.1);
+  --color-border-lighter: rgba(255, 255, 255, 0.2);
+
+  /* Background colors */
+  --color-bg-default: #1a1a1a;
+  --color-bg-dark: #222018;
+  --color-bg-darker: #2a2520;
+  --color-bg-card: rgba(255, 255, 255, 0.05);
+  --color-bg-nav: rgba(0, 0, 0, 0.3);
+  --color-bg-overlay: rgba(0, 0, 0, 0.2);
+
+  /* Terminal button colors */
+  --color-terminal-red: #ff5f56;
+  --color-terminal-yellow: #ffbd2e;
+  --color-terminal-green: #27c93f;
+
+  /* Code colors - matching RestMan TUI theme */
+  --color-code-prompt: #cc8844; /* Primary orange for prompts */
+  --color-code-output: #bb7733; /* Secondary brown-orange for output */
+  --color-code-text: #999999; /* Muted gray for text */
+
+  /* Accent colors */
+  --color-accent-yellow: #f1fa8c;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  --gradient-background: linear-gradient(135deg, #1a1a1a 0%, #2a2520 50%, #1a1a1a 100%);
+
+  /* Opacity values */
+  --opacity-primary-10: rgba(204, 136, 68, 0.1);
+  --opacity-primary-20: rgba(204, 136, 68, 0.2);
+  --opacity-primary-30: rgba(204, 136, 68, 0.3);
+  --opacity-primary-50: rgba(204, 136, 68, 0.5);
+
+  /* Shadows */
+  --shadow-primary-sm: 0 10px 25px var(--opacity-primary-30);
+  --shadow-primary-md: 0 10px 40px var(--opacity-primary-20);
+  --shadow-default: 0 10px 30px rgba(0, 0, 0, 0.3);
+  --shadow-terminal: 0 20px 60px rgba(0, 0, 0, 0.5);
+
+  /* Border radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 50%;
+
+  /* Spacing */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+  --spacing-2xl: 4rem;
+  --spacing-3xl: 6rem;
+
+  /* Typography */
+  --font-family-base: 'Inter', sans-serif;
+  --font-family-mono: 'JetBrains Mono', monospace;
+
+  --font-size-xs: 0.9rem;
+  --font-size-sm: 0.95rem;
+  --font-size-base: 1rem;
+  --font-size-md: 1.125rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: 2rem;
+  --font-size-3xl: 2.5rem;
+  --font-size-4xl: 3.5rem;
+
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  --line-height-tight: 1.2;
+  --line-height-base: 1.5;
+  --line-height-relaxed: 1.6;
+  --line-height-loose: 1.8;
+
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-base: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
