@@ -11,7 +11,6 @@
           <div class="nav-links">
             <a href="#features" class="nav-link">Features</a>
             <a href="#screenshots" class="nav-link">Screenshots</a>
-            <a href="#install" class="nav-link">Install</a>
             <a href="#quickstart" class="nav-link">Quick Start</a>
             <a href="https://github.com/cadamsdev/restman" target="_blank" class="nav-link">
               <Icon name="mdi:github" size="20" />
@@ -37,7 +36,7 @@
               alternative to Postman.
             </p>
             <div class="hero-buttons">
-              <a href="#install" class="btn-primary">Get Started</a>
+              <a href="#features" class="btn-primary">Get Started</a>
               <a href="https://github.com/cadamsdev/restman" target="_blank" class="btn-secondary">
                 <Icon name="mdi:github" size="20" style="vertical-align: middle" />
                 View on GitHub
@@ -55,6 +54,72 @@
               <div class="hero-feature">
                 <Icon name="mdi:open-source-initiative" size="24" />
                 <span>Open Source</span>
+              </div>
+            </div>
+
+            <!-- Installation Tabs -->
+            <div class="install-tabs">
+              <div class="tabs-header">
+                <button
+                  :class="['tab-button', { active: activeTab === 'unix' }]"
+                  @click="activeTab = 'unix'"
+                >
+                  <Icon name="mdi:linux" size="20" />
+                  Linux & Mac
+                </button>
+                <button
+                  :class="['tab-button', { active: activeTab === 'windows' }]"
+                  @click="activeTab = 'windows'"
+                >
+                  <Icon name="mdi:microsoft-windows" size="20" />
+                  Windows
+                </button>
+              </div>
+              <div class="tabs-content">
+                <div v-show="activeTab === 'unix'" class="tab-panel">
+                  <div class="install-commands">
+                    <div class="command-group">
+                      <p class="command-label">Install with Bun (Recommended)</p>
+                      <div class="code-block">
+                        <pre><code>bun install -g restman</code></pre>
+                        <button class="copy-btn" @click="copyToClipboard('bun install -g restman')">
+                          <Icon name="mdi:content-copy" size="18" />
+                        </button>
+                      </div>
+                    </div>
+                    <div class="command-group">
+                      <p class="command-label">Or use npm</p>
+                      <div class="code-block">
+                        <pre><code>npm install -g restman</code></pre>
+                        <button class="copy-btn" @click="copyToClipboard('npm install -g restman')">
+                          <Icon name="mdi:content-copy" size="18" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div v-show="activeTab === 'windows'" class="tab-panel">
+                  <div class="install-commands">
+                    <div class="command-group">
+                      <p class="command-label">Install with Bun (Recommended)</p>
+                      <div class="code-block">
+                        <pre><code>bun install -g restman</code></pre>
+                        <button class="copy-btn" @click="copyToClipboard('bun install -g restman')">
+                          <Icon name="mdi:content-copy" size="18" />
+                        </button>
+                      </div>
+                    </div>
+                    <div class="command-group">
+                      <p class="command-label">Or use npm</p>
+                      <div class="code-block">
+                        <pre><code>npm install -g restman</code></pre>
+                        <button class="copy-btn" @click="copyToClipboard('npm install -g restman')">
+                          <Icon name="mdi:content-copy" size="18" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -203,70 +268,6 @@
               <h4>Built-in Help</h4>
               <p>Quick reference for all keyboard shortcuts</p>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Installation Section -->
-    <section id="install" class="install">
-      <div class="container">
-        <h2 class="section-title">
-          <span class="gradient-text">Get Started in Seconds</span>
-        </h2>
-        <p class="section-subtitle">Installation is quick and easy with Bun or npm</p>
-        <div class="install-steps">
-          <div class="install-step">
-            <div class="step-number">1</div>
-            <div class="step-content">
-              <h3>Install with Bun (Recommended)</h3>
-              <div class="code-block">
-                <pre><code>bun install -g restman</code></pre>
-                <button class="copy-btn" @click="copyToClipboard('bun install -g restman')">
-                  <Icon name="mdi:content-copy" size="18" />
-                </button>
-              </div>
-              <p class="step-note">Or use npm:</p>
-              <div class="code-block">
-                <pre><code>npm install -g restman</code></pre>
-                <button class="copy-btn" @click="copyToClipboard('npm install -g restman')">
-                  <Icon name="mdi:content-copy" size="18" />
-                </button>
-              </div>
-            </div>
-          </div>
-          <div class="install-step">
-            <div class="step-number">2</div>
-            <div class="step-content">
-              <h3>Run RestMan</h3>
-              <div class="code-block">
-                <pre><code>restman</code></pre>
-                <button class="copy-btn" @click="copyToClipboard('restman')">
-                  <Icon name="mdi:content-copy" size="18" />
-                </button>
-              </div>
-              <p class="step-note">That's it! You're ready to make API requests.</p>
-            </div>
-          </div>
-          <div class="install-step">
-            <div class="step-number">3</div>
-            <div class="step-content">
-              <h3>Start Testing APIs</h3>
-              <p>
-                Enter a URL, configure headers, and press <code class="inline-code">Enter</code> to
-                send your first request.
-              </p>
-              <p class="step-note">
-                Press <code class="inline-code">/</code> for help with all keyboard shortcuts.
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="pro-tip">
-          <Icon name="mdi:lightbulb-on" size="24" />
-          <div>
-            <strong>Pro Tip:</strong> Run <code class="inline-code">restman --help</code> to see all
-            available options and flags.
           </div>
         </div>
       </div>
@@ -430,6 +431,8 @@ Authorization: Bearer {{TOKEN}}</code></pre>
 </template>
 
 <script setup lang="ts">
+const activeTab = ref('unix')
+
 const copyToClipboard = (text: string) => {
   if (navigator.clipboard) {
     navigator.clipboard
@@ -600,6 +603,130 @@ const copyToClipboard = (text: string) => {
   font-weight: var(--font-weight-medium);
 }
 
+/* Installation Tabs in Hero */
+.install-tabs {
+  margin-top: var(--spacing-xl);
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-light);
+  overflow: hidden;
+}
+
+.tabs-header {
+  display: flex;
+  border-bottom: 1px solid var(--color-border-light);
+  background: var(--color-bg-overlay);
+}
+
+.tab-button {
+  flex: 1;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  border-bottom: 2px solid transparent;
+}
+
+.tab-button:hover {
+  color: var(--color-text-default);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.tab-button.active {
+  color: var(--color-primary);
+  background: var(--color-bg-card);
+  border-bottom-color: var(--color-primary);
+}
+
+.tabs-content {
+  padding: var(--spacing-md);
+}
+
+.tab-panel {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.install-commands {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.command-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.command-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* Shared Code Block Styles */
+.code-block {
+  background: var(--color-bg-dark);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm);
+  margin: var(--spacing-sm) 0;
+  position: relative;
+  border: 1px solid var(--color-border-light);
+}
+
+.code-block pre {
+  margin: 0;
+  overflow-x: auto;
+}
+
+.code-block code {
+  color: var(--color-code-output);
+  font-size: var(--font-size-base);
+}
+
+.copy-btn {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--color-border-lighter);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-xs);
+  color: var(--color-text-default);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.copy-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.inline-code {
+  background: var(--opacity-primary-20);
+  padding: 0.2rem var(--spacing-xs);
+  border-radius: var(--radius-sm);
+  color: var(--color-code-output);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-xs);
+}
+
 /* Features Section */
 .features {
   padding: var(--spacing-3xl) 0;
@@ -691,113 +818,6 @@ const copyToClipboard = (text: string) => {
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
   line-height: var(--line-height-base);
-}
-
-/* Installation Section */
-.install {
-  padding: var(--spacing-3xl) 0;
-}
-
-.install-steps {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.install-step {
-  display: flex;
-  gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-xl);
-}
-
-.step-number {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-full);
-  background: var(--gradient-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  flex-shrink: 0;
-}
-
-.step-content {
-  flex: 1;
-}
-
-.step-content h3 {
-  font-size: var(--font-size-xl);
-  margin-bottom: var(--spacing-sm);
-  color: var(--color-text-active);
-}
-
-.code-block {
-  background: var(--color-bg-dark);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-sm);
-  margin: var(--spacing-sm) 0;
-  position: relative;
-  border: 1px solid var(--color-border-light);
-}
-
-.code-block pre {
-  margin: 0;
-  overflow-x: auto;
-}
-
-.code-block code {
-  color: var(--color-code-output);
-  font-size: var(--font-size-base);
-}
-
-.copy-btn {
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid var(--color-border-lighter);
-  border-radius: var(--radius-sm);
-  padding: var(--spacing-xs);
-  color: var(--color-text-default);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.copy-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.step-note {
-  color: var(--color-text-muted);
-  margin-top: var(--spacing-xs);
-  font-size: var(--font-size-sm);
-}
-
-.inline-code {
-  background: var(--opacity-primary-20);
-  padding: 0.2rem var(--spacing-xs);
-  border-radius: var(--radius-sm);
-  color: var(--color-code-output);
-  font-family: var(--font-family-mono);
-  font-size: var(--font-size-xs);
-}
-
-.pro-tip {
-  max-width: 800px;
-  margin: var(--spacing-xl) auto 0;
-  background: var(--opacity-primary-10);
-  border: 1px solid var(--opacity-primary-30);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-md);
-  display: flex;
-  gap: var(--spacing-sm);
-  align-items: flex-start;
-}
-
-.pro-tip > svg {
-  color: var(--color-accent-yellow);
-  flex-shrink: 0;
 }
 
 /* Quick Start Section */
