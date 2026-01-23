@@ -441,7 +441,7 @@ Authorization: Bearer {{TOKEN}}</code></pre>
             &copy; 2026 RestMan. Built with ❤️ by
             <a href="https://github.com/cadamsdev" target="_blank">cadamsdev</a>
           </p>
-          <p class="footer-note">Powered by Bun, React, and Ink</p>
+          <p class="footer-note">Powered by Bun, React, and OpenTUI</p>
         </div>
       </div>
     </footer>
