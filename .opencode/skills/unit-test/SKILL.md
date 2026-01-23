@@ -1,11 +1,27 @@
 ---
-description: Specialized agent for creating unit tests with Bun.
-mode: subagent
+name: unit-test
+description: Create comprehensive unit tests using Bun's test runner. Use when the user asks to write tests, create test files, add test coverage, or test specific functions or modules.
+compatibility: Requires Bun runtime for test execution
+metadata:
+  author: restman
+  version: "1.0"
+  category: testing
 ---
 
-You are a specialized test agent for Bun's test runner. Your expertise is in creating comprehensive, well-structured unit tests using Bun's built-in testing framework.
+## When to use this skill
 
-## Your Core Capabilities
+Use this skill when:
+- User asks to create or write unit tests
+- User mentions testing, test coverage, or Bun test
+- User wants to test specific functions, modules, or components
+- User asks to add test files or improve test coverage
+- User mentions test frameworks, mocking, or assertions
+
+## What this skill does
+
+This skill provides expertise in creating comprehensive, well-structured unit tests using Bun's built-in testing framework. It covers test file creation, Bun test features, best practices, and RestMan-specific testing guidelines.
+
+## Core capabilities
 
 ### 1. Test File Creation
 - Create test files with proper naming conventions: `*.test.ts`, `*_test.ts`, `*.spec.ts`, `*_spec.ts`
@@ -13,7 +29,6 @@ You are a specialized test agent for Bun's test runner. Your expertise is in cre
 - Follow the project's code style guidelines (single quotes, camelCase, etc.)
 
 ### 2. Bun Test Framework Features
-You have expertise in all Bun test features:
 
 **Basic Testing**
 ```typescript
@@ -68,6 +83,7 @@ test.serial('sequential test', () => {
 - Mock external dependencies and side effects
 
 ### 4. RestMan-Specific Testing Guidelines
+
 When testing RestMan code:
 - Follow TypeScript strict mode requirements
 - Handle `noUncheckedIndexedAccess: true` (indexed access can be undefined)
@@ -78,7 +94,8 @@ When testing RestMan code:
 - Use proper types from the codebase
 
 ### 5. Running Tests
-You can run tests using these commands:
+
+Available test commands:
 - `bun test` - Run all tests
 - `bun test <filter>` - Run tests matching filter
 - `bun test --watch` - Watch mode
@@ -87,7 +104,7 @@ You can run tests using these commands:
 - `bun test --bail` - Exit after first failure
 - `bun test --update-snapshots` - Update snapshots
 
-## Your Workflow
+## Workflow
 
 When asked to create tests:
 
@@ -104,7 +121,7 @@ When asked to create tests:
 6. **Run tests** - Execute with `bun test` to verify they pass
 7. **Report results** - Explain what was tested and any issues found
 
-## Key Principles
+## Key principles
 
 - **Test behavior, not implementation** - Focus on what the code does, not how
 - **Keep tests simple and readable** - Tests are documentation
@@ -114,47 +131,9 @@ When asked to create tests:
 - **Maintain test isolation** - Tests should not depend on each other
 - **Use descriptive names** - Test names should read like documentation
 
-## Example Test Structure
+## Example test structure
 
-```typescript
-import { describe, test, expect, beforeEach, afterEach, mock } from 'bun:test';
-import { functionToTest } from './module';
-
-describe('Module: functionToTest', () => {
-  beforeEach(() => {
-    // Setup before each test
-  });
-
-  afterEach(() => {
-    // Cleanup after each test
-  });
-
-  describe('happy path', () => {
-    test('should return expected result with valid input', () => {
-      const result = functionToTest('valid input');
-      expect(result).toBe('expected output');
-    });
-  });
-
-  describe('edge cases', () => {
-    test('should handle empty string', () => {
-      const result = functionToTest('');
-      expect(result).toBe('');
-    });
-
-    test('should handle null', () => {
-      const result = functionToTest(null);
-      expect(result).toBeNull();
-    });
-  });
-
-  describe('error handling', () => {
-    test('should throw error for invalid input', () => {
-      expect(() => functionToTest('invalid')).toThrow('Expected error message');
-    });
-  });
-});
-```
+See [test structure reference](references/EXAMPLE.md) for detailed examples.
 
 ## Remember
 
