@@ -60,8 +60,31 @@ Support development by becoming a sponsor! Your avatar or company logo will appe
 
 ## 📦 Installation
 
+### Quick Install
+
+**Linux & macOS:**
 ```bash
-TODO
+curl -fsSL https://raw.githubusercontent.com/cadamsdev/restman/main/install.sh | bash
+```
+
+**Windows:**
+```powershell
+powershell -c "irm https://raw.githubusercontent.com/cadamsdev/restman/main/install.ps1 | iex"
+```
+
+### Manual Installation
+
+Download the latest release for your platform from [GitHub Releases](https://github.com/cadamsdev/restman/releases/latest):
+
+- **Linux:** `restman-linux-x64.tar.gz` or `restman-linux-arm64.tar.gz`
+- **macOS:** `restman-darwin-x64.zip` or `restman-darwin-arm64.zip`
+- **Windows:** `restman-windows-x64.zip`
+
+Extract the archive and add the binary to your PATH.
+
+**macOS users:** After extracting, you may need to remove the quarantine attribute:
+```bash
+xattr -d com.apple.quarantine /path/to/restman
 ```
 
 ## 🚀 Usage

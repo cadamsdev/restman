@@ -2,7 +2,7 @@
 /**
  * build script for restman CLI
  * Usage: bun run scripts/build-target.ts <target>
- * 
+ *
  * Note: Builds natively for the current platform. The target parameter
  * is used for naming the output archive.
  */
