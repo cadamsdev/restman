@@ -1,6 +1,6 @@
 ---
 name: unit-test
-description: Create comprehensive unit tests using Bun's test runner. Use when the user asks to write tests, create test files, add test coverage, or test specific functions or modules.
+description: Create comprehensive unit tests using Bun's test runner. Use when the user asks to create or fix unit tests or create test files.
 compatibility: Requires Bun runtime for test execution
 metadata:
   author: restman
