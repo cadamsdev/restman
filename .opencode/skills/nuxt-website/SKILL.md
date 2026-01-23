@@ -1,17 +1,12 @@
 ---
 name: nuxt-website
-description: Manages and updates Vue 3 + Nuxt 4 marketing websites including components, pages, layouts, content, SEO, and deployment. Use when working on marketing sites, landing pages, Vue components, Nuxt configuration, or website updates.
-license: MIT
-metadata:
-  author: restman
-  version: "1.0"
-  frameworks: "Vue 3, Nuxt 4"
+description: Handles updating the nuxt website. Use when needing to update the website.
 ---
 
 ## When to use this skill
 
 Use this skill when:
-- User asks to update or modify a marketing website
+- User asks to update or modify the website
 - Working with Vue 3 components or Nuxt 4 features
 - Creating or editing pages, layouts, or components
 - Managing website content, SEO, or meta tags
