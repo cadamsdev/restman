@@ -1,5 +1,3 @@
-import packageJson from '../package.json';
-
 export interface RequestOptions {
   method: string;
   url: string;
@@ -22,7 +20,7 @@ export class HTTPClient {
     try {
       // Add default User-Agent if not provided
       const headers = {
-        'User-Agent': `RestMan/${packageJson.version} (https://github.com/cadamsdev/restman)`,
+        'User-Agent': `RestMan/2.0.0 (https://github.com/cadamsdev/restman)`,
         ...options.headers,
       };
 
@@ -48,7 +46,25 @@ export class HTTPClient {
       const contentType = response.headers.get('content-type') || '';
       let body: string;
 
-      if (contentType.includes('application/json')) {
+      // Check if content is binary (images, videos, audio, etc.)
+      const binaryContentTypes = [
+        'image/',
+        'video/',
+        'audio/',
+        'application/octet-stream',
+        'application/pdf',
+        'application/zip',
+        'application/x-',
+        'font/',
+      ];
+
+      const isBinary = binaryContentTypes.some((type) => contentType.toLowerCase().includes(type));
+
+      if (isBinary) {
+        const arrayBuffer = await response.arrayBuffer();
+        const sizeKB = (arrayBuffer.byteLength / 1024).toFixed(1);
+        body = `(binary content - ${contentType} - ${sizeKB} KB)`;
+      } else if (contentType.includes('application/json')) {
         try {
           const json = await response.json();
           body = JSON.stringify(json, null, 2);

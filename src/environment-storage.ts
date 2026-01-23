@@ -27,7 +27,7 @@ const ensureDirectoryExists = (): void => {
 };
 
 /**
- * Get default environments config
+ * Get default environments config with example variable usage
  */
 const getDefaultConfig = (): EnvironmentsConfig => {
   return {
@@ -38,7 +38,8 @@ const getDefaultConfig = (): EnvironmentsConfig => {
         name: 'Development',
         variables: {
           BASE_URL: 'http://localhost:3000',
-          API_KEY: 'dev-api-key',
+          API_KEY: 'dev-api-key-12345',
+          AUTH_TOKEN: 'Bearer dev-token',
         },
       },
       {
@@ -46,7 +47,8 @@ const getDefaultConfig = (): EnvironmentsConfig => {
         name: 'Staging',
         variables: {
           BASE_URL: 'https://staging.example.com',
-          API_KEY: 'staging-api-key',
+          API_KEY: 'staging-api-key-67890',
+          AUTH_TOKEN: 'Bearer staging-token',
         },
       },
       {
@@ -54,7 +56,8 @@ const getDefaultConfig = (): EnvironmentsConfig => {
         name: 'Production',
         variables: {
           BASE_URL: 'https://api.example.com',
-          API_KEY: 'prod-api-key',
+          API_KEY: 'prod-api-key-secure',
+          AUTH_TOKEN: 'Bearer prod-token',
         },
       },
     ],
@@ -132,21 +135,11 @@ export const setActiveEnvironment = (
  */
 export const addEnvironment = (
   config: EnvironmentsConfig,
-  name: string,
-  variables: Record<string, string>,
+  environment: Environment,
 ): EnvironmentsConfig => {
-  const maxId =
-    config.environments.length > 0 ? Math.max(...config.environments.map((e) => e.id)) : 0;
-
-  const newEnvironment: Environment = {
-    id: maxId + 1,
-    name,
-    variables,
-  };
-
   return {
     ...config,
-    environments: [...config.environments, newEnvironment],
+    environments: [...config.environments, environment],
   };
 };
 
