@@ -27,9 +27,6 @@ jobs:
           - os: macos-latest
             target: darwin-arm64
             artifact: restman-darwin-arm64.zip
-          - os: macos-13
-            target: darwin-x64
-            artifact: restman-darwin-x64.zip
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
