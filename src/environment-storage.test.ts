@@ -77,11 +77,7 @@ describe('environment-storage', () => {
 
         await loadEnvironments();
 
-        expect(mockWriteFile).toHaveBeenCalledWith(
-          ENVIRONMENTS_FILE,
-          expect.any(String),
-          'utf-8',
-        );
+        expect(mockWriteFile).toHaveBeenCalledWith(ENVIRONMENTS_FILE, expect.any(String), 'utf-8');
       });
 
       test('should include variables in default environments', async () => {
@@ -104,9 +100,7 @@ describe('environment-storage', () => {
         mockExistsSync.mockReturnValue(true);
         const testConfig: EnvironmentsConfig = {
           activeEnvironmentId: 5,
-          environments: [
-            { id: 5, name: 'Test', variables: { KEY: 'value' } },
-          ],
+          environments: [{ id: 5, name: 'Test', variables: { KEY: 'value' } }],
         };
         mockReadFile.mockResolvedValueOnce(JSON.stringify(testConfig));
 
@@ -565,7 +559,11 @@ describe('environment-storage', () => {
 
       const result = updateEnvironment(config, 1, 'Development', {});
 
-      expect(result.environments[1]).toEqual({ id: 2, name: 'Staging', variables: { KEY: 'value' } });
+      expect(result.environments[1]).toEqual({
+        id: 2,
+        name: 'Staging',
+        variables: { KEY: 'value' },
+      });
     });
 
     test('should return new config object', () => {

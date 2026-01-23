@@ -50,7 +50,7 @@ describe('saved-requests-storage', () => {
 
     test('should create directory if it does not exist', async () => {
       const mkdirMock = mock(() => {});
-      
+
       void mock.module('fs', () => ({
         existsSync: mock((path: string) => {
           if (path === RESTMAN_DIR) return false;
@@ -316,14 +316,14 @@ describe('saved-requests-storage', () => {
       expect(writeFileMock).toHaveBeenCalledWith(
         SAVED_REQUESTS_FILE,
         JSON.stringify(requests, null, 2),
-        'utf-8'
+        'utf-8',
       );
     });
 
     test('should save multiple requests', async () => {
       let capturedPath = '';
       let capturedData = '';
-      
+
       void mock.module('fs', () => ({
         existsSync: mock(() => true),
         mkdirSync: mock(() => {}),
@@ -334,7 +334,7 @@ describe('saved-requests-storage', () => {
         capturedData = data;
         return Promise.resolve();
       });
-      
+
       void mock.module('fs/promises', () => ({
         readFile: mock(() => Promise.resolve('[]')),
         writeFile: writeFileMock,
@@ -375,7 +375,7 @@ describe('saved-requests-storage', () => {
       expect(writeFileMock).toHaveBeenCalledWith(
         SAVED_REQUESTS_FILE,
         JSON.stringify([], null, 2),
-        'utf-8'
+        'utf-8',
       );
     });
 
@@ -404,7 +404,7 @@ describe('saved-requests-storage', () => {
 
     test('should preserve all request properties', async () => {
       let capturedData = '';
-      
+
       void mock.module('fs', () => ({
         existsSync: mock(() => true),
         mkdirSync: mock(() => {}),
@@ -414,7 +414,7 @@ describe('saved-requests-storage', () => {
         capturedData = data;
         return Promise.resolve();
       });
-      
+
       void mock.module('fs/promises', () => ({
         readFile: mock(() => Promise.resolve('[]')),
         writeFile: writeFileMock,
@@ -429,7 +429,7 @@ describe('saved-requests-storage', () => {
           url: 'https://api.example.com/users',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer token123',
+            Authorization: 'Bearer token123',
           },
           body: JSON.stringify({ username: 'test', email: 'test@example.com' }),
         },
@@ -438,7 +438,7 @@ describe('saved-requests-storage', () => {
       await saveSavedRequests([complexRequest]);
 
       const writtenData = JSON.parse(capturedData);
-      
+
       expect(writtenData[0]?.id).toBe(123);
       expect(writtenData[0]?.name).toBe('Complex Request');
       expect(writtenData[0]?.request.method).toBe('POST');

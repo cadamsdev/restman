@@ -134,19 +134,19 @@ describe('substituteVariables', () => {
 describe('substituteVariablesInHeaders', () => {
   test('should substitute variables in all header values', () => {
     const headers = {
-      'Authorization': 'Bearer {{TOKEN}}',
+      Authorization: 'Bearer {{TOKEN}}',
       'X-API-Key': '{{API_KEY}}',
     };
     const variables = { TOKEN: 'abc123', API_KEY: 'xyz789' };
     const result = substituteVariablesInHeaders(headers, variables);
     expect(result).toEqual({
-      'Authorization': 'Bearer abc123',
+      Authorization: 'Bearer abc123',
       'X-API-Key': 'xyz789',
     });
   });
 
   test('should not modify original headers object', () => {
-    const headers = { 'Authorization': 'Bearer {{TOKEN}}' };
+    const headers = { Authorization: 'Bearer {{TOKEN}}' };
     const variables = { TOKEN: 'abc123' };
     const result = substituteVariablesInHeaders(headers, variables);
     expect(result).not.toBe(headers);
@@ -168,10 +168,10 @@ describe('substituteVariablesInHeaders', () => {
   });
 
   test('should handle empty variables object', () => {
-    const headers = { 'Authorization': 'Bearer {{TOKEN}}' };
+    const headers = { Authorization: 'Bearer {{TOKEN}}' };
     const variables = {};
     const result = substituteVariablesInHeaders(headers, variables);
-    expect(result).toEqual({ 'Authorization': 'Bearer {{TOKEN}}' });
+    expect(result).toEqual({ Authorization: 'Bearer {{TOKEN}}' });
   });
 
   test('should handle multiple variables in single header value', () => {
@@ -201,15 +201,15 @@ describe('substituteVariablesInHeaders', () => {
 
   test('should handle complex header values', () => {
     const headers = {
-      'Authorization': 'Bearer {{TOKEN}}',
-      'Accept': 'application/json, text/plain',
+      Authorization: 'Bearer {{TOKEN}}',
+      Accept: 'application/json, text/plain',
       'User-Agent': 'RestMan/{{VERSION}}',
     };
     const variables = { TOKEN: 'secret123', VERSION: '1.0.0' };
     const result = substituteVariablesInHeaders(headers, variables);
     expect(result).toEqual({
-      'Authorization': 'Bearer secret123',
-      'Accept': 'application/json, text/plain',
+      Authorization: 'Bearer secret123',
+      Accept: 'application/json, text/plain',
       'User-Agent': 'RestMan/1.0.0',
     });
   });
