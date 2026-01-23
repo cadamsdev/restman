@@ -746,7 +746,8 @@ const copyToClipboard = (text: string) => {
 
 .copy-btn {
   position: absolute;
-  top: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
   right: 0.75rem;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid var(--color-border-lighter);
