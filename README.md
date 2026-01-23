@@ -82,6 +82,7 @@ restman/
 │   ├── components/     # React UI components
 │   ├── *-storage.ts    # Data persistence modules
 │   └── *.ts            # Core utilities (HTTP, variables, tokens)
+├── website/            # Project website and landing page
 ├── docs/               # Documentation
 ├── media/              # Screenshots and assets
 ├── scripts/            # Build and utility scripts
