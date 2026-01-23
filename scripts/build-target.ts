@@ -1,12 +1,15 @@
 #!/usr/bin/env bun
 /**
- * Platform-agnostic build script for restman CLI
- * Usage: bun run scripts/build-target.ts <target> <outdir>
+ * build script for restman CLI
+ * Usage: bun run scripts/build-target.ts <target>
+ *
+ * Note: Builds natively for the current platform. The target parameter
+ * is used for naming the output archive.
  */
 
-import { rmSync, mkdirSync, cpSync, createWriteStream } from 'fs';
+import { rmSync, mkdirSync, createWriteStream } from 'fs';
 import { existsSync } from 'fs';
-import { join, resolve } from 'path';
+import { join } from 'path';
 import archiver from 'archiver';
 
 const baseOutputDir = 'dist';
@@ -31,27 +34,16 @@ async function build() {
 
   console.log(`Creating ${outputDir}...`);
   mkdirSync(outputDir, { recursive: true });
-  // Copy stdlib directory into output directory
-  const stdlibSrc = resolve('../../stdlib');
-  const stdlibDest = join(outputDir, 'stdlib');
 
-  if (existsSync(stdlibSrc)) {
-    console.log(`Copying stdlib to ${stdlibDest}...`);
-    cpSync(stdlibSrc, stdlibDest, { recursive: true });
-  } else {
-    console.warn(`Warning: stdlib directory not found at ${stdlibSrc}`);
-  }
-
-  // Build the binary
+  // Build the binary natively (no cross-compilation target)
   const outfile = join(outputDir, 'restman');
-  console.log(`Building ${target} -> ${outfile}...`);
+  console.log(`Building for current platform -> ${outfile}...`);
 
   const buildProcess = Bun.spawn([
     'bun',
     'build',
-    'src/cli.ts',
+    'index.tsx',
     '--compile',
-    `--target=bun-${target}`,
     `--outfile=${outfile}`,
   ]);
 
