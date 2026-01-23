@@ -1,49 +1,43 @@
 {
   "name": "restman",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "description": "A powerful REST API client TUI built with Bun",
-  "keywords": [
-    "api",
-    "client",
-    "http",
-    "postman",
-    "rest",
-    "terminal",
-    "tui"
-  ],
   "license": "MIT",
   "author": "cadamsdev",
+  "bin": {
+    "restman-v2": "./index.tsx"
+  },
   "type": "module",
-  "module": "src/cli.ts",
+  "module": "index.tsx",
   "scripts": {
-    "start": "bun run src/cli.ts",
-    "dev": "bun run src/cli.ts",
+    "dev": "bun run ./index.tsx",
+    "start": "bun run ./index.tsx",
     "changeset": "changeset",
     "build:linux-x64": "bun run scripts/build-target.ts linux-x64",
     "build:linux-arm64": "bun run scripts/build-target.ts linux-arm64",
     "build:windows-x64": "bun run scripts/build-target.ts windows-x64",
     "build:darwin-arm64": "bun run scripts/build-target.ts darwin-arm64",
     "build:darwin-x64": "bun run scripts/build-target.ts darwin-x64",
-    "build": "bun build src/cli.ts --compile --outfile dist/restman",
+    "build": "bun build index.tsx --compile --outfile dist/restman",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
     "lint": "oxlint --type-aware --type-check",
     "lint:fix": "oxlint --fix"
   },
   "dependencies": {
-    "@types/react": "^19.2.8",
-    "ink": "^6.6.0",
-    "ink-text-input": "^6.0.0",
+    "@opentui/core": "^0.1.72",
+    "@opentui/react": "^0.1.72",
     "react": "^19.2.3"
   },
   "devDependencies": {
-    "@lazy-release/changesets": "^0.5.0",
+    "@lazy-release/changesets": "^0.5.1",
     "@types/archiver": "^7.0.0",
     "@types/bun": "latest",
+    "@types/react": "^19.2.8",
     "archiver": "^7.0.1",
-    "oxfmt": "^0.24.0",
-    "oxlint": "^1.39.0",
+    "oxfmt": "^0.26.0",
+    "oxlint": "^1.41.0",
     "oxlint-tsgolint": "^0.11.1",
     "react-devtools-core": "^7.0.1"
   },

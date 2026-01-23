@@ -1,20 +1,24 @@
-# RestMan - REST API Client TUI
+<div align="center">
 
-A simple and easy to use REST API Client that runs in your terminal. Open-source alternative to Postman. Built with Bun, TypeScript, React, and Ink.
+# RestMan
 
-![RestMan](https://img.shields.io/badge/Built%20with-Bun-orange) ![RestMan](https://img.shields.io/badge/UI-Ink%20%2B%20React-blue) ![License](https://img.shields.io/github/license/cadamsdev/restman) ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
+A simple and easy to use REST API client that runs in your terminal. Open-source alternative to Postman.
+
+![RestMan](https://img.shields.io/badge/Built%20with-Bun-orange) ![RestMan](https://img.shields.io/badge/UI-OpenTUI%20%2B%20React-blue) ![License](https://img.shields.io/github/license/cadamsdev/restman) ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
 ![RestMan Preview](media/preview.png)
 
-## Sponsors
+</div>
 
-Support RestMan development by becoming a sponsor! Your avatar or company logo will appear below.
+## ❤️ Sponsors
+
+Support development by becoming a sponsor! Your avatar or company logo will appear below.
 
 [Become a Sponsor](https://github.com/sponsors/cadamsdev)
 
 <!-- Sponsors will appear here -->
 
-## Features
+## ✨ Features
 
 - Make HTTP requests (GET, POST, PUT, PATCH, DELETE)
 - Add custom headers, query params, and request body
@@ -23,7 +27,7 @@ Support RestMan development by becoming a sponsor! Your avatar or company logo w
 - Manage environments with variable substitution (`{{BASE_URL}}`, `{{API_KEY}}`, etc.)
 - Fully keyboard-driven (no mouse required)
 
-## Screenshots
+## 📸 Screenshots
 
 <details>
 <summary>Click to view screenshots</summary>
@@ -54,13 +58,13 @@ Support RestMan development by becoming a sponsor! Your avatar or company logo w
 
 </details>
 
-## Installation
+## 📦 Installation
 
 ```bash
 TODO
 ```
 
-## Usage
+## 🚀 Usage
 
 ### Running the Application
 
@@ -68,43 +72,39 @@ TODO
 restman
 ```
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 restman/
-├── index.ts              # Main entry point
-├── src/
-│   ├── http-client.ts    # HTTP client implementation
-│   └── ui-manager.ts     # TUI interface manager
-├── package.json
-├── tsconfig.json
-└── READApp.tsx           # Main React component
-│   ├── http-client.ts    # HTTP client implementation
-│   └── components/       # React UI components
-│       ├── URLInput.tsx
-│       ├── MethodSelector.tsx
-│       ├── HeadersEditor.tsx
-│       ├── BodyEditor.tsx
-│       ├── ResponsePanel.tsx
-│       ├── StatusBar.tsx
-│       └── Instructions.tsx
+├── index.tsx           # Application entry point
+├── src/                # Source code
+│   ├── App.tsx         # Main application component
+│   ├── components/     # React UI components
+│   ├── *-storage.ts    # Data persistence modules
+│   └── *.ts            # Core utilities (HTTP, variables, tokens)
+├── docs/               # Documentation
+├── media/              # Screenshots and assets
+├── scripts/            # Build and utility scripts
+├── .github/            # GitHub workflows and templates
+└── package.json        # Dependencies and scripts
+```
 
-## Development
+## 🛠️ Development
 
 ```bash
-# Run in development mode
+# Run the app
 bun dev
 ```
 
-## Contributing
+## 🤝 Contributing
 
 Contributions are welcome! Feel free to open issues or submit pull requests.
 
-## Documentation
+## 📚 Documentation
 
 - [Keyboard Shortcuts](docs/KEYBOARD_SHORTCUTS.md) - Complete list of keyboard shortcuts and navigation
 - [Environment Variables](docs/ENVIRONMENT_VARIABLES.md) - Guide to managing environments and variable substitution
 
-## License
+## 📄 License
 
 MIT

@@ -1,5 +1,0 @@
----
-"restman": chore
----
-
-Initial release
