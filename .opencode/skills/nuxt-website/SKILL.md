@@ -1,20 +1,21 @@
 ---
 name: nuxt-website
-description: Handles updating the nuxt website. Use when needing to update the website.
+description: Build and maintain Vue 3/Nuxt 4 marketing websites. Use when working with website pages, components, layouts, SEO, Nuxt configuration, or when user mentions 'website', 'marketing site', 'landing page', 'docs site', Vue, or Nuxt.
 ---
 
 ## When to use this skill
 
-Use this skill when:
-- User asks to update or modify the website
-- Working with Vue 3 components or Nuxt 4 features
-- Creating or editing pages, layouts, or components
-- Managing website content, SEO, or meta tags
-- Configuring Nuxt plugins, modules, or middleware
-- Working with Nuxt composables or auto-imports
-- Optimizing website performance or assets
-- Setting up or modifying deployment configurations
-- User mentions "website", "marketing site", "landing page", "Vue", or "Nuxt"
+- User asks to update, modify, or build the website/marketing site/landing page/docs site
+- Working with Vue 3 components or Nuxt 4 features in the website directory
+- Creating or editing website pages, layouts, or UI components
+- Managing website content, SEO, meta tags, or Open Graph data
+- Configuring Nuxt plugins, modules, middleware, or nuxt.config.ts
+- Working with Nuxt composables, auto-imports, or data fetching (useFetch, useAsyncData)
+- Optimizing website performance, images, or assets
+- Setting up or modifying website deployment configurations
+- Implementing forms, navigation, or interactive features on the website
+- Working with API routes in the server directory
+- User explicitly mentions "website", "marketing site", "landing page", "docs", "Vue", "Nuxt", or references website-specific files/paths
 
 ## What this skill does
 
