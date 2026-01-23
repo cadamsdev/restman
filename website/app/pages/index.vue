@@ -446,6 +446,58 @@ const copyToClipboard = (text: string) => {
 </script>
 
 <style scoped>
+/* Button Styles */
+.btn-primary {
+  background: var(--gradient-primary);
+  color: var(--color-text-active);
+  padding: 0.875rem var(--spacing-lg);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+  display: inline-block;
+  transition: all var(--transition-base);
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-primary-sm);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-text-active);
+  padding: 0.875rem var(--spacing-lg);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+  display: inline-block;
+  transition: all var(--transition-base);
+  border: 1px solid var(--color-border-lighter);
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Feature Card Styles */
+.feature-card {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-lg);
+  border: 1px solid var(--color-border-light);
+  transition: all var(--transition-base);
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--opacity-primary-50);
+  box-shadow: var(--shadow-default);
+}
+
 /* Navigation */
 .nav {
   padding: var(--spacing-md) 0;
@@ -983,6 +1035,12 @@ const copyToClipboard = (text: string) => {
 
   .nav-links {
     display: none; /* Hide nav links on mobile, could add hamburger menu */
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    padding: 0.75rem var(--spacing-md);
+    font-size: var(--font-size-xs);
   }
 }
 </style>
