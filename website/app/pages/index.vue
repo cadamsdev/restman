@@ -731,7 +731,7 @@ const copyToClipboard = (text: string) => {
   padding: var(--spacing-sm);
   margin: var(--spacing-sm) 0;
   position: relative;
-  border: 1px solid var(--color-border-light);
+  border: 1px solid var(--color-border-default);
 }
 
 .code-block pre {
@@ -765,9 +765,10 @@ const copyToClipboard = (text: string) => {
   background: var(--opacity-primary-20);
   padding: 0.2rem var(--spacing-xs);
   border-radius: var(--radius-sm);
-  color: var(--color-code-output);
+  color: var(--color-primary);
   font-family: var(--font-family-mono);
   font-size: var(--font-size-xs);
+  border: 1px solid var(--opacity-primary-30);
 }
 
 /* Features Section */
@@ -917,12 +918,13 @@ const copyToClipboard = (text: string) => {
   background: var(--color-bg-dark);
   padding: 0.4rem 0.8rem;
   border-radius: 0.35rem;
-  border: 1px solid var(--color-border-lighter);
+  border: 1px solid var(--color-border-default);
   font-family: var(--font-family-mono);
   font-size: var(--font-size-xs);
   min-width: 3rem;
   text-align: center;
-  color: var(--color-code-output);
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
 }
 
 .shortcut span {

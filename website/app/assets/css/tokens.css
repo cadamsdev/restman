@@ -22,8 +22,8 @@
 
   /* Background colors */
   --color-bg-default: #1a1a1a;
-  --color-bg-dark: #1e1e2e;
-  --color-bg-darker: #2a2a3e;
+  --color-bg-dark: #222018;
+  --color-bg-darker: #2a2520;
   --color-bg-card: rgba(255, 255, 255, 0.05);
   --color-bg-nav: rgba(0, 0, 0, 0.3);
   --color-bg-overlay: rgba(0, 0, 0, 0.2);
@@ -33,10 +33,10 @@
   --color-terminal-yellow: #ffbd2e;
   --color-terminal-green: #27c93f;
 
-  /* Code colors */
-  --color-code-prompt: #67d174;
-  --color-code-output: #8be9fd;
-  --color-code-text: #a0a0a0;
+  /* Code colors - matching RestMan TUI theme */
+  --color-code-prompt: #cc8844; /* Primary orange for prompts */
+  --color-code-output: #bb7733; /* Secondary brown-orange for output */
+  --color-code-text: #999999; /* Muted gray for text */
 
   /* Accent colors */
   --color-accent-yellow: #f1fa8c;
