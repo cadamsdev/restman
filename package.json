@@ -5,11 +5,7 @@
   "description": "A powerful REST API client TUI built with Bun",
   "license": "MIT",
   "author": "cadamsdev",
-  "bin": {
-    "restman-v2": "./index.tsx"
-  },
   "type": "module",
-  "module": "index.tsx",
   "scripts": {
     "dev": "bun run ./index.tsx",
     "start": "bun run ./index.tsx",
