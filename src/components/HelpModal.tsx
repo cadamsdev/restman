@@ -1,135 +1,111 @@
-import React from 'react';
-import { Box, Text } from 'ink';
+import { useCallback } from 'react';
+import { useKeyboard } from '@opentui/react';
 
 interface HelpModalProps {
   onClose: () => void;
 }
 
-export const HelpModal: React.FC<HelpModalProps> = () => {
-  return (
-    <Box
-      position="absolute"
-      width="100%"
-      height="100%"
-      justifyContent="center"
-      alignItems="center"
-      flexDirection="column"
-    >
-      {/* Backdrop overlay */}
-      <Box position="absolute" width="100%" height="100%" />
-
-      {/* Modal content */}
-      <Box
-        borderStyle="double"
-        borderColor="magenta"
-        paddingX={3}
-        paddingY={1}
-        flexDirection="column"
-        width={75}
-        backgroundColor="black"
-      >
-        <Box justifyContent="center">
-          <Text bold color="magenta">
-            ⌨️ RestMan Keyboard Shortcuts
-          </Text>
-        </Box>
-
-        <Box marginTop={1} flexDirection="column">
-          <Text bold color="cyan">
-            ▸ Navigation:
-          </Text>
-          <Text>
-            {' '}
-            <Text color="yellow">↑↓</Text> / <Text color="yellow">Tab</Text> - Navigate between
-            panels
-          </Text>
-          <Text>
-            {' '}
-            <Text color="yellow">0-4</Text> - Jump to panel (0=Env, 1=Method, 2=URL, 3=Request,
-            4=Response)
-          </Text>
-          <Text>
-            {' '}
-            <Text color="yellow">h</Text> / <Text color="yellow">5</Text> - View Request History
-          </Text>
-          <Text>
-            {' '}
-            <Text color="yellow">l</Text> / <Text color="yellow">6</Text> - View Saved Requests
-          </Text>
-          <Text>
-            {' '}
-            <Text color="yellow">v</Text> / <Text color="yellow">7</Text> - View Environments
-          </Text>
-        </Box>
-
-        <Box marginTop={1} flexDirection="column">
-          <Text bold color="cyan">
-            ▸ Actions:
-          </Text>
-          <Text>
-            {' '}
-            <Text color="yellow">e</Text> - Enter edit mode for focused section
-          </Text>
-          <Text>
-            {' '}
-            <Text color="yellow">Space</Text> - View full response (when focused on Response)
-          </Text>
-          <Text>
-            {' '}
-            <Text color="yellow">s</Text> - Save current request
-          </Text>
-          <Text>
-            {' '}
-            <Text color="green">Enter</Text> - Send request (readonly mode)
-          </Text>
-          <Text>
-            {' '}
-            <Text color="green">Ctrl+S</Text> - Send request (any mode)
-          </Text>
-        </Box>
-
-        <Box marginTop={1} flexDirection="column">
-          <Text bold color="cyan">
-            ▸ Other:
-          </Text>
-          <Text>
-            {' '}
-            <Text color="yellow">ESC</Text> - Exit edit mode / View / Confirm quit
-          </Text>
-          <Text>
-            {' '}
-            <Text color="yellow">q</Text> - Show exit confirmation
-          </Text>
-          <Text>
-            {' '}
-            <Text color="magenta">/</Text> - Toggle this help
-          </Text>
-          <Text>
-            {' '}
-            <Text color="red">Ctrl+C</Text> - Force quit (no confirmation)
-          </Text>
-        </Box>
-
-        <Box
-          marginTop={1}
-          justifyContent="center"
-          borderStyle="single"
-          borderColor="gray"
-          paddingX={1}
-        >
-          <Text dimColor italic>
-            Press{' '}
-            <Text color="magenta" bold>
-              /
-            </Text>{' '}
-            or{' '}
-            <Text color="yellow" bold>
-              ESC
-            </Text>{' '}
-            to close
-          </Text>
-        </Box>
-      </Box>
-    </Box>
+export function HelpModal({ onClose }: HelpModalProps) {
+  const handleKeyboard = useCallback(
+    (key: { name: string; sequence?: string }) => {
+      if (key.name === 'escape' || key.sequence === '/' || key.name === 'return') {
+        onClose();
+        return;
+      }
+    },
+    [onClose],
   );
-};
+
+  useKeyboard(handleKeyboard);
+
+  return (
+    <box
+      style={{
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+        zIndex: 1000,
+      }}
+    >
+      {/* Modal content */}
+      <box
+        style={{
+          border: true,
+          borderColor: '#665544',
+          paddingLeft: 3,
+          paddingRight: 3,
+          paddingTop: 1,
+          paddingBottom: 1,
+          flexDirection: 'column',
+          width: 70,
+          backgroundColor: '#1a1a1a',
+        }}
+      >
+        <box style={{ justifyContent: 'center' }}>
+          <text fg="#CC8844">RestMan Keyboard Shortcuts</text>
+        </box>
+
+        <box style={{ marginTop: 1, flexDirection: 'column', gap: 1 }}>
+          {/* Navigation Section */}
+          <box style={{ flexDirection: 'column' }}>
+            <text fg="#999999">Navigation:</text>
+            <box style={{ flexDirection: 'column', paddingLeft: 2 }}>
+              <text fg="#666666">Tab / Shift+Tab Navigate between fields</text>
+              <text fg="#666666">↑ / ↓ Navigate up/down</text>
+              <text fg="#666666">← / → Switch tabs in Request/Response panels</text>
+              <text fg="#666666">0-4 Quick navigation (0:Env, 1:Method, 2:URL, 3:Req, 4:Res)</text>
+            </box>
+          </box>
+
+          {/* Actions Section */}
+          <box style={{ flexDirection: 'column' }}>
+            <text fg="#999999">Actions:</text>
+            <box style={{ flexDirection: 'column', paddingLeft: 2 }}>
+              <text fg="#666666">Enter Send HTTP request</text>
+              <text fg="#666666">e Edit focused field</text>
+              <text fg="#666666">Space Expand response viewer (when on response)</text>
+              <text fg="#666666">s Save current request</text>
+              <text fg="#666666">h View history</text>
+              <text fg="#666666">v Manage environments</text>
+            </box>
+          </box>
+
+          {/* Edit Mode Section */}
+          <box style={{ flexDirection: 'column' }}>
+            <text fg="#999999">Edit Mode:</text>
+            <box style={{ flexDirection: 'column', paddingLeft: 2 }}>
+              <text fg="#666666">ESC Exit edit mode</text>
+              <text fg="#666666">Enter Submit changes</text>
+            </box>
+          </box>
+
+          {/* Application Section */}
+          <box style={{ flexDirection: 'column' }}>
+            <text fg="#999999">Application:</text>
+            <box style={{ flexDirection: 'column', paddingLeft: 2 }}>
+              <text fg="#666666">/ Show this help menu</text>
+              <text fg="#666666">q / ESC Quit application</text>
+              <text fg="#666666">Ctrl+C Force quit</text>
+            </box>
+          </box>
+        </box>
+
+        <box
+          style={{
+            marginTop: 1,
+            justifyContent: 'center',
+            border: true,
+            borderColor: '#443322',
+            paddingLeft: 1,
+            paddingRight: 1,
+          }}
+        >
+          <text fg="#666666">Press / or ESC or Enter to close</text>
+        </box>
+      </box>
+    </box>
+  );
+}

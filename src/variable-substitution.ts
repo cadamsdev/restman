@@ -43,36 +43,3 @@ export const substituteVariablesInHeaders = (
 
   return result;
 };
-
-/**
- * Find all variable names in a string
- *
- * @param text - The text to search for variables
- * @returns Array of unique variable names found (without {{ }})
- */
-export const findVariables = (text: string): string[] => {
-  if (!text) return [];
-
-  const variablePattern = /\{\{([^}]+)\}\}/g;
-  const variables: Set<string> = new Set();
-
-  let match;
-  while ((match = variablePattern.exec(text)) !== null) {
-    if (match[1]) {
-      variables.add(match[1].trim());
-    }
-  }
-
-  return Array.from(variables);
-};
-
-/**
- * Check if a string contains any variables
- *
- * @param text - The text to check
- * @returns True if the text contains at least one variable placeholder
- */
-export const hasVariables = (text: string): boolean => {
-  if (!text) return false;
-  return /\{\{[^}]+\}\}/.test(text);
-};

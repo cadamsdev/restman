@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Box, Text, useInput } from 'ink';
-import TextInput from 'ink-text-input';
+import { useState, useCallback } from 'react';
+import { useKeyboard } from '@opentui/react';
+import { TextInput } from './TextInput';
 
 interface SaveModalProps {
   defaultName: string;
@@ -8,77 +8,94 @@ interface SaveModalProps {
   onCancel: () => void;
 }
 
-export const SaveModal: React.FC<SaveModalProps> = ({ defaultName, onSave, onCancel }) => {
+export function SaveModal({ defaultName, onSave, onCancel }: SaveModalProps) {
   const [name, setName] = useState(defaultName);
 
-  useInput((input, key) => {
-    if (key.escape) {
-      onCancel();
-      return;
-    }
-    if (key.return) {
-      if (name.trim()) {
-        onSave(name.trim());
+  const handleKeyboard = useCallback(
+    (key: { name: string }) => {
+      if (key.name === 'escape') {
+        onCancel();
+        return;
       }
-      return;
-    }
-  });
+
+      if (key.name === 'return') {
+        if (name.trim()) {
+          onSave(name.trim());
+        }
+        return;
+      }
+    },
+    [name, onSave, onCancel],
+  );
+
+  useKeyboard(handleKeyboard);
 
   return (
-    <Box
-      position="absolute"
-      width="100%"
-      height="100%"
-      justifyContent="center"
-      alignItems="center"
-      flexDirection="column"
+    <box
+      style={{
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+        zIndex: 1000,
+      }}
     >
-      {/* Backdrop overlay */}
-      <Box position="absolute" width="100%" height="100%" />
-
-      {/* Modal content */}
-      <Box
-        borderStyle="double"
-        borderColor="green"
-        paddingX={3}
-        paddingY={1}
-        flexDirection="column"
-        width={65}
-        backgroundColor="black"
+      <box
+        style={{
+          border: true,
+          borderStyle: 'double',
+          borderColor: '#665544',
+          paddingLeft: 3,
+          paddingRight: 3,
+          paddingTop: 1,
+          paddingBottom: 1,
+          flexDirection: 'column',
+          width: 65,
+          backgroundColor: '#1a1a1a',
+        }}
       >
-        <Box justifyContent="center">
-          <Text bold color="green">
-            💾 Save Request
-          </Text>
-        </Box>
-        <Box marginTop={1}>
-          <Text dimColor>Enter a name for this request:</Text>
-        </Box>
-        <Box marginTop={1} borderStyle="round" borderColor="cyan" paddingX={1}>
-          <Text color="cyan" bold>
-            📝{' '}
-          </Text>
-          <TextInput value={name} onChange={setName} placeholder="e.g., Get User Profile" />
-        </Box>
-        <Box
-          marginTop={1}
-          justifyContent="center"
-          borderStyle="single"
-          borderColor="gray"
-          paddingX={1}
+        <box style={{ justifyContent: 'center' }}>
+          <text fg="#CC8844">Save Request</text>
+        </box>
+
+        <box style={{ marginTop: 1 }}>
+          <text fg="#666666">Enter a name for this request:</text>
+        </box>
+
+        <box
+          style={{
+            marginTop: 1,
+            border: true,
+            borderColor: '#CC8844',
+            paddingLeft: 1,
+            paddingRight: 1,
+          }}
         >
-          <Text dimColor>
-            <Text color="green" bold>
-              Enter
-            </Text>{' '}
-            Save │{' '}
-            <Text color="yellow" bold>
-              ESC
-            </Text>{' '}
-            Cancel
-          </Text>
-        </Box>
-      </Box>
-    </Box>
+          <TextInput
+            value={name}
+            onChange={setName}
+            onSubmit={() => name.trim() && onSave(name.trim())}
+            onCancel={onCancel}
+            focused={true}
+            placeholder="e.g., Get User Profile"
+          />
+        </box>
+
+        <box
+          style={{
+            marginTop: 1,
+            justifyContent: 'center',
+            border: true,
+            borderColor: '#443322',
+            paddingLeft: 1,
+            paddingRight: 1,
+          }}
+        >
+          <text fg="#666666">Enter: Save | ESC: Cancel</text>
+        </box>
+      </box>
+    </box>
   );
-};
+}

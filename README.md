@@ -4,7 +4,7 @@
 
 A simple and easy to use REST API client that runs in your terminal. Open-source alternative to Postman.
 
-![RestMan](https://img.shields.io/badge/Built%20with-Bun-orange) ![RestMan](https://img.shields.io/badge/UI-Ink%20%2B%20React-blue) ![License](https://img.shields.io/github/license/cadamsdev/restman) ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
+![RestMan](https://img.shields.io/badge/Built%20with-Bun-orange) ![RestMan](https://img.shields.io/badge/UI-OpenTUI%20%2B%20React-blue) ![License](https://img.shields.io/github/license/cadamsdev/restman) ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
 ![RestMan Preview](media/preview.png)
 
@@ -76,22 +76,17 @@ restman
 
 ```
 restman/
-├── index.ts              # Main entry point
-├── src/
-│   ├── http-client.ts    # HTTP client implementation
-│   └── ui-manager.ts     # TUI interface manager
-├── package.json
-├── tsconfig.json
-└── READApp.tsx           # Main React component
-│   ├── http-client.ts    # HTTP client implementation
-│   └── components/       # React UI components
-│       ├── URLInput.tsx
-│       ├── MethodSelector.tsx
-│       ├── HeadersEditor.tsx
-│       ├── BodyEditor.tsx
-│       ├── ResponsePanel.tsx
-│       ├── StatusBar.tsx
-│       └── Instructions.tsx
+├── index.tsx           # Application entry point
+├── src/                # Source code
+│   ├── App.tsx         # Main application component
+│   ├── components/     # React UI components
+│   ├── *-storage.ts    # Data persistence modules
+│   └── *.ts            # Core utilities (HTTP, variables, tokens)
+├── docs/               # Documentation
+├── media/              # Screenshots and assets
+├── scripts/            # Build and utility scripts
+├── .github/            # GitHub workflows and templates
+└── package.json        # Dependencies and scripts
 ```
 
 ## 🛠️ Development

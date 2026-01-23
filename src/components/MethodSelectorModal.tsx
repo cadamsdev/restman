@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Box, Text, useInput } from 'ink';
+import { useState, useCallback } from 'react';
+import { useKeyboard } from '@opentui/react';
 
 interface MethodSelectorModalProps {
   currentMethod: string;
@@ -7,127 +7,113 @@ interface MethodSelectorModalProps {
   onCancel: () => void;
 }
 
-export const MethodSelectorModal: React.FC<MethodSelectorModalProps> = ({
+export function MethodSelectorModal({
   currentMethod,
   onSelect,
   onCancel,
-}) => {
+}: MethodSelectorModalProps) {
   const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
   const [selectedIndex, setSelectedIndex] = useState(methods.indexOf(currentMethod));
 
   const getMethodColor = (method: string): string => {
     switch (method) {
       case 'GET':
-        return 'blue';
+        return '#8899AA';
       case 'POST':
-        return 'green';
+        return '#99AA77';
       case 'PUT':
-        return 'yellow';
+        return '#CC9944';
       case 'PATCH':
-        return 'cyan';
+        return '#9988BB';
       case 'DELETE':
-        return 'red';
+        return '#BB6655';
       default:
-        return 'white';
+        return '#999999';
     }
   };
 
-  useInput((input, key) => {
-    if (key.escape) {
-      onCancel();
-      return;
-    }
-
-    if (key.return) {
-      const selectedMethod = methods[selectedIndex];
-      if (selectedMethod) {
-        onSelect(selectedMethod);
+  const handleKeyboard = useCallback(
+    (key: { name: string; sequence?: string }) => {
+      if (key.name === 'escape') {
+        onCancel();
+        return;
       }
-      return;
-    }
 
-    if (key.upArrow) {
-      setSelectedIndex((prev) => (prev > 0 ? prev - 1 : methods.length - 1));
-      return;
-    }
+      if (key.name === 'return') {
+        const selectedMethod = methods[selectedIndex];
+        if (selectedMethod) {
+          onSelect(selectedMethod);
+        }
+        return;
+      }
 
-    if (key.downArrow) {
-      setSelectedIndex((prev) => (prev < methods.length - 1 ? prev + 1 : 0));
-      return;
-    }
+      if (key.name === 'up') {
+        setSelectedIndex((prev) => (prev > 0 ? prev - 1 : methods.length - 1));
+        return;
+      }
 
-    // Quick selection by first letter
-    const upperInput = input.toUpperCase();
-    const methodIndex = methods.findIndex((m) => m.startsWith(upperInput));
-    if (methodIndex !== -1) {
-      setSelectedIndex(methodIndex);
-    }
-  });
+      if (key.name === 'down') {
+        setSelectedIndex((prev) => (prev < methods.length - 1 ? prev + 1 : 0));
+        return;
+      }
+    },
+    [methods, selectedIndex, onSelect, onCancel],
+  );
+
+  useKeyboard(handleKeyboard);
 
   return (
-    <Box
-      position="absolute"
-      width="100%"
-      height="100%"
-      justifyContent="center"
-      alignItems="center"
-      flexDirection="column"
+    <box
+      style={{
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+        zIndex: 1000,
+      }}
     >
-      {/* Backdrop overlay */}
-      <Box position="absolute" width="100%" height="100%" />
-
       {/* Modal content */}
-      <Box
-        borderStyle="double"
-        borderColor="magenta"
-        paddingX={3}
-        paddingY={1}
-        flexDirection="column"
-        width={40}
-        backgroundColor="black"
+      <box
+        style={{
+          border: true,
+          borderStyle: 'double',
+          borderColor: '#665544',
+          paddingLeft: 3,
+          paddingRight: 3,
+          paddingTop: 1,
+          paddingBottom: 1,
+          flexDirection: 'column',
+          width: 40,
+          backgroundColor: '#1a1a1a',
+        }}
       >
-        <Box justifyContent="center">
-          <Text bold color="magenta">
-            ⚡ Select HTTP Method
-          </Text>
-        </Box>
+        <box style={{ justifyContent: 'center' }}>
+          <text fg="#CC8844">Select HTTP Method</text>
+        </box>
 
-        <Box marginTop={1} flexDirection="column" paddingX={2}>
+        <box style={{ marginTop: 1, flexDirection: 'column', paddingLeft: 2, paddingRight: 2 }}>
           {methods.map((method, index) => (
-            <Text
-              key={method}
-              color={index === selectedIndex ? getMethodColor(method) : 'gray'}
-              bold={index === selectedIndex}
-              dimColor={index !== selectedIndex}
-            >
+            <text key={method} fg={index === selectedIndex ? getMethodColor(method) : '#666666'}>
               {index === selectedIndex ? `▸ ${method}` : `  ${method}`}
-            </Text>
+            </text>
           ))}
-        </Box>
+        </box>
 
-        <Box
-          marginTop={1}
-          justifyContent="center"
-          borderStyle="single"
-          borderColor="gray"
-          paddingX={1}
+        <box
+          style={{
+            marginTop: 1,
+            justifyContent: 'center',
+            border: true,
+            borderColor: '#443322',
+            paddingLeft: 1,
+            paddingRight: 1,
+          }}
         >
-          <Text dimColor>
-            <Text color="cyan" bold>
-              ↕
-            </Text>{' '}
-            Navigate │{' '}
-            <Text color="green" bold>
-              Enter
-            </Text>{' '}
-            Select │{' '}
-            <Text color="yellow" bold>
-              ESC
-            </Text>{' '}
-            Cancel
-          </Text>
-        </Box>
-      </Box>
-    </Box>
+          <text fg="#666666">↕: Navigate | Enter: Select | ESC: Cancel</text>
+        </box>
+      </box>
+    </box>
   );
-};
+}
