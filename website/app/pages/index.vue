@@ -10,6 +10,7 @@
           </div>
           <div class="nav-links">
             <a href="#features" class="nav-link">Features</a>
+            <a href="#install" class="nav-link">Install</a>
             <a href="#screenshots" class="nav-link">Screenshots</a>
             <a href="#quickstart" class="nav-link">Quick Start</a>
             <a href="https://github.com/cadamsdev/restman" target="_blank" class="nav-link">
@@ -36,7 +37,7 @@
               alternative to Postman.
             </p>
             <div class="hero-buttons">
-              <a href="#features" class="btn-primary">Get Started</a>
+              <a href="#install" class="btn-primary">Get Started</a>
               <a href="https://github.com/cadamsdev/restman" target="_blank" class="btn-secondary">
                 <Icon name="mdi:github" size="20" style="vertical-align: middle" />
                 View on GitHub
@@ -56,76 +57,93 @@
                 <span>Open Source</span>
               </div>
             </div>
+          </div>
+          <div class="hero-demo">
+            <TerminalDemo />
+          </div>
+        </div>
+      </div>
+    </section>
 
-            <!-- Installation Tabs -->
-            <div class="install-tabs">
-              <div class="tabs-header">
-                <button
-                  :class="['tab-button', { active: activeTab === 'unix' }]"
-                  @click="activeTab = 'unix'"
-                >
-                  <Icon name="mdi:linux" size="20" />
-                  Linux & Mac
-                </button>
-                <button
-                  :class="['tab-button', { active: activeTab === 'windows' }]"
-                  @click="activeTab = 'windows'"
-                >
-                  <Icon name="mdi:microsoft-windows" size="20" />
-                  Windows
-                </button>
-              </div>
-              <div class="tabs-content">
-                <div v-show="activeTab === 'unix'" class="tab-panel">
-                  <div class="install-commands">
-                    <div class="command-group">
-                      <p class="command-label">Install with Bun (Recommended)</p>
-                      <div class="code-block">
-                        <pre><code>bun install -g restman</code></pre>
-                        <button class="copy-btn" @click="copyToClipboard('bun install -g restman')">
-                          <Icon name="mdi:content-copy" size="18" />
-                        </button>
-                      </div>
-                    </div>
-                    <div class="command-group">
-                      <p class="command-label">Or use npm</p>
-                      <div class="code-block">
-                        <pre><code>npm install -g restman</code></pre>
-                        <button class="copy-btn" @click="copyToClipboard('npm install -g restman')">
-                          <Icon name="mdi:content-copy" size="18" />
-                        </button>
-                      </div>
-                    </div>
+    <!-- Installation Section -->
+    <section id="install" class="install">
+      <div class="container">
+        <h2 class="section-title">
+          <span class="gradient-text">Get Started in Seconds</span>
+        </h2>
+        <p class="section-subtitle">One command to install RestMan on your system</p>
+        
+        <!-- Installation Tabs -->
+        <div class="install-tabs">
+          <div class="tabs-header">
+            <button
+              :class="['tab-button', { active: activeTab === 'unix' }]"
+              @click="activeTab = 'unix'"
+            >
+              <Icon name="mdi:linux" size="20" />
+              Linux & Mac
+            </button>
+            <button
+              :class="['tab-button', { active: activeTab === 'windows' }]"
+              @click="activeTab = 'windows'"
+            >
+              <Icon name="mdi:microsoft-windows" size="20" />
+              Windows
+            </button>
+          </div>
+          <div class="tabs-content">
+            <div v-show="activeTab === 'unix'" class="tab-panel">
+              <div class="install-commands">
+                <div class="command-group">
+                  <p class="command-label">Quick Install</p>
+                  <div class="code-block">
+                    <pre><code>curl -fsSL https://raw.githubusercontent.com/cadamsdev/restman/main/install.sh | bash</code></pre>
+                    <button class="copy-btn" @click="copyToClipboard('curl -fsSL https://raw.githubusercontent.com/cadamsdev/restman/main/install.sh | bash')">
+                      <Icon name="mdi:content-copy" size="18" />
+                    </button>
                   </div>
                 </div>
-                <div v-show="activeTab === 'windows'" class="tab-panel">
-                  <div class="install-commands">
-                    <div class="command-group">
-                      <p class="command-label">Install with Bun (Recommended)</p>
-                      <div class="code-block">
-                        <pre><code>bun install -g restman</code></pre>
-                        <button class="copy-btn" @click="copyToClipboard('bun install -g restman')">
-                          <Icon name="mdi:content-copy" size="18" />
-                        </button>
-                      </div>
-                    </div>
-                    <div class="command-group">
-                      <p class="command-label">Or use npm</p>
-                      <div class="code-block">
-                        <pre><code>npm install -g restman</code></pre>
-                        <button class="copy-btn" @click="copyToClipboard('npm install -g restman')">
-                          <Icon name="mdi:content-copy" size="18" />
-                        </button>
-                      </div>
-                    </div>
+                <div class="command-group">
+                  <p class="command-label">Then run</p>
+                  <div class="code-block">
+                    <pre><code>restman</code></pre>
+                    <button class="copy-btn" @click="copyToClipboard('restman')">
+                      <Icon name="mdi:content-copy" size="18" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-show="activeTab === 'windows'" class="tab-panel">
+              <div class="install-commands">
+                <div class="command-group">
+                  <p class="command-label">Quick Install (PowerShell)</p>
+                  <div class="code-block">
+                    <pre><code>irm https://raw.githubusercontent.com/cadamsdev/restman/main/install.ps1 | iex</code></pre>
+                    <button class="copy-btn" @click="copyToClipboard('irm https://raw.githubusercontent.com/cadamsdev/restman/main/install.ps1 | iex')">
+                      <Icon name="mdi:content-copy" size="18" />
+                    </button>
+                  </div>
+                </div>
+                <div class="command-group">
+                  <p class="command-label">Then run</p>
+                  <div class="code-block">
+                    <pre><code>restman</code></pre>
+                    <button class="copy-btn" @click="copyToClipboard('restman')">
+                      <Icon name="mdi:content-copy" size="18" />
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="hero-demo">
-            <TerminalDemo />
-          </div>
+        </div>
+
+        <div class="install-note">
+          <p>
+            For manual installation or other options, visit the 
+            <a href="https://github.com/cadamsdev/restman#installation" target="_blank">GitHub repository</a>.
+          </p>
         </div>
       </div>
     </section>
@@ -603,9 +621,15 @@ const copyToClipboard = (text: string) => {
   font-weight: var(--font-weight-medium);
 }
 
-/* Installation Tabs in Hero */
+/* Installation Section */
+.install {
+  padding: var(--spacing-3xl) 0;
+  background: var(--color-bg-overlay);
+}
+
 .install-tabs {
-  margin-top: var(--spacing-xl);
+  max-width: 900px;
+  margin: 0 auto;
   background: var(--color-bg-card);
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border-light);
@@ -620,12 +644,12 @@ const copyToClipboard = (text: string) => {
 
 .tab-button {
   flex: 1;
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
   background: transparent;
   border: none;
   color: var(--color-text-muted);
   font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-base);
   cursor: pointer;
   transition: all var(--transition-base);
   display: flex;
@@ -647,7 +671,7 @@ const copyToClipboard = (text: string) => {
 }
 
 .tabs-content {
-  padding: var(--spacing-md);
+  padding: var(--spacing-lg);
 }
 
 .tab-panel {
@@ -666,7 +690,7 @@ const copyToClipboard = (text: string) => {
 .install-commands {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
+  gap: var(--spacing-lg);
 }
 
 .command-group {
@@ -679,6 +703,25 @@ const copyToClipboard = (text: string) => {
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
   margin: 0;
+  font-weight: var(--font-weight-medium);
+}
+
+.install-note {
+  max-width: 900px;
+  margin: var(--spacing-lg) auto 0;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.install-note a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+}
+
+.install-note a:hover {
+  text-decoration: underline;
 }
 
 /* Shared Code Block Styles */
