@@ -5,6 +5,9 @@
   "description": "A powerful REST API client TUI built with Bun",
   "license": "MIT",
   "author": "cadamsdev",
+  "workspaces": [
+    "website"
+  ],
   "type": "module",
   "scripts": {
     "dev": "bun run ./index.tsx",
@@ -22,9 +25,6 @@
     "lint": "oxlint --type-aware --type-check",
     "lint:fix": "oxlint --fix"
   },
-  "workspaces": [
-    "website"
-  ],
   "dependencies": {
     "@opentui/core": "^0.1.72",
     "@opentui/react": "^0.1.72",
