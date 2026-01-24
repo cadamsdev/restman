@@ -126,12 +126,12 @@
                 <div class="command-group">
                   <p class="command-label">Quick Install (PowerShell)</p>
                   <div class="code-block">
-                    <pre><code>irm https://raw.githubusercontent.com/cadamsdev/restman/main/install.ps1 | iex</code></pre>
+                    <pre><code>powershell -c "irm https://raw.githubusercontent.com/cadamsdev/restman/main/install.ps1 | iex"</code></pre>
                     <button
                       class="copy-btn"
                       @click="
                         copyToClipboard(
-                          'irm https://raw.githubusercontent.com/cadamsdev/restman/main/install.ps1 | iex',
+                          'powershell -c &quot;irm https://raw.githubusercontent.com/cadamsdev/restman/main/install.ps1 | iex&quot;',
                         )
                       "
                     >
