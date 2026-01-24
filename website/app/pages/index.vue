@@ -97,12 +97,12 @@
                 <div class="command-group">
                   <p class="command-label">Quick Install</p>
                   <div class="code-block">
-                    <pre><code>curl -fsSL https://raw.githubusercontent.com/cadamsdev/restman/main/install.sh | bash</code></pre>
+                    <pre><code>curl -fsSL https://userestman.vercel.app/install.sh | bash</code></pre>
                     <button
                       class="copy-btn"
                       @click="
                         copyToClipboard(
-                          'curl -fsSL https://raw.githubusercontent.com/cadamsdev/restman/main/install.sh | bash',
+                          'curl -fsSL https://userestman.vercel.app/install.sh | bash',
                         )
                       "
                     >
@@ -126,12 +126,12 @@
                 <div class="command-group">
                   <p class="command-label">Quick Install (PowerShell)</p>
                   <div class="code-block">
-                    <pre><code>powershell -c "irm https://raw.githubusercontent.com/cadamsdev/restman/main/install.ps1 | iex"</code></pre>
+                    <pre><code>powershell -c "irm https://userestman.vercel.app/install.ps1 | iex"</code></pre>
                     <button
                       class="copy-btn"
                       @click="
                         copyToClipboard(
-                          'powershell -c &quot;irm https://raw.githubusercontent.com/cadamsdev/restman/main/install.ps1 | iex&quot;',
+                          'powershell -c &quot;irm https://userestman.vercel.app/install.ps1 | iex&quot;',
                         )
                       "
                     >

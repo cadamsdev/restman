@@ -64,12 +64,12 @@ Support development by becoming a sponsor! Your avatar or company logo will appe
 
 **Linux & macOS:**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/cadamsdev/restman/main/install.sh | bash
+curl -fsSL https://userestman.vercel.app/install.sh | bash
 ```
 
 **Windows:**
 ```powershell
-powershell -c "irm https://raw.githubusercontent.com/cadamsdev/restman/main/install.ps1 | iex"
+powershell -c "irm https://userestman.vercel.app/install.ps1 | iex"
 ```
 
 ### Manual Installation
