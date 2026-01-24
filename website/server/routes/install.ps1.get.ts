@@ -6,9 +6,11 @@ export default defineEventHandler((event) => {
   const scriptPath = join(process.cwd(), '..', 'install.ps1');
   const scriptContent = readFileSync(scriptPath, 'utf-8');
 
-  // Set the content type to PowerShell script
-  event.node.res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-  event.node.res.setHeader('Content-Disposition', 'inline; filename="install.ps1"');
+  // Set the content type to plain text
+  setResponseHeaders(event, {
+    'Content-Type': 'text/plain; charset=utf-8',
+    'Cache-Control': 'public, max-age=3600',
+  });
 
   return scriptContent;
 });

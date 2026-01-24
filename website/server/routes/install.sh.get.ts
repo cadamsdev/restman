@@ -6,9 +6,11 @@ export default defineEventHandler((event) => {
   const scriptPath = join(process.cwd(), '..', 'install.sh');
   const scriptContent = readFileSync(scriptPath, 'utf-8');
 
-  // Set the content type to shell script
-  event.node.res.setHeader('Content-Type', 'text/x-shellscript; charset=utf-8');
-  event.node.res.setHeader('Content-Disposition', 'inline; filename="install.sh"');
+  // Set the content type to plain text
+  setResponseHeaders(event, {
+    'Content-Type': 'text/plain; charset=utf-8',
+    'Cache-Control': 'public, max-age=3600',
+  });
 
   return scriptContent;
 });

@@ -26,4 +26,9 @@ export default defineNuxtConfig({
       ],
     },
   },
+  nitro: {
+    prerender: {
+      routes: ['/install.sh', '/install.ps1'],
+    },
+  },
 });
