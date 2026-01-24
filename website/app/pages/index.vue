@@ -5,7 +5,7 @@
       <div class="container">
         <div class="nav-content">
           <div class="nav-brand">
-            <span class="brand-icon">🚀</span>
+            <img src="/logo.svg" alt="RestMan" class="brand-logo" />
             <span class="brand-text gradient-text">RestMan</span>
           </div>
           <div class="nav-links">
@@ -416,7 +416,7 @@ Authorization: Bearer {{TOKEN}}</code></pre>
       <div class="container">
         <div class="footer-content">
           <div class="footer-brand">
-            <span class="brand-icon">🚀</span>
+            <img src="/logo.svg" alt="RestMan" class="brand-logo" />
             <span class="brand-text gradient-text">RestMan</span>
             <p class="footer-tagline">REST API Client for Your Terminal</p>
           </div>
@@ -562,6 +562,12 @@ const copyToClipboard = (text: string) => {
 
 .brand-icon {
   font-size: 1.75rem;
+}
+
+.brand-logo {
+  width: 2rem;
+  height: 2rem;
+  display: block;
 }
 
 .brand-text {
@@ -1001,6 +1007,11 @@ const copyToClipboard = (text: string) => {
 
 .footer-brand .brand-icon {
   font-size: 2rem;
+}
+
+.footer-brand .brand-logo {
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 .footer-brand .brand-text {
