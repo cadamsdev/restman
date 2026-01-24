@@ -1,0 +1,7 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="200" height="200" fill="#1a1a1a" rx="20"/>
+  
+  <!-- Letter R - bold and simple -->
+  <path d="M 60 60 L 60 140 L 70 140 L 70 105 L 100 105 L 125 140 L 138 140 L 110 103 C 120 100 130 90 130 75 C 130 60 120 60 105 60 Z M 70 70 L 105 70 C 112 70 120 70 120 75 C 120 85 112 95 105 95 L 70 95 Z" fill="#CC8844"/>
+</svg>

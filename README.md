@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="media/logo.svg" alt="RestMan Logo" width="120" height="120">
+
 # RestMan
 
 A simple and easy to use REST API client that runs in your terminal. Open-source alternative to Postman.
