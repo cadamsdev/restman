@@ -37,4 +37,3 @@ useHead({
   ],
 });
 </script>
-
