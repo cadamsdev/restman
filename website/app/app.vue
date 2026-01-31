@@ -26,3 +26,15 @@
   }
 }
 </style>
+
+<script setup lang="ts">
+useHead({
+  script: [
+    {
+      src: 'https://media.bitterbrains.com/main.js?from=RESTMAN&type=top',
+      async: true,
+    },
+  ],
+});
+</script>
+
