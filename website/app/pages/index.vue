@@ -541,9 +541,6 @@ const copyToClipboard = (text: string) => {
   border-bottom: 1px solid var(--color-border-light);
   background: var(--color-bg-nav);
   backdrop-filter: blur(10px);
-  position: sticky;
-  top: 0;
-  z-index: 100;
 }
 
 .nav-content {
